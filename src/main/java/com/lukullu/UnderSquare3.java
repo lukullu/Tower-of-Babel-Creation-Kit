@@ -21,9 +21,9 @@ public class UnderSquare3 extends ExtendedPApplet {
         background(40);
         frameRate(60);
 
-        gameObjects.putEntity(new Player(Shapes.SQUARE,new Vec2(600,600), 0, 50));
         gameObjects.putEntity(new EntityObject(Shapes.PENTAGON,new Vec2(1000,600), 0, 75,2));
         gameObjects.putEntity(new EntityObject(Shapes.HEXAGON,new Vec2(1000,450), 0, 150,2));
+        gameObjects.putEntity(new Player(Shapes.SQUARE,new Vec2(600,600), 0, 50));
 
     }
 
@@ -53,9 +53,17 @@ public class UnderSquare3 extends ExtendedPApplet {
                 for (GameplayObject entity : entities) {
                     if (query != entity) {
                         Vec2 delta = Collision.collisionResolutionSAT(query,entity);
-                        query.updatePos(delta);
-                        //stroke(0);
-                        //line((float)query.getPosition().x,(float)query.getPosition().y,(float)(query.getPosition().x+ delta.x),(float)(query.getPosition().y+delta.y));
+
+                        // TODO: implement proper push physics based on weight
+                        if(query.getPushPriority() <= entity.getPushPriority())
+                        {
+                            query.updatePos(delta);
+                        }
+                        else
+                        {
+                            entity.updatePos(delta.multiply(-1));
+                        }
+
                     }
                 }
             }

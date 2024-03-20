@@ -145,7 +145,7 @@ public class GameplayObject implements IGameObject, ProcessingClass
         {
             if(obj != this)
             {
-                if(CollisionDetectionOld.areShapesOverlapping(simPos,simVertices,obj))
+                if(Collision.collisionCheckSAT(this,obj))
                 {
                     colliders.add(obj);
                 }
@@ -166,7 +166,7 @@ public class GameplayObject implements IGameObject, ProcessingClass
 
                 for (GameplayObject obj : colliders)
                 {
-                    if(CollisionDetectionOld.areShapesOverlapping(simPos,simVertices,obj))
+                    if(Collision.collisionCheckSAT(this,obj))
                     {
                         println(stepcounter);
                         stepAcc = stepAcc.subtract(stepSize);

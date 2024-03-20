@@ -113,8 +113,9 @@ public class Collision
             }
         }
 
-        System.out.println(minOverlap);
-        Vec2 delta = transformationAxis.multiply(-minOverlap);
+        Vec2 generalDirection = polygon1.getPosition().subtract(polygon2.getPosition());
+
+        Vec2 delta = transformationAxis.multiply(-minOverlap).align(generalDirection);
 
         return delta;
     }

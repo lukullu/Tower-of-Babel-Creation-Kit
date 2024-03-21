@@ -56,11 +56,12 @@ public class Collision
         return true;
     }
 
-    public static Vec2 collisionResolutionSAT(GameplayObject polygon1, GameplayObject polygon2)
+    public static CollisionResult collisionResolutionSAT(GameplayObject polygon1, GameplayObject polygon2)
     {
         double overlap = Double.MAX_VALUE;
         double minOverlap = Double.MAX_VALUE;
         Vec2 transformationAxis = Vec2.ZERO_VECTOR2;
+        int axisOriginIndex = -1;
 
         GameplayObject poly1 = polygon1;
         GameplayObject poly2 = polygon2;
@@ -106,9 +107,10 @@ public class Collision
                 {
                     minOverlap = overlap;
                     transformationAxis = projectionAxis.normalise();
+                    axisOriginIndex = i;
                 }
 
-                if(!(maxPoly2 >= minPoly1 && maxPoly1 >= minPoly2)){return Vec2.ZERO_VECTOR2;}
+                if(!(maxPoly2 >= minPoly1 && maxPoly1 >= minPoly2)){return new CollisionResult(false,Vec2.ZERO_VECTOR2,false);}
 
             }
         }
@@ -117,7 +119,7 @@ public class Collision
 
         Vec2 delta = transformationAxis.multiply(-minOverlap).align(generalDirection);
 
-        return delta;
+        return new CollisionResult(true, delta, axisOriginIndex == 0);
     }
 
 }

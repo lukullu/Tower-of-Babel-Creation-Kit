@@ -45,10 +45,7 @@ public class GameplayObject implements IGameObject, ProcessingClass
     public int getPushPriority() { return pushPriority; }
     public Vec2 getPosition() { return position; }
     public ArrayList<Vec2> getVertices(){ return vertices; }
-    public void update()
-    {
-        updateVertices();
-    }
+    public void update() { updateVertices(); }
     public void paint()
     {
         paintPolygon(vertices);
@@ -103,7 +100,7 @@ public class GameplayObject implements IGameObject, ProcessingClass
         vertices.addAll(shape);
         updateVertices();
     }
-    private void updateVertices() {
+    public void updateVertices() {
         vertices = calcVertices(position, rotation, scaling);
     }
 

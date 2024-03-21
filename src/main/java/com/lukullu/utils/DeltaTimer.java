@@ -12,14 +12,14 @@ public class DeltaTimer
         return single_instance;
     }
 
-    private long lastFrameTime = System.currentTimeMillis();
-    private int deltaTime;
+    private double lastFrameTime = System.currentTimeMillis() / 1000.0;
+    private double deltaTime;
     private DeltaTimer(){ update(); }
-    public int getDeltaTime(){ return deltaTime; }
+    public double getDeltaTime(){ return deltaTime; }
     public void update()
     {
-        deltaTime = (int)(System.currentTimeMillis() - lastFrameTime);
-        lastFrameTime = System.currentTimeMillis();
+        deltaTime = ((System.currentTimeMillis() / 1000.0) - lastFrameTime);
+        lastFrameTime = System.currentTimeMillis() / 1000.0;
     }
 
 }

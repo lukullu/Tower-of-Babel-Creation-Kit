@@ -19,9 +19,9 @@ public class UnderSquare3 extends ExtendedPApplet {
     public void setup()
     {
         background(40);
-        frameRate(60);
+        //frameRate(30);
 
-        gameObjects.putEntity(new EntityObject(Shapes.PENTAGON,new Vec2(1000,600), 0, 75,2));
+        gameObjects.putEntity(new EntityObject(Shapes.TRIANGLE,new Vec2(1000,600), 0, 75,2));
         gameObjects.putEntity(new EntityObject(Shapes.HEXAGON,new Vec2(1000,450), 0, 150,2));
         gameObjects.putEntity(new Player(Shapes.SQUARE,new Vec2(600,600), 0, 50));
 
@@ -45,29 +45,31 @@ public class UnderSquare3 extends ExtendedPApplet {
         }
 
         // collide every GameplayObject
-        @SuppressWarnings("all")
-        List<GameplayObject> entities = (List<GameplayObject>)(Object)gameObjects.get(EntityObject.class);
+        /*@SuppressWarnings("all")
+        List<EntityObject> entities = (List<EntityObject>)(Object)gameObjects.get(EntityObject.class);
         if(!entities.isEmpty()) {
-            for (GameplayObject query : entities) {
+            for (EntityObject query : entities) {
                 // TODO spacial partitioning
-                for (GameplayObject entity : entities) {
+                for (EntityObject entity : entities) {
                     if (query != entity) {
-                        Vec2 delta = Collision.collisionResolutionSAT(query,entity);
+                        CollisionResult res = Collision.collisionResolutionSAT(query,entity);
 
-                        // TODO: implement proper push physics based on weight
-                        if(query.getPushPriority() <= entity.getPushPriority())
+                        if(res.collisionCheck)
                         {
-                            query.updatePos(delta);
+                            // TODO: implement proper push physics based on weight
+                            if(query.getPushPriority() <= entity.getPushPriority())
+                            {
+                                query.updatePos(res.delta);
+                            }
+                            else
+                            {
+                                entity.updatePos(res.delta.multiply(-1));
+                            }
                         }
-                        else
-                        {
-                            entity.updatePos(delta.multiply(-1));
-                        }
-
                     }
                 }
             }
-        }
+        }*/
 
         // draw every GameObject
         for (var entry : gameObjects.entrySet()) {
@@ -80,6 +82,7 @@ public class UnderSquare3 extends ExtendedPApplet {
 
     }
 
+    public static GameObjectMultiHashMap getGameObjects() { return gameObjects; }
     public void keyPressed() { InputManager.getInstance().keyPressed(); }
     public void keyReleased() { InputManager.getInstance().keyReleased(); }
 

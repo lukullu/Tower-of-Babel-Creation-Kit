@@ -21,6 +21,10 @@ public class Player extends EntityObject {
 
     private void movement()
     {
+        //if(InputManager.getInstance().isActionQueued(Actions.FORWARD )){ applyForce(new Vec2(0  , -5000)); }
+        //if(InputManager.getInstance().isActionQueued(Actions.BACKWARD)){ applyForce(new Vec2(0  , 5000));  }
+        //if(InputManager.getInstance().isActionQueued(Actions.LEFT    )){ applyForce(new Vec2(-5000, 0));   }
+        //if(InputManager.getInstance().isActionQueued(Actions.RIGHT   )){ applyForce(new Vec2(5000 , 0));   }
         if(InputManager.getInstance().isActionQueued(Actions.FORWARD )){ updatePos(new Vec2(0  , -10)); }
         if(InputManager.getInstance().isActionQueued(Actions.BACKWARD)){ updatePos(new Vec2(0  , 10));  }
         if(InputManager.getInstance().isActionQueued(Actions.LEFT    )){ updatePos(new Vec2(-10, 0));   }

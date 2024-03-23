@@ -1,10 +1,14 @@
-package com.lukullu.enums;
+package com.lukullu.tbck.enums;
 
 public enum Actions {
     FORWARD ("Forward"),
     BACKWARD ("Backward"),
     LEFT ("Left"),
-    RIGHT ("Right");
+    RIGHT ("Right"),
+    ROTATE_CLOCKWISE ("RotateClockwise"),
+    ROTATE_COUNTERCLOCKWISE ("RotateCounterClockwise"),
+    SLOWMO ("SlowMo"),
+    DEBUGTOGGLE ("DebugEnum");
 
     private final String name;
 

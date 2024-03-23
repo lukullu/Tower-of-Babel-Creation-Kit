@@ -1,6 +1,4 @@
-package com.lukullu.gameObjects;
-
-import com.lukullu.utils.ID_Manager;
+package com.lukullu.tbck.gameObjects;
 
 public interface IGameObject {
 

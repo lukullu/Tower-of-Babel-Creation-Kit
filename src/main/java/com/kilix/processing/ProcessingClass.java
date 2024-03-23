@@ -154,6 +154,7 @@ public interface ProcessingClass extends HelperMethods {
 	default void noStroke() {
 		appletWrapper.value.noStroke();
 	}
+	default void strokeWeight(float weight) { appletWrapper.value.strokeWeight(weight);}
 	
 	// - BACKGROUND - \\
 	default void background(int rgb) {

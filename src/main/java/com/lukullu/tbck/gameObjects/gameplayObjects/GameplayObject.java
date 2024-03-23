@@ -1,11 +1,10 @@
-package com.lukullu.gameObjects.gameplayObjects;
+package com.lukullu.tbck.gameObjects.gameplayObjects;
 
 import com.kilix.processing.ProcessingClass;
-import com.lukullu.UnderSquare3;
-import com.lukullu.enums.Shapes;
-import com.lukullu.gameObjects.IGameObject;
-import com.lukullu.gameObjects.gameplayObjects.entityObjects.EntityObject;
-import com.lukullu.utils.*;
+import com.lukullu.undersquare.UnderSquare3;
+import com.lukullu.tbck.enums.Shapes;
+import com.lukullu.tbck.gameObjects.IGameObject;
+import com.lukullu.tbck.utils.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,13 +14,12 @@ public class GameplayObject implements IGameObject, ProcessingClass
 {
 
     private int id = ID_Manager.getInstance().generateNewID();
-    private Shapes shapeDesc = Shapes.PENTAGON;
+    public Shapes shapeDesc = Shapes.PENTAGON;
     private Vec2 position = new Vec2(100,100);
-    private double rotation = 0; // Unit: radians
-    private double scaling = 10;
-    private ArrayList<Vec2> shape = new ArrayList<>();
+    public double rotation = 0; // Unit: radians
+    private double scaling = 1;
+    public ArrayList<Vec2> shape = new ArrayList<>();
     private ArrayList<Vec2> vertices = new ArrayList<>();
-    private int pushPriority = 1;
 
     public boolean debugOverlap = false;
 
@@ -30,46 +28,44 @@ public class GameplayObject implements IGameObject, ProcessingClass
         initShape();
         initVertices();
     }
-    public GameplayObject(Shapes shapeDesc, Vec2 position, double rotation, double scaling, int pushPriority)
+
+    public GameplayObject(Shapes shapeDesc, Vec2 position, double rotation, double scaling)
     {
         this.shapeDesc = shapeDesc;
         this.position = position;
         this.rotation = rotation;
         this.scaling = scaling;
-        this.pushPriority = pushPriority;
         initShape();
         initVertices();
     }
 
+    public GameplayObject(ArrayList<Vec2> vertices)
+    {
+        this.vertices = vertices;
+    }
+
     public int getID() { return 0; }
-    public int getPushPriority() { return pushPriority; }
     public Vec2 getPosition() { return position; }
     public ArrayList<Vec2> getVertices(){ return vertices; }
-    public void update() { updateVertices(); }
+    public void update() { updateVertices(); } // TODO: Check if this can be moved to the updatePos / updateRot functions to save resources
     public void paint()
     {
         paintPolygon(vertices);
     }
 
-    Random debugRan = new Random();
-
     public void updatePos(Vec2 delta)
     {
-
-        //debug
-
-
-
-        //rotation += PI/(160);
-        //rotation %= 2*PI;
-
         position = position.add(delta);
-        //checkForCollision(displacement,50);
         updateVertices();
-        //System.out.println("Hello");
     }
 
-    private void initShape()
+    public void updateRot(double delta)
+    {
+        rotation += delta;
+        updateVertices();
+    }
+
+    public void initShape()
     {
         int vertexCount = switch (shapeDesc) {
             case POLY -> -1; // TODO do some custom shit idk/idc
@@ -77,7 +73,12 @@ public class GameplayObject implements IGameObject, ProcessingClass
             case SQUARE -> 4;
             case PENTAGON -> 5;
             case HEXAGON -> 6;
+            case HEPTAGON -> 7;
+            case OKTAGON -> 8;
+            case POLY16 -> 16;
+            case POLY32 -> 32;
         };
+
 
         if(vertexCount != -1)
         {

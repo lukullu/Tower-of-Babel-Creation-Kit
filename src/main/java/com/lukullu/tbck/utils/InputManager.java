@@ -1,7 +1,7 @@
-package com.lukullu.utils;
+package com.lukullu.tbck.utils;
 
 import com.kilix.processing.ProcessingClass;
-import com.lukullu.enums.Actions;
+import com.lukullu.tbck.enums.Actions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,6 +36,10 @@ public class InputManager implements ProcessingClass {
         keyActions.put('s',Actions.BACKWARD);
         keyActions.put('a',Actions.LEFT);
         keyActions.put('d',Actions.RIGHT);
+        keyActions.put('e',Actions.ROTATE_CLOCKWISE);
+        keyActions.put('q',Actions.ROTATE_COUNTERCLOCKWISE);
+        keyActions.put('l',Actions.SLOWMO);
+        keyActions.put('k',Actions.DEBUGTOGGLE);
     }
     private void saveConfig(){}
     private void changeKey(){}

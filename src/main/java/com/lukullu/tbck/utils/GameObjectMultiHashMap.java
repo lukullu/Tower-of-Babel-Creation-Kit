@@ -1,7 +1,8 @@
-package com.lukullu.utils;
+package com.lukullu.tbck.utils;
 
-import com.lukullu.gameObjects.IGameObject;
-import com.lukullu.gameObjects.gameplayObjects.entityObjects.EntityObject;
+import com.lukullu.tbck.gameObjects.IGameObject;
+import com.lukullu.tbck.gameObjects.gameplayObjects.EntityObject;
+import com.lukullu.tbck.gameObjects.gameplayObjects.MetaObject;
 
 import java.util.ArrayList;
 
@@ -13,5 +14,9 @@ public class GameObjectMultiHashMap extends MultiHashMap<Class<? extends IGameOb
     public void putEntity(IGameObject value)
     {
         super.computeIfAbsent(EntityObject.class, a -> new ArrayList<>()).add(value);
+    }
+    public void putMetaObject(IGameObject value)
+    {
+        super.computeIfAbsent(MetaObject.class, a -> new ArrayList<>()).add(value);
     }
 }

@@ -13,6 +13,7 @@ public class Vec2
     {
         return new Vec2(x + other_vector.x, y + other_vector.y);
     }
+    public static Vec2 add(Vec2 v1, Vec2 v2) { return v1.add(v2); }
     public Vec2 subtract(Vec2 other_vector)
     {
         return new Vec2(x - other_vector.x, y - other_vector.y);

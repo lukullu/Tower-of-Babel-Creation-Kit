@@ -1,8 +1,7 @@
 package com.lukullu.tbck.gameObjects.gameplayObjects;
 
 import com.lukullu.tbck.enums.Shapes;
-import com.lukullu.tbck.utils.MyMath;
-import com.lukullu.tbck.utils.Triangle;
+import com.lukullu.tbck.utils.Polygon;
 import com.lukullu.tbck.utils.Vec2;
 
 import java.util.ArrayList;
@@ -10,59 +9,22 @@ import java.util.ArrayList;
 public class MeshObject extends GameplayObject
 {
 
-    ArrayList<Triangle> shapeTriangles = new ArrayList<>();
-
-    MeshObject(Shapes shapeDesc, Vec2 position, double rotation, double scaling)
+    public MeshObject(Shapes shapeDesc, Vec2 position, double rotation, double scaling)
     {
         super(shapeDesc, position, rotation, scaling);
-        shapeTriangles = constructTrianglesRec(new ArrayList<>(),getVertices(),1);
+        setPolygons(constructTriangles());
     }
 
-    @Override
-    public void update()
+    private ArrayList<Polygon> constructTriangles()
     {
-        super.update();
-        //shapeTriangles = constructTrianglesRec(new ArrayList<>(),this.getVertices(),1);
-    }
-
-    @Override
-    public void paint()
-    {
-        //super.paint();
-        fill(255);
-        for (Triangle triangle: shapeTriangles)
-        {
-            //if(!triangle.enabled) fill(255,0,0);
-            //else fill(255);
-            if(triangle.enabled) paintTriangle(triangle);
-        }
-
-    }
-
-    @Override
-    public void updatePos(Vec2 delta)
-    {
-        super.updatePos(delta);
-
-        for(Triangle triangle : shapeTriangles)
-        {
-            triangle.updatePos(delta);
-        }
-    }
-
-    @Override
-    public void updateRot(double delta)
-    {
-        super.updateRot(delta);
-
-        for(Triangle triangle : shapeTriangles)
-        {
-            triangle.updateRot(this.getPosition(),delta);
-        }
+        ArrayList<Polygon> acc = new ArrayList<>();
+        for(Polygon polygon : getPolygons())
+            acc.addAll(constructTrianglesRec(new ArrayList<>(),polygon.getVertices(),1));
+        return acc;
     }
 
     // depth has to start at 1!
-    private ArrayList<Triangle> constructTrianglesRec(ArrayList<Triangle> triangles, ArrayList<Vec2> vertices, int depth)
+    private ArrayList<Polygon> constructTrianglesRec(ArrayList<Polygon> triangles, ArrayList<Vec2> vertices, int depth)
     {
 
         // Recursion Beginning
@@ -70,7 +32,11 @@ public class MeshObject extends GameplayObject
         {
             for (int i = 0; i < vertices.size()-2; i++)
             {
-                triangles.add(new Triangle(vertices.get(i*2),vertices.get(i*2+1),vertices.get((i*2+2) % vertices.size())));
+                ArrayList<Vec2> triangle = new ArrayList<>();
+                triangle.add(vertices.get(i*2));
+                triangle.add(vertices.get(i*2+1));
+                triangle.add(vertices.get((i*2+2) % vertices.size()));
+                triangles.add(new Polygon(triangle));
             }
             return triangles;
         }
@@ -80,7 +46,12 @@ public class MeshObject extends GameplayObject
         ArrayList<Vec2> newVertices = new ArrayList<>();
         for(int i = 0; i < trianglesInLayer; i++)
         {
-            triangles.add(new Triangle(vertices.get(i*2),vertices.get(i*2+1),vertices.get((i*2+2) % vertices.size())));
+            ArrayList<Vec2> triangle = new ArrayList<>();
+            triangle.add(vertices.get(i*2));
+            triangle.add(vertices.get(i*2+1));
+            triangle.add(vertices.get((i*2+2) % vertices.size()));
+            triangles.add(new Polygon(triangle));
+
             newVertices.add(vertices.get((i*2+2) % vertices.size()));
         }
 
@@ -90,16 +61,6 @@ public class MeshObject extends GameplayObject
         }
 
         return constructTrianglesRec(triangles,newVertices,depth+1);
-    }
-
-    private void paintTriangle(Triangle triangle)
-    {
-        beginShape();
-        vertex((float)triangle.v1.x,(float)triangle.v1.y);
-        vertex((float)triangle.v2.x,(float)triangle.v2.y);
-        vertex((float)triangle.v3.x,(float)triangle.v3.y);
-        vertex((float)triangle.v1.x,(float)triangle.v1.y);
-        endShape();
     }
 
 }

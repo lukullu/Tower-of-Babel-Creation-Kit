@@ -301,6 +301,8 @@ public interface ProcessingClass extends HelperMethods {
 		return appletWrapper.value.random(lowerBound.floatValue(), upperBound.floatValue());
 	}
 	default void beginShape(){ appletWrapper.value.beginShape(); }
+	default void beginShape(int v){ appletWrapper.value.beginShape(v); }
 	default void endShape(){ appletWrapper.value.endShape(); }
+	default void endShape(int v){ appletWrapper.value.endShape(v); }
 	default void vertex( float x, float y){ appletWrapper.value.vertex(x,y); }
 }

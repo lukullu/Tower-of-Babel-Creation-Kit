@@ -136,7 +136,17 @@ public class GameplayObject implements IGameObject, ProcessingClass
         {
             vertex((float) polygon.getVertices().get(i % polygon.getVertices().size()).x,(float) polygon.getVertices().get(i % polygon.getVertices().size()).y);
         }
-        endShape();
+        endShape(CLOSE);
+
+        //TODO: Debug remove
+
+        fill(255,0,0);
+        rectMode(CENTER);
+        for (int i = 0; i < polygon.getVertices().size() + 1; i++)
+        {
+            ellipse((float)polygon.getPosition().x,(float)polygon.getPosition().y,2,2);
+        }
+        fill(255);
     }
 
 }

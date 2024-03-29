@@ -12,7 +12,7 @@ import java.util.Objects;
 public class EntityObject extends MeshObject {
 
     public int pushPriority;
-    public double mass = 2; // Unit: kg
+    public double mass = 2.5; // Unit: kg
     public Vec2 force = Vec2.ZERO_VECTOR2;
 
     //DEBUG
@@ -74,7 +74,7 @@ public class EntityObject extends MeshObject {
                     if (!res.collisionCheck){ continue; }
 
                     Vec2 combinedForce = this.force.subtract(entity.force);
-                    Vec2 queryForce = combinedForce.multiply(entity.mass / (this.mass + entity.mass));
+                    Vec2 queryForce = combinedForce.multiply(this.mass / (this.mass + entity.mass));
                     Vec2 generalDirectionQuery = this.getPosition().subtract(entity.getPosition());
                     Vec2 deltaNorm = res.delta.normalise();
 
@@ -85,10 +85,6 @@ public class EntityObject extends MeshObject {
                     }
 
                     this.updatePos(res.delta.multiply(1));
-
-                    stroke(255,0,0);
-                    line((float)getPosition().x,(float)getPosition().y,(float)(getPosition().x+res.delta.x),(float)(getPosition().y+res.delta.y));
-                    stroke(0);
 
                     out.add(getPolygons().get(i));
                 }

@@ -1,2 +1,3 @@
-rootProject.name = "UnderSquare3"
+rootProject.name = "TowerOfBabelCreationKit"
 
+include("common", "editor", "game")

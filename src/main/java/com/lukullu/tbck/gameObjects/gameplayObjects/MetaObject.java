@@ -4,7 +4,7 @@ package com.lukullu.tbck.gameObjects.gameplayObjects;
 import com.lukullu.tbck.enums.Shapes;
 import com.lukullu.tbck.utils.Collision;
 import com.lukullu.tbck.utils.CollisionResult;
-import com.lukullu.tbck.utils.Triangle;
+import com.lukullu.tbck.utils.Polygon;
 import com.lukullu.tbck.utils.Vec2;
 import com.lukullu.undersquare.UnderSquare3;
 
@@ -23,9 +23,18 @@ public class MetaObject extends GameplayObject
         this.action = action;
         this.isContinuous = isContinuous;
     }
-    public MetaObject(ArrayList<Vec2> vertices, Runnable action, boolean isTrigger)
+    public MetaObject(ArrayList<Polygon> polygons, Vec2 position, Runnable action, boolean isTrigger)
     {
-        super(vertices);
+        super(new ArrayList<>(polygons
+                .stream()
+                .map((polygon) -> new Polygon(new ArrayList<>(polygon
+                    .getVertices()
+                    .stream()
+                    .map((vertex)->vertex
+                            .add(position))
+                    .toList())))
+                .toList()),position,0);
+
         this.action = action;
         this.isContinuous = isTrigger;
     }
@@ -39,18 +48,20 @@ public class MetaObject extends GameplayObject
 
     private void collisionUpdate()
     {
+        @SuppressWarnings("all")
         List<EntityObject> entities = (List<EntityObject>)(Object) UnderSquare3.getGameObjects().get(EntityObject.class);
 
         ArrayList<CollisionResult> out = new ArrayList<>();
 
+        if(entities == null) return;
+
         for (EntityObject entity : entities)
         {
-
-            for (Triangle triangle : entity.shapeTriangles)
+            for (Polygon polygon : getPolygons())
             {
-                if(triangle.enabled)
+                for (Polygon entityPolygon : entity.getPolygons())
                 {
-                    CollisionResult res = Collision.collisionResolutionSAT(this.getVertices(),this.getPosition(),triangle.getVertices(),triangle.getPosition());
+                    CollisionResult res = Collision.collisionResolutionSAT(polygon.getVertices(), polygon.getPosition(), entityPolygon.getVertices(), entityPolygon.getPosition());
 
                     if(res.collisionCheck)
                     {

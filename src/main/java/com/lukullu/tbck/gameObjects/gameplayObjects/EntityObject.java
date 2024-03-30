@@ -7,20 +7,27 @@ import com.lukullu.tbck.enums.Shapes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class EntityObject extends MeshObject {
+public class EntityObject extends GameplayObject {
 
-    public int pushPriority;
-    public double mass = 2; // Unit: kg
+    public static final double gravity = 10;
+    public double mass = 2.5; // Unit: kg
     public Vec2 force = Vec2.ZERO_VECTOR2;
 
-    public EntityObject(Shapes shapeDesc, Vec2 position, double rotation, double scaling, int pushPriority)
+    //DEBUG
+    private Vec2 deltaPos = Vec2.ZERO_VECTOR2;
+
+    public EntityObject(Shapes shapeDesc, Vec2 position, double rotation, double scaling)
     {
         super(shapeDesc, position, rotation, scaling);
-        this.pushPriority = pushPriority;
     }
 
-    public int getPushPriority() { return pushPriority; }
+    public EntityObject(ArrayList<Polygon> polygons, Vec2 position, double rotation)
+    {
+        super(polygons, position, rotation);
+    }
+
 
     public void applyForce(Vec2 appliedForce)
     {
@@ -31,102 +38,71 @@ public class EntityObject extends MeshObject {
     public void update()
     {
 
-        if(InputManager.getInstance().isActionQueued(Actions.DEBUGTOGGLE))
-        {
-            ArrayList<Triangle> colliders = collisionUpdateTriangles();
-            for( Triangle triangle : colliders ) { triangle.enabled = false; }
-        }
-        else
-        {
-            ArrayList<Triangle> colliders = collisionUpdateTriangles();
-            //collisionUpdatePolygon();
-        }
-
         updatePos(calcDeltaPos());
-        super.update();
 
         // TODO: Temp; Actually make this work properly | Friction
-        applyForce(force.multiply(-1 * 0.05));
+        double coefficientOfFriction = 0.05;
+        if(!force.equals(Vec2.ZERO_VECTOR2)) applyForce(force.multiply(-1 * coefficientOfFriction));
     }
 
     public Vec2 calcDeltaPos()
     {
         Vec2 acceleration = force.divide(mass);
         Vec2 velocity = acceleration.multiply(DeltaTimer.getInstance().getDeltaTime());
-        return velocity.multiply(DeltaTimer.getInstance().getDeltaTime());
+        Vec2 delta = velocity.multiply(DeltaTimer.getInstance().getDeltaTime()).multiply(100).add(deltaPos); // 1px = 1cm
+        deltaPos = Vec2.ZERO_VECTOR2;
+        return delta;
     }
 
-    public void collisionUpdatePolygon()
-    {
-        @SuppressWarnings("all")
-        List<EntityObject> entities = (List<EntityObject>)(Object)UnderSquare3.getGameObjects().get(EntityObject.class);
-        for (EntityObject entity : entities) {
-            if (this != entity) {
-                CollisionResult res = Collision.collisionResolutionSAT(this,entity);
-
-                if(res.collisionCheck) {
-
-                    if (this.getPushPriority() <= entity.getPushPriority()) {this.updatePos(res.delta); }
-                    else entity.updatePos(res.delta.multiply(-1));
-
-                    Vec2 combinedForce = this.force.subtract(entity.force);
-                    Vec2 queryForce = combinedForce.multiply(entity.mass / (this.mass + entity.mass));
-                    Vec2 generalDirectionQuery = this.getPosition().subtract(entity.getPosition());
-
-                    Vec2 deltaNorm = res.delta.normalise();
-
-                    if(!(Double.isNaN(deltaNorm.x) || Double.isNaN(deltaNorm.y)))
-                    {
-                        this.applyForce(res.delta.normalise().multiply(-1).multiply(queryForce).align(generalDirectionQuery));
-                    }
-                }
-            }
-        }
-    }
-
-    public ArrayList<Triangle> collisionUpdateTriangles()
+    public ArrayList<Polygon> dynamicCollisionUpdatePolygon()
     {
         @SuppressWarnings("all")
         List<EntityObject> entities = (List<EntityObject>)(Object)UnderSquare3.getGameObjects().get(EntityObject.class);
 
-        ArrayList<Triangle> out = new ArrayList<>();
+        ArrayList<Polygon> out = new ArrayList<>();
 
         for (EntityObject entity : entities)
         {
-            if (this != entity) {
-                for (Triangle triangle : shapeTriangles)
+            if (this.equals(entity)) { continue; }
+
+            for (int i = 0; i < getPolygons().size(); i++)
+            {
+                for (int j = 0; j < entity.getPolygons().size(); j++)
                 {
-                    if(triangle.enabled)
+                    //CollisionResult res = Collision.collisionResolutionSAT(polygon.getVertices(), polygon.getPosition(), entityPolygon.getVertices(), entityPolygon.getPosition());
+                    CollisionResult res = Collision.collisionResolutionSAT(getPolygons().get(i).getVertices(), this.getPosition(), entity.getPolygons().get(j).getVertices(), entity.getPosition());
+
+                    if (!res.collisionCheck){ continue; }
+
+                    Vec2 combinedForce = this.force.subtract(entity.force);
+                    Vec2 queryForce = combinedForce.multiply(this.mass / (this.mass + entity.mass));
+                    Vec2 generalDirectionQuery = this.getPosition().subtract(entity.getPosition());
+                    Vec2 deltaNorm = res.delta.normalise();
+
+                    if (!(Double.isNaN(deltaNorm.x) || Double.isNaN(deltaNorm.y)))
                     {
-                        for(Triangle entityTriangle : entity.shapeTriangles)
-                        {
-                            if(entityTriangle.enabled)
-                            {
-                                CollisionResult res = Collision.collisionResolutionSAT(triangle.getVertices(),triangle.getPosition(),entityTriangle.getVertices(),entityTriangle.getPosition());
-
-                                if(res.collisionCheck)
-                                {
-                                    if (this.getPushPriority() <= entity.getPushPriority()) {this.updatePos(res.delta); }
-                                    else entity.updatePos(res.delta.multiply(-1));
-
-                                    Vec2 combinedForce = this.force.subtract(entity.force);
-                                    Vec2 queryForce = combinedForce.multiply(entity.mass / (this.mass + entity.mass));
-                                    Vec2 generalDirectionQuery = triangle.getPosition().subtract(entityTriangle.getPosition());
-
-                                    Vec2 deltaNorm = res.delta.normalise();
-
-                                    if(!(Double.isNaN(deltaNorm.x) || Double.isNaN(deltaNorm.y)))
-                                    {
-                                        this.applyForce(res.delta.normalise().multiply(-1).multiply(queryForce).align(generalDirectionQuery));
-                                    }
-                                    out.add(triangle);
-                                }
-                            }
-                        }
+                        this.applyForce(deltaNorm.multiply(queryForce).align(generalDirectionQuery).multiply(1));
+                        entity.applyForce(deltaNorm.multiply(queryForce).align(generalDirectionQuery).multiply(-1));
                     }
+
+                    this.updatePos(res.delta.multiply(1));
+
+                    out.add(getPolygons().get(i));
                 }
             }
         }
         return out;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof EntityObject that)) return false;
+        return Double.compare(mass, that.mass) == 0 && Objects.equals(force, that.force) && Objects.equals(deltaPos, that.deltaPos);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash( mass, force, deltaPos);
     }
 }

@@ -1,5 +1,9 @@
 package com.lukullu.tbck.utils;
 
+import com.lukullu.undersquare.enums.SegmentRoles;
+
+import java.util.ArrayList;
+
 public class CollisionResult
 {
     public boolean collisionCheck;
@@ -13,5 +17,13 @@ public class CollisionResult
         this.collisionAxisOriginIsQuery = collisionAxisOriginIsQuery;
         this.delta = delta;
         this.collisionCheck = collisionCheck;
+    }
+
+    public static class SegmentData
+    {
+        public SegmentRoles role;
+        public ArrayList<Vec2> vertices;
+        public Double ArmorPoints;
+
     }
 }

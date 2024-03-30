@@ -9,6 +9,7 @@ import com.lukullu.tbck.gameObjects.gameplayObjects.MeshObject;
 import com.lukullu.tbck.gameObjects.gameplayObjects.MetaObject;
 import com.lukullu.tbck.utils.*;
 import com.lukullu.undersquare.entities.Player;
+import com.lukullu.undersquare.entityTypes.SegmentEntity;
 
 import java.util.List;
 
@@ -19,8 +20,8 @@ public class UnderSquare3 extends ExtendedPApplet {
     public void setup()
     {
         gameObjects.putEntity(new Player(Shapes.HEXAGON,new Vec2(600,600), 0, 50));
-        gameObjects.putEntity(new EntityObject(Shapes.POLY16,new Vec2(1000,450), 0, 150,2));
-        gameObjects.putEntity(new EntityObject(Shapes.SQUARE,new Vec2(1400,600), 0, 75,2));
+        gameObjects.putEntity(new EntityObject(Shapes.SQUARE,new Vec2(900,600),0,75));
+        gameObjects.putEntity(new SegmentEntity("src/main/resources/shapeFiles/testShape.psff",new Vec2(1400,600), 0, 2));
         //gameObjects.putMetaObject(new MetaObject(Shapes.SQUARE,new Vec2(1000,700), 0, 75,()->{System.out.println("Hello World");},false));
 
 

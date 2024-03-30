@@ -24,7 +24,7 @@ public class StaticObject extends GameplayObject
                         .map((vertex)->vertex
                                 .add(position))
                         .toList())))
-                .toList()));
+                .toList()),position,0);
     }
 
 

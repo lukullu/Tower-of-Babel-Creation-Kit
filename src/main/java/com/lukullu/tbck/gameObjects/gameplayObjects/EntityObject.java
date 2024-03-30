@@ -9,22 +9,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class EntityObject extends MeshObject {
+public class EntityObject extends GameplayObject {
 
-    public int pushPriority;
+    public static final double gravity = 10;
     public double mass = 2.5; // Unit: kg
     public Vec2 force = Vec2.ZERO_VECTOR2;
 
     //DEBUG
     private Vec2 deltaPos = Vec2.ZERO_VECTOR2;
 
-    public EntityObject(Shapes shapeDesc, Vec2 position, double rotation, double scaling, int pushPriority)
+    public EntityObject(Shapes shapeDesc, Vec2 position, double rotation, double scaling)
     {
         super(shapeDesc, position, rotation, scaling);
-        this.pushPriority = pushPriority;
     }
 
-    public int getPushPriority() { return pushPriority; }
+    public EntityObject(ArrayList<Polygon> polygons, Vec2 position, double rotation)
+    {
+        super(polygons, position, rotation);
+    }
+
 
     public void applyForce(Vec2 appliedForce)
     {
@@ -37,11 +40,9 @@ public class EntityObject extends MeshObject {
 
         updatePos(calcDeltaPos());
 
-        //ArrayList<Polygon> colliders = dynamicCollisionUpdatePolygon();
-
         // TODO: Temp; Actually make this work properly | Friction
-        applyForce(force.multiply(-1 * 0.05));
-
+        double coefficientOfFriction = 0.05;
+        if(!force.equals(Vec2.ZERO_VECTOR2)) applyForce(force.multiply(-1 * coefficientOfFriction));
     }
 
     public Vec2 calcDeltaPos()
@@ -97,11 +98,11 @@ public class EntityObject extends MeshObject {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof EntityObject that)) return false;
-        return pushPriority == that.pushPriority && Double.compare(mass, that.mass) == 0 && Objects.equals(force, that.force) && Objects.equals(deltaPos, that.deltaPos);
+        return Double.compare(mass, that.mass) == 0 && Objects.equals(force, that.force) && Objects.equals(deltaPos, that.deltaPos);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pushPriority, mass, force, deltaPos);
+        return Objects.hash( mass, force, deltaPos);
     }
 }

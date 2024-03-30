@@ -33,7 +33,7 @@ public class MetaObject extends GameplayObject
                     .map((vertex)->vertex
                             .add(position))
                     .toList())))
-                .toList()));
+                .toList()),position,0);
 
         this.action = action;
         this.isContinuous = isTrigger;

@@ -1,23 +1,23 @@
 package com.lukullu.tbck.gameObjects.gameplayObjects;
 
 import com.kilix.processing.ProcessingClass;
-import com.lukullu.undersquare.UnderSquare3;
 import com.lukullu.tbck.enums.Shapes;
 import com.lukullu.tbck.gameObjects.IGameObject;
 import com.lukullu.tbck.utils.*;
+import com.lukullu.undersquare.utils.PSFF_Utils;
+import com.lukullu.undersquare.utils.SegmentData;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class GameplayObject implements IGameObject, ProcessingClass
 {
 
     private int id = ID_Manager.getInstance().generateNewID();
     public Shapes shapeDesc = Shapes.PENTAGON;
-    private Vec2 position = new Vec2(100,100);
+    private Vec2 position = new Vec2(0,0);
     public double rotation = 0; // Unit: radians
     private double scaling = 1;
-    public ArrayList<Vec2> shape = new ArrayList<>();
+    public ArrayList<Polygon> shape = new ArrayList<>();
     private ArrayList<Polygon> polygons = new ArrayList<>();
 
     public boolean debugOverlap = false;
@@ -38,9 +38,12 @@ public class GameplayObject implements IGameObject, ProcessingClass
         initVertices();
     }
 
-    public GameplayObject(ArrayList<Polygon> shapes)
+    public GameplayObject(ArrayList<Polygon> shape, Vec2 position, double rotation)
     {
-        this.polygons = shapes;
+        this.shape = shape;
+        this.rotation = rotation;
+        this.position = position;
+        initVertices();
     }
 
     public int getID() { return 0; }
@@ -87,22 +90,23 @@ public class GameplayObject implements IGameObject, ProcessingClass
             double radialFractions = ( 2 * PI ) / vertexCount;
             double radialAccumulator = MyMath.isEven(vertexCount) ? radialFractions / 2 : 0;
 
+            ArrayList<Vec2> newShape = new ArrayList<>();
+
             for (int i = 0; i < vertexCount; i++)
             {
                 Vec2 noramlVec2 = new Vec2(1,0);
-                shape.add(new Vec2(
+                newShape.add(new Vec2(
                         (noramlVec2.x * Math.cos(radialAccumulator) - noramlVec2.y * Math.sin(radialAccumulator)) * scaling,
                         (noramlVec2.y * Math.cos(radialAccumulator) + noramlVec2.x * Math.sin(radialAccumulator)) * scaling));
 
                 radialAccumulator += radialFractions;
             }
+            shape.add(new Polygon(newShape));
         }
     }
     private void initVertices()
     {
-        Polygon polygon = new Polygon(new ArrayList<>(shape));
-        polygons.add(polygon);
-
+        polygons.addAll(shape);
         updateVertices(position,rotation);
     }
     public void updateVertices(Vec2 deltaPos, double deltaRot)
@@ -119,8 +123,8 @@ public class GameplayObject implements IGameObject, ProcessingClass
         ArrayList<Vec2> output = new ArrayList<Vec2>();
         for (Vec2 vertex : vertices) {
 
-            vertex = vertex.rotate(getPosition(),rotation);
             vertex = vertex.add(position);
+            vertex = vertex.rotate(getPosition(),rotation);
 
             output.add(vertex);
         }
@@ -148,5 +152,6 @@ public class GameplayObject implements IGameObject, ProcessingClass
         }
         fill(255);
     }
+
 
 }

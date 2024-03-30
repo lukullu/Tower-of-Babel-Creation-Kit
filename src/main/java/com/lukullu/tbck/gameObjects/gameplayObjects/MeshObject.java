@@ -15,6 +15,11 @@ public class MeshObject extends GameplayObject
         setPolygons(constructTriangles());
     }
 
+    public MeshObject()
+    {
+
+    }
+
     private ArrayList<Polygon> constructTriangles()
     {
         ArrayList<Polygon> acc = new ArrayList<>();

@@ -11,5 +11,7 @@ public class SegmentData
     public int ArmorPoints;
     public SegmentRoles role;
 
+    public boolean enabled = true;
+
 
 }

@@ -131,7 +131,7 @@ public class GameplayObject implements IGameObject, ProcessingClass
         return new Polygon(output);
     }
 
-    private void paintPolygon(Polygon polygon)
+    protected void paintPolygon(Polygon polygon)
     {
         fill(255);
 

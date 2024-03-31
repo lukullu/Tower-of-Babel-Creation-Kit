@@ -10,8 +10,7 @@ public class SegmentData
     public ArrayList<Vec2> vertices;
     public int ArmorPoints;
     public SegmentRoles role;
-
-    public boolean enabled = true;
+    public transient boolean enabled = true;
 
 
 }

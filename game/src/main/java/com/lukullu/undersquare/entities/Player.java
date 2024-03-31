@@ -1,13 +1,10 @@
 package com.lukullu.undersquare.entities;
 
 import com.lukullu.tbck.enums.Actions;
-import com.lukullu.tbck.gameObjects.gameplayObjects.EntityObject;
-import com.lukullu.tbck.enums.Shapes;
 import com.lukullu.tbck.utils.DeltaTimer;
 import com.lukullu.tbck.utils.InputManager;
-import com.lukullu.tbck.utils.Vec2;
+import com.tbck.math.Vec2;
 import com.lukullu.undersquare.entityTypes.SegmentEntity;
-import com.lukullu.undersquare.utils.SegmentData;
 
 public class Player extends SegmentEntity {
 

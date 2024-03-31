@@ -1,8 +1,10 @@
 package com.lukullu.undersquare.utils;
 
-import com.lukullu.undersquare.enums.SegmentRoles;
-import com.lukullu.tbck.utils.Vec2;
+import com.tbck.data.entity.SegmentRoles;
+import com.tbck.math.Vec2;
+import com.tbck.data.entity.SegmentData;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -30,9 +32,10 @@ public class PSFF_Utils {
     public static SegmentData getVerticesFromLine(String data)
     {
         try {
-            SegmentData out = new SegmentData();
 
             ArrayList<Vec2> vertices = new ArrayList<>();
+
+            SegmentData out = new SegmentData(vertices);
 
             String[] dataEntries = data.split(":");
 

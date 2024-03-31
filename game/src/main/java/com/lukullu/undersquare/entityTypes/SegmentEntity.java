@@ -3,11 +3,11 @@ package com.lukullu.undersquare.entityTypes;
 import com.lukullu.tbck.gameObjects.gameplayObjects.EntityObject;
 import com.lukullu.tbck.utils.Collision;
 import com.lukullu.tbck.utils.CollisionResult;
-import com.lukullu.tbck.utils.Polygon;
-import com.lukullu.tbck.utils.Vec2;
+import com.tbck.math.Polygon;
+import com.tbck.math.Vec2;
 import com.lukullu.undersquare.UnderSquare3;
 import com.lukullu.undersquare.utils.PSFF_Utils;
-import com.lukullu.undersquare.utils.SegmentData;
+import com.tbck.data.entity.SegmentData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,8 +127,8 @@ public class SegmentEntity extends EntityObject
             furthestPolygon = out.get(0);
         }
 
-        if(getPolygons().contains(furthestPolygon))
-            segments.get(getPolygons().indexOf(furthestPolygon)).enabled = false;
+        //if(getPolygons().contains(furthestPolygon))
+            //segments.get(getPolygons().indexOf(furthestPolygon)).enabled = false;
 
         return out;
     }

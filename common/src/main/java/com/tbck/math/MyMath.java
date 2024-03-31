@@ -1,4 +1,4 @@
-package com.lukullu.tbck.utils;
+package com.tbck.math;
 
 public class MyMath {
 

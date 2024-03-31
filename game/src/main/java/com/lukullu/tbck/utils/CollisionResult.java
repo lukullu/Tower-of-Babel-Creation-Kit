@@ -1,6 +1,7 @@
 package com.lukullu.tbck.utils;
 
-import com.lukullu.undersquare.enums.SegmentRoles;
+import com.tbck.data.entity.SegmentRoles;
+import com.tbck.math.Vec2;
 
 import java.util.ArrayList;
 

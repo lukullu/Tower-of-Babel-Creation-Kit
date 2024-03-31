@@ -6,13 +6,15 @@ import com.lukullu.tbck.enums.Shapes;
 import com.lukullu.tbck.utils.DeltaTimer;
 import com.lukullu.tbck.utils.InputManager;
 import com.lukullu.tbck.utils.Vec2;
+import com.lukullu.undersquare.entityTypes.SegmentEntity;
+import com.lukullu.undersquare.utils.SegmentData;
 
-public class Player extends EntityObject {
+public class Player extends SegmentEntity {
 
     private static final Vec2 MOVEMENT_FORCE = new Vec2(50,50);
 
-    public Player(Shapes shapeDesc, Vec2 position, double rotation, double scaling) {
-        super(shapeDesc, position, rotation, scaling);
+    public Player(String psff_url, Vec2 position, double rotation, double scaling) {
+        super(psff_url, position, rotation, scaling);
         mass = 2;
     }
 

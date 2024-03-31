@@ -31,6 +31,7 @@ public class Vec2
     public Vec2 mod(Vec2 other_vector) { return new Vec2(x % other_vector.x, y % other_vector.y); }
     public Vec2 mod(double value) { return new Vec2(x % value, y % value); }
     public double length(){return Math.sqrt(Math.max(0, x*x + y*y)); }
+    public double length2(){return x*x + y*y; }
     public Vec2 normalise(){ return this.divide(this.length()); }
     public static double dotProduct(Vec2 v1, Vec2 v2){ return v1.x * v2.x + v1.y * v2.y; }
     public Vec2 align(Vec2 other_vector){ return new Vec2 (Math.signum(other_vector.x) * Math.abs(x), Math.signum(other_vector.y) * Math.abs(y)); }

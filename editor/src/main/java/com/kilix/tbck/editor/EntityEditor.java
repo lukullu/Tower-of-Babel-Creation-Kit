@@ -17,7 +17,7 @@ public class EntityEditor extends EditorPanel {
 	
 	static {
 		try {
-			Files.createDirectories(ENTITY_TEMPLATE_STORAGE_DIRECTORY);
+			Files.createDirectories(ENTITY_TEMPLATE_DIRECTORY);
 		} catch (IOException e) { e.printStackTrace(); }
 	}
 	
@@ -68,7 +68,7 @@ public class EntityEditor extends EditorPanel {
 			chooser.setVisible(true);
 			chooser.setMultiSelectionEnabled(false);
 			chooser.setFileFilter(FILE_FILTER);
-			chooser.setCurrentDirectory(ENTITY_TEMPLATE_STORAGE_DIRECTORY.toFile());
+			chooser.setCurrentDirectory(ENTITY_TEMPLATE_DIRECTORY.toFile());
 			
 			if (chooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) return;
 			file = chooser.getSelectedFile();
@@ -98,7 +98,7 @@ public class EntityEditor extends EditorPanel {
 			chooser.setVisible(true);
 			chooser.setMultiSelectionEnabled(false);
 			chooser.setFileFilter(FILE_FILTER);
-			chooser.setCurrentDirectory(ENTITY_TEMPLATE_STORAGE_DIRECTORY.toFile());
+			chooser.setCurrentDirectory(ENTITY_TEMPLATE_DIRECTORY.toFile());
 			
 			if (chooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) return;
 			file = chooser.getSelectedFile();

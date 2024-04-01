@@ -3,6 +3,7 @@ package com.lukullu.undersquare.entityTypes;
 import com.lukullu.tbck.gameObjects.gameplayObjects.EntityObject;
 import com.lukullu.tbck.utils.Collision;
 import com.lukullu.tbck.utils.CollisionResult;
+import com.tbck.data.entity.SegmentDataManager;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
 import com.lukullu.undersquare.UnderSquare3;
@@ -15,12 +16,13 @@ import java.util.List;
 public class SegmentEntity extends EntityObject
 {
 
-    ArrayList<SegmentData> segments = new ArrayList<>();
+    @Deprecated
+    public ArrayList<SegmentData> segments = new ArrayList<>();
 
-    public SegmentEntity(String psff_url, Vec2 position, double rotation, double scaling)
+    public SegmentEntity(String psff_resource, Vec2 position, double rotation, double scaling)
     {
-        super(polygonsFromPSFF(psff_url,scaling),position,rotation);
-        segments = segmentsFromPSFF(psff_url);
+        super(SegmentDataManager.loadInternal(psff_resource),position,rotation);
+        segments = SegmentDataManager.loadInternal(psff_resource);
     }
 
     @Override
@@ -31,7 +33,7 @@ public class SegmentEntity extends EntityObject
                 paintPolygon(getPolygons().get(i));
     }
 
-    private static ArrayList<Polygon> polygonsFromPSFF(String url,double scaling)
+    private static ArrayList<Polygon> polygonsFromPSFF(String url, double scaling)
     {
         ArrayList<Polygon> polygons = new ArrayList<>();
         ArrayList<String> dataLines = PSFF_Utils.getLines(url);

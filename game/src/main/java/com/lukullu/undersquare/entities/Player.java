@@ -10,8 +10,8 @@ public class Player extends SegmentEntity {
 
     private static final Vec2 MOVEMENT_FORCE = new Vec2(50,50);
 
-    public Player(String psff_url, Vec2 position, double rotation, double scaling) {
-        super(psff_url, position, rotation, scaling);
+    public Player(String psff_resource, Vec2 position, double rotation, double scaling) {
+        super(psff_resource, position, rotation, scaling);
         mass = 2;
     }
 

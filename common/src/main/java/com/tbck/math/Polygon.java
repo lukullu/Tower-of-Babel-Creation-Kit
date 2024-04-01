@@ -18,6 +18,12 @@ public class Polygon implements Serializable
         this.vertices = vertices;
     }
     
+    public Polygon scale(double scale) {
+        return new Polygon(new ArrayList<>(
+                vertices.stream().map(vec -> vec.multiply(scale)).toList()
+        ));
+    }
+    
     public java.awt.Polygon asNative() {
         int[] xPoints = new int[vertices.size()];
         int[] yPoints = new int[vertices.size()];
@@ -44,13 +50,6 @@ public class Polygon implements Serializable
         return acc.divide(counter);
     }
 
-//    @Override
-//    public String toString() {
-//        return "Polygon{" +
-//                "vertices=" + vertices.stream().map(Vec2::toString) +
-//                '}';
-//    }
-    
     
     public String toString() {
         return "Polygon{" +

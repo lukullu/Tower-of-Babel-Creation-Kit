@@ -24,7 +24,7 @@ public class EntityObject extends GameplayObject {
         super(shapeDesc, position, rotation, scaling);
     }
 
-    public EntityObject(ArrayList<Polygon> polygons, Vec2 position, double rotation)
+    public EntityObject(ArrayList<? extends Polygon> polygons, Vec2 position, double rotation)
     {
         super(polygons, position, rotation);
     }

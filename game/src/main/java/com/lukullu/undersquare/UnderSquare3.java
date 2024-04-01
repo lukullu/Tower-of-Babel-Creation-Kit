@@ -12,6 +12,7 @@ import com.tbck.data.entity.SegmentDataManager;
 import com.tbck.math.Vec2;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class UnderSquare3 extends ExtendedPApplet {
@@ -20,23 +21,30 @@ public class UnderSquare3 extends ExtendedPApplet {
 
     public void setup()
     {
-        Player player = new Player("../game/src/main/resources/shapeFiles/playerShape.psff",new Vec2(600,600), 0, 5);
-        SegmentEntity testEntity = new SegmentEntity("../game/src/main/resources/shapeFiles/testShape.psff",new Vec2(1400,600), 0, 5);
+        // "../game/src/main/resources/shapeFiles/playerShape.psff"
         
-        try {
-            SegmentDataManager.saveExternal(new File("./player.psff"), player.getPolygons());
-            SegmentDataManager.saveExternal(new File("./testShape.psff"), testEntity.getPolygons());
-        } catch (Exception e) { throw new RuntimeException(e); }
         
-        System.exit(0);
-        gameObjects.putEntity(player);
+        gameObjects.putEntity(new Player("/shapeFiles/playerShape.psff", new Vec2(600,600), 0, 5));
         gameObjects.putEntity(new EntityObject(Shapes.SQUARE,new Vec2(900,600),0,75));
-        gameObjects.putEntity(testEntity);
+        gameObjects.putEntity(new SegmentEntity("/shapeFiles/testShape.psff",new Vec2(1400,600), 0, 5));
         //gameObjects.putMetaObject(new MetaObject(Shapes.SQUARE,new Vec2(1000,700), 0, 75,()->{System.out.println("Hello World");},false));
 
 
     }
 
+    private static final void storeShapes() {
+        Player player = new Player("../game/src/main/resources/shapeFiles/legacy/playerShape.psff", new Vec2(600,600), 0, 5);
+        SegmentEntity testEntity = new SegmentEntity("../game/src/main/resources/shapeFiles/legacy/testShape.psff",new Vec2(1400,600), 0, 5);
+        
+        try {
+            SegmentDataManager.saveExternal(new File("./playerShape.psff"), player.segments);
+            SegmentDataManager.saveExternal(new File("./testShape.psff"), testEntity.segments);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        System.exit(0);
+    }
+    
     public void draw()
     {
 

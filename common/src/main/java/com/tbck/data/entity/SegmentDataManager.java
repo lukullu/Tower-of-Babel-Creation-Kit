@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
@@ -40,20 +41,21 @@ public class SegmentDataManager {
 		return new ArrayList<>(data); // only give out copies of the template
 	}
 	/** load SegmentData from an internal resource */
-	public static ArrayList<SegmentData> loadInternal(String resourceName) throws IOException {
+	public static ArrayList<SegmentData> loadInternal(String resourceName) {
 		try {
 			Objects.requireNonNull(resourceName, "resourceName must not be null!");
-			return loadExternal(new File(Objects.requireNonNull(Object.class.getClassLoader().getResource(resourceName), "Unable to find resource " + resourceName).toURI()));
-		} catch (URISyntaxException e) { throw new RuntimeException(e); } // should not happen?
+			URL resourceURL = SegmentDataManager.class.getResource(resourceName);
+			return loadExternal(new File(Objects.requireNonNull(resourceURL, "Unable to find resource " + resourceName).toURI()));
+		} catch (Exception e) { e.printStackTrace(); return new ArrayList<>(); } // should not happen?
 	}
 	/** save SegmentData to an external file */
-	public static void saveExternal(File file, List<Polygon> segments) throws IOException {
+	public static void saveExternal(File file, List<SegmentData> segments) throws IOException {
 		Objects.requireNonNull(file, "file must not be null!");
 		Objects.requireNonNull(segments, "segments must not be null!");
 		
 		Files.createDirectories(file.toPath().getParent());
 		try (ObjectOutputStream os = new ObjectOutputStream(Files.newOutputStream(file.toPath(), StandardOpenOption.CREATE))) {
-			if (segments instanceof ArrayList<Polygon>) os.writeObject(segments);
+			if (segments instanceof ArrayList<SegmentData>) os.writeObject(segments);
 			else os.writeObject(new ArrayList<>(segments));
 			invalidate(file);
 		}

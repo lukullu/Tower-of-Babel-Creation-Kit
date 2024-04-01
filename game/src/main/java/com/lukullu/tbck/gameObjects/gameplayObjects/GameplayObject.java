@@ -39,9 +39,9 @@ public class GameplayObject implements IGameObject, ProcessingClass
         initVertices();
     }
 
-    public GameplayObject(ArrayList<Polygon> shape, Vec2 position, double rotation)
+    public GameplayObject(ArrayList<? extends Polygon> shape, Vec2 position, double rotation)
     {
-        this.shape = shape;
+        this.shape.addAll(shape);
         this.rotation = rotation;
         this.position = position;
         initVertices();

@@ -5,8 +5,11 @@ import java.util.Map;
 
 public class EntityEditor extends EditorPanel {
 	
-	public Map<String, JMenu> getContextMenus() {
-		return Map.of();
+	public JMenu[] getContextMenus() {
+		return new JMenu[] {
+				new JMenu("File", true),
+				new JMenu("Edit", true)
+		};
 	}
 }
 

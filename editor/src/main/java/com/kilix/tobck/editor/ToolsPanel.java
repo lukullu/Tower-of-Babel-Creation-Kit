@@ -40,7 +40,7 @@ public class ToolsPanel extends JPanel {
 		// spacer
 		add(new JPanel(), new GridBagConstraints(0, line, 2, 1, 1, 1, GridBagConstraints.PAGE_START, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 		// cancel button
-		add(new JButton(new SimpleAction("Cancel", event -> onToolSelected.accept(SelectedTool.NONE))), new GridBagConstraints(
+		add(new JButton(new SimpleAction("Close", event -> onToolSelected.accept(SelectedTool.NONE))), new GridBagConstraints(
 				2, line,
 				1, 1,
 				0, 0,

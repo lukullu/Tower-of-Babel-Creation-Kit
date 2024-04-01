@@ -1,3 +1,5 @@
+import java.nio.file.Files
+
 plugins {
     id("java")
     id("application")
@@ -17,4 +19,7 @@ dependencies {
 
 application {
     mainClass = "com.lukullu.Main"
+    val workingDir = File(rootProject.projectDir, "run")
+    if (! workingDir.exists()) Files.createDirectories(workingDir.toPath())
+    tasks.run.get().workingDir = workingDir
 }

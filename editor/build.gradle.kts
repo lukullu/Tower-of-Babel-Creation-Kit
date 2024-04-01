@@ -7,7 +7,7 @@ group = "com.kilix"
 version = "1.0-SNAPSHOT"
 
 application {
-    mainClass = "com.kilix.tobck.editor.Main"
+    mainClass = "com.kilix.tbck.editor.Main"
 }
 
 repositories {

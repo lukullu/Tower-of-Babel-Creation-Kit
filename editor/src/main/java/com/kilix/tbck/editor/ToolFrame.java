@@ -1,6 +1,6 @@
-package com.kilix.tobck.editor;
+package com.kilix.tbck.editor;
 
-import com.kilix.tobck.Constants;
+import com.tbck.Constants;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,4 +1,4 @@
-package com.kilix.tobck.editor;
+package com.kilix.tbck.editor;
 
 import javax.swing.*;
 import java.util.Map;

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 public class SegmentData extends Polygon
 {
-    public ArrayList<Vec2> vertices;
     public int ArmorPoints;
     public SegmentRoles role;
     public transient boolean enabled = true;

@@ -1,8 +1,9 @@
 package com.tbck.math;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Polygon
+public class Polygon implements Serializable
 {
 
     public ArrayList<Vec2> vertices = new ArrayList<>();

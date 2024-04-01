@@ -57,12 +57,8 @@ public class Vec2 implements Serializable
 
     public Point getPoint() { return new Point((int) x, (int) y); }
     
-    @Override
     public String toString() {
-        return "Vec2{" +
-                "x=" + Math.round(x * 100) / 100.0 +
-                ", y=" + Math.round(y * 100) / 100.0 +
-                '}';
+        return '[' + Math.round(x * 100) / 100.0 + ", " + Math.round(y * 100) / 100.0 + ']';
     }
 
     @Override

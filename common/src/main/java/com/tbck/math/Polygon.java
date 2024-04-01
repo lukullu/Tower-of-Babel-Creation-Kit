@@ -52,8 +52,6 @@ public class Polygon implements Serializable
 
     
     public String toString() {
-        return "Polygon{" +
-                "vertices=" + vertices +
-                '}';
+        return vertices.toString();
     }
 }

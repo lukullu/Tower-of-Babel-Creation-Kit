@@ -1,5 +1,8 @@
 package com.tbck;
 
+import com.tbck.data.entity.SegmentData;
+
+import java.awt.*;
 import java.nio.file.Path;
 
 public interface Constants {
@@ -14,5 +17,12 @@ public interface Constants {
 	// -. Entity Editor .- \\
 	String ENTITY_TEMPLATE_FILE_EXTENSION = ".psff"; // .etf maybe? or just a "universal" file-extension for all things we store? .towerdata?
 	String ENTITY_TEMPLATE_FILE_TYPE_DESCRIPTION = "Entity-Template File";
+	
+	// -. editor rendering .- \\
+	Color TRANSPARENT = new Color(255, 255, 255, 0);
+	Color SHAPE_HOVER = new Color(76, 76, 134);
+	Color SHAPE_SELECTED = new Color(55, 107, 73);
+	String NO_SEGMENT_TITLE = "no segment selected";
+	static String SEGMENT_TITLE(SegmentData segment) { return segment.role + " segment"; }
 	
 }

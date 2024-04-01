@@ -1,5 +1,7 @@
 package com.tbck.data.entity;
 
+import com.tbck.math.Polygon;
+
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
@@ -45,13 +47,13 @@ public class SegmentDataManager {
 		} catch (URISyntaxException e) { throw new RuntimeException(e); } // should not happen?
 	}
 	/** save SegmentData to an external file */
-	public static void saveExternal(File file, List<SegmentData> segments) throws IOException {
+	public static void saveExternal(File file, List<Polygon> segments) throws IOException {
 		Objects.requireNonNull(file, "file must not be null!");
 		Objects.requireNonNull(segments, "segments must not be null!");
 		
 		Files.createDirectories(file.toPath().getParent());
 		try (ObjectOutputStream os = new ObjectOutputStream(Files.newOutputStream(file.toPath(), StandardOpenOption.CREATE))) {
-			if (segments instanceof ArrayList<SegmentData>) os.writeObject(segments);
+			if (segments instanceof ArrayList<Polygon>) os.writeObject(segments);
 			else os.writeObject(new ArrayList<>(segments));
 			invalidate(file);
 		}

@@ -1,18 +1,33 @@
 package com.tbck.math;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Polygon implements Serializable
 {
-
+    
+    @Serial private static final long serialVersionUID = 3756687872714555217L;
+    
     public ArrayList<Vec2> vertices = new ArrayList<>();
 
+    public Polygon(java.util.List<Vec2> vertices) { this(new ArrayList<>(vertices)); }
+    
     public Polygon(ArrayList<Vec2> vertices)
     {
         this.vertices = vertices;
     }
-
+    
+    public java.awt.Polygon asNative() {
+        int[] xPoints = new int[vertices.size()];
+        int[] yPoints = new int[vertices.size()];
+        for (int i = 0; i < vertices.size(); i++) {
+            xPoints[i] = (int) vertices.get(i).x;
+            yPoints[i] = (int) vertices.get(i).y;
+        }
+        return new java.awt.Polygon(xPoints, yPoints, vertices.size());
+    }
+    
     public ArrayList<Vec2> getVertices(){ return vertices; }
     public Vec2 getPosition() { return calcPos(); }
 
@@ -29,10 +44,17 @@ public class Polygon implements Serializable
         return acc.divide(counter);
     }
 
-    @Override
+//    @Override
+//    public String toString() {
+//        return "Polygon{" +
+//                "vertices=" + vertices.stream().map(Vec2::toString) +
+//                '}';
+//    }
+    
+    
     public String toString() {
         return "Polygon{" +
-                "vertices=" + vertices.stream().map(Vec2::toString) +
+                "vertices=" + vertices +
                 '}';
     }
 }

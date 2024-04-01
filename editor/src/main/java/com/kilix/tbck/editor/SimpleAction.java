@@ -24,6 +24,7 @@ public class SimpleAction implements Action {
 	protected boolean enabled = true;
 	public final void setEnabled(boolean b) { enabled = b; }
 	public final boolean isEnabled() { return enabled; }
+	public SimpleAction enabled(boolean enabled) { this.enabled = enabled; return this; }
 	
 	// property change listeners \\
 	protected final ArrayList<PropertyChangeListener> propertyChangeListeners = new ArrayList<>(1);

@@ -14,7 +14,7 @@ public class ToolsPopup {
 		JPanel panel = new JPanel(new GridBagLayout());
 		
 		int line = 0;
-		panel.add(new JButton(new SimpleAction("Level Editor", event -> { newLevelEditor(); hide(); })), new GridBagConstraints(
+		panel.add(new JButton(new SimpleAction("Level Editor", event -> { newLevelEditor(); hide(); }).enabled(false)), new GridBagConstraints(
 				0, line++,
 				3, 1,
 				1, 0,
@@ -46,6 +46,7 @@ public class ToolsPopup {
 				new Insets(0, 0, 0, 0),
 				0, 0
 		));
+		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		
 		FRAME.setContentPane(panel);
 		FRAME.setTitle(Constants.WINDOW_TITLE + " - Tool Selection");

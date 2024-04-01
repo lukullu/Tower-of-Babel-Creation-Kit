@@ -12,11 +12,13 @@ public abstract class EditorPanel extends JPanel implements MenuContext {
 	
 	protected final JPanel editorView = new JPanel();
 	protected final JPanel toolsView = new JPanel();
-	private final JMenuBar menuBar = new JMenuBar();
+	
+	protected ToolFrame rootFrame;
 	
 	public EditorPanel() {
 		super(new GridBagLayout());
 		
+		JMenuBar menuBar = new JMenuBar();
 		add(menuBar, new GridBagConstraints(
 				0, 0,
 				2, 1,
@@ -47,10 +49,12 @@ public abstract class EditorPanel extends JPanel implements MenuContext {
 		
 		for (JMenu menu : getContextMenus()) menuBar.add(menu);
 		if (getContextMenus().length > 0) menuBar.add(new JSeparator(JSeparator.VERTICAL));
-		menuBar.add(new SimpleMenuItem("Show Tools", KeyEvent.VK_T, e -> Main.TOOL_WINDOW.setVisible(true)));
+		menuBar.add(new SimpleMenuItem("Show Tools", KeyEvent.VK_T, e -> ToolsPopup.show()));
 		menuBar.add(new JSeparator(JSeparator.VERTICAL));
-		menuBar.add(new SimpleMenuItem("Help", -1, e -> JOptionPane.showMessageDialog(this, "There is no help.")));
+		menuBar.add(new SimpleMenuItem("Help", KeyEvent.VK_H, e -> JOptionPane.showMessageDialog(this, "There is no help.")));
 	}
+	
+	void setRootFrame(ToolFrame frame) { this.rootFrame = frame; }
 	
 	public Dimension getPreferredSize() { return preferredSize; }
 	public Dimension getMinimumSize() { return minimumSize; }

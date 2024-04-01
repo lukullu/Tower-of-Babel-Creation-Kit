@@ -54,12 +54,10 @@ public class ToolsPopup {
 		FRAME.setPreferredSize(new Dimension(300, 150));
 		FRAME.setResizable(false);
 		FRAME.pack();
-		FRAME.setVisible(true);
 	}
 	
-	public static void hide() { FRAME.setVisible(false); }
+	public static void hide() { FRAME.dispose(); }
 	public static void show() {
-		FRAME.pack();
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = FRAME.getSize();
 		
@@ -72,13 +70,7 @@ public class ToolsPopup {
 	 }
 	
 	
-	public static void newLevelEditor() {
-		// TODO
-	}
-	
-	public static void newEntityEditor() {
-		new ToolFrame("Entity Editor", new EntityEditor());
-	}
-	
+	private static void newLevelEditor() { /* TODO */ }
+	private static void newEntityEditor() { new ToolFrame("Entity Editor", new EntityEditor()); }
 	
 }

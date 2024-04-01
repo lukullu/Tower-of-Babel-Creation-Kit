@@ -21,6 +21,7 @@ public class ToolFrame extends JFrame {
 	public ToolFrame(String toolName, EditorPanel content) {
 		super(Constants.WINDOW_TITLE + " - " + toolName);
 		setContentPane(Objects.requireNonNull(content, "Content must not be null!"));
+		content.setRootFrame(this);
 		this.toolName = Objects.requireNonNull(toolName, "Tool name must not be null!");
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setType(Window.Type.NORMAL);

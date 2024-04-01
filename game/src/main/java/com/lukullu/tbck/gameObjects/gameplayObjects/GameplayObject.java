@@ -39,11 +39,12 @@ public class GameplayObject implements IGameObject, ProcessingClass
         initVertices();
     }
 
-    public GameplayObject(ArrayList<? extends Polygon> shape, Vec2 position, double rotation)
+    public GameplayObject(ArrayList<? extends Polygon> shape, Vec2 position, double rotation, double scaling)
     {
         this.shape.addAll(shape);
         this.rotation = rotation;
         this.position = position;
+        this.scaling = scaling;
         initVertices();
     }
 
@@ -63,13 +64,19 @@ public class GameplayObject implements IGameObject, ProcessingClass
     public void updatePos(Vec2 delta)
     {
         position = position.add(delta);
-        updateVertices(delta,0);
+        updateVertices(delta,0,0);
     }
 
     public void updateRot(double delta)
     {
         rotation += delta;
-        updateVertices(Vec2.ZERO_VECTOR2,delta);
+        updateVertices(Vec2.ZERO_VECTOR2,delta,0);
+    }
+
+    public void updateSca(double delta)
+    {
+        rotation += delta;
+        updateVertices(Vec2.ZERO_VECTOR2,0,delta);
     }
 
     public void initShape()
@@ -109,24 +116,25 @@ public class GameplayObject implements IGameObject, ProcessingClass
     private void initVertices()
     {
         polygons.addAll(shape);
-        updateVertices(position,rotation);
+        updateVertices(position,rotation,scaling);
     }
-    public void updateVertices(Vec2 deltaPos, double deltaRot)
+    public void updateVertices(Vec2 deltaPos, double deltaRot, double deltaSca)
     {
         ArrayList<Polygon> newPolygons = new ArrayList<>();
         for (Polygon polygon : polygons)
         {
-            newPolygons.add(calcVertices(polygon.getVertices(),deltaPos,deltaRot));
+            newPolygons.add(calcVertices(polygon.getVertices(),deltaPos,deltaRot,deltaSca));
         }
         polygons = newPolygons;
     }
 
-    private Polygon calcVertices(ArrayList<Vec2> vertices, Vec2 position, double rotation) {
+    private Polygon calcVertices(ArrayList<Vec2> vertices, Vec2 deltaPos, double deltaRot, double deltaSca) {
         ArrayList<Vec2> output = new ArrayList<Vec2>();
         for (Vec2 vertex : vertices) {
 
-            vertex = vertex.add(position);
-            vertex = vertex.rotate(getPosition(),rotation);
+            vertex = vertex.add(deltaPos);
+            vertex = vertex.rotate(getPosition(),deltaRot);
+            vertex = vertex.scale(getPosition(),deltaSca);
 
             output.add(vertex);
         }

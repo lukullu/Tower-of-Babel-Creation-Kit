@@ -21,7 +21,7 @@ public class Entity extends EntityObject implements ISegmentedObject
 
     public Entity(String psff_resource, Vec2 position, double rotation, double scaling)
     {
-        super(SegmentDataManager.loadInternal(psff_resource),position,rotation);
+        super(SegmentDataManager.loadInternal(psff_resource),position,rotation, scaling);
     }
 
     @Override

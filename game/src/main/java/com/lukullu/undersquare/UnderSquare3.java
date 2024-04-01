@@ -5,9 +5,11 @@ import com.kilix.processing.ExtendedPApplet;
 import com.lukullu.tbck.enums.Shapes;
 import com.lukullu.tbck.gameObjects.IGameObject;
 import com.lukullu.tbck.gameObjects.gameplayObjects.EntityObject;
+import com.lukullu.tbck.gameObjects.gameplayObjects.MetaObject;
 import com.lukullu.tbck.utils.*;
 import com.lukullu.undersquare.entities.Player;
-import com.lukullu.undersquare.entityTypes.SegmentEntity;
+import com.lukullu.undersquare.entityTypes.Entity;
+import com.lukullu.undersquare.entityTypes.Meta;
 import com.tbck.data.entity.SegmentDataManager;
 import com.tbck.math.Vec2;
 
@@ -26,18 +28,18 @@ public class UnderSquare3 extends ExtendedPApplet {
 
         gameObjects.putEntity(new Player("/shapeFiles/playerShape.psff", new Vec2(600,600), 0, 5));
         gameObjects.putEntity(new EntityObject(Shapes.SQUARE,new Vec2(900,600),0,75));
-        gameObjects.putEntity(new SegmentEntity("/shapeFiles/testShape.psff",new Vec2(1400,600), 0, 5));
-        //gameObjects.putMetaObject(new MetaObject(Shapes.SQUARE,new Vec2(1000,700), 0, 75,()->{System.out.println("Hello World");},false));
+        gameObjects.putEntity(new Entity("/shapeFiles/testShape.psff",new Vec2(1400,600), 0, 5));
+        gameObjects.putMetaObject(new Meta("/shapeFiles/testShape.psff",new Vec2(1000,700),  ()->{System.out.println("Hello World");},false));
 
     }
 
     private static final void storeShapes() {
         Player player = new Player("../game/src/main/resources/shapeFiles/legacy/playerShape.psff", new Vec2(600,600), 0, 5);
-        SegmentEntity testEntity = new SegmentEntity("../game/src/main/resources/shapeFiles/legacy/testShape.psff",new Vec2(1400,600), 0, 5);
+        Entity testEntity = new Entity("../game/src/main/resources/shapeFiles/legacy/testShape.psff",new Vec2(1400,600), 0, 5);
 
         try {
-            SegmentDataManager.saveExternal(new File("./playerShape.psff"), player.segments);
-            SegmentDataManager.saveExternal(new File("./testShape.psff"), testEntity.segments);
+            SegmentDataManager.saveExternal(new File("./playerShape.psff"), player.getSegments());
+            SegmentDataManager.saveExternal(new File("./testShape.psff"), testEntity.getSegments());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

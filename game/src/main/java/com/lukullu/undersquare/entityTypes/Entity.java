@@ -3,66 +3,25 @@ package com.lukullu.undersquare.entityTypes;
 import com.lukullu.tbck.gameObjects.gameplayObjects.EntityObject;
 import com.lukullu.tbck.utils.Collision;
 import com.lukullu.tbck.utils.CollisionResult;
+import com.lukullu.undersquare.interfaces.ISegmentedObject;
 import com.tbck.data.entity.SegmentDataManager;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
 import com.lukullu.undersquare.UnderSquare3;
-import com.lukullu.undersquare.utils.PSFF_Utils;
 import com.tbck.data.entity.SegmentData;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SegmentEntity extends EntityObject
+public class Entity extends EntityObject implements ISegmentedObject
 {
 
     @Deprecated
-    public ArrayList<SegmentData> segments = new ArrayList<>();
+    public ArrayList<SegmentData> segments;
 
-    public SegmentEntity(String psff_resource, Vec2 position, double rotation, double scaling)
+    public Entity(String psff_resource, Vec2 position, double rotation, double scaling)
     {
         super(SegmentDataManager.loadInternal(psff_resource),position,rotation);
-        segments = SegmentDataManager.loadInternal(psff_resource);
-    }
-
-    @Override
-    public void paint()
-    {
-        for (int i = 0; i < getPolygons().size(); i++)
-            if(segments.get(i).enabled)
-                paintPolygon(getPolygons().get(i));
-    }
-
-    private static ArrayList<Polygon> polygonsFromPSFF(String url, double scaling)
-    {
-        ArrayList<Polygon> polygons = new ArrayList<>();
-        ArrayList<String> dataLines = PSFF_Utils.getLines(url);
-        ArrayList<SegmentData> segmentData = new ArrayList<>();
-        for (String line : dataLines)
-        {
-            segmentData.add(PSFF_Utils.getVerticesFromLine(line));
-        }
-        for(SegmentData segment : segmentData)
-        {
-            ArrayList<Vec2> vertices = new ArrayList<>(segment.vertices.stream().map((v)->{return v.multiply(scaling);}).toList());
-            polygons.add(new Polygon(vertices));
-        }
-
-        return polygons;
-
-    }
-
-    private static ArrayList<SegmentData> segmentsFromPSFF(String url)
-    {
-        ArrayList<String> dataLines = PSFF_Utils.getLines(url);
-        ArrayList<SegmentData> segmentData = new ArrayList<>();
-        for (String line : dataLines)
-        {
-            segmentData.add(PSFF_Utils.getVerticesFromLine(line));
-        }
-
-        return segmentData;
-
     }
 
     @Override
@@ -82,11 +41,11 @@ public class SegmentEntity extends EntityObject
                 for (int j = 0; j < entity.getPolygons().size(); j++)
                 {
 
-                    if(entity instanceof SegmentEntity)
-                        if(!((SegmentEntity) entity).segments.get(j).enabled)
+                    if(entity instanceof Entity)
+                        if(!((Entity) entity).getSegments().get(j).enabled)
                             continue;
 
-                    if (!segments.get(i).enabled) continue;
+                    if (!getSegments().get(i).enabled) continue;
 
                     //CollisionResult res = Collision.collisionResolutionSAT(polygon.getVertices(), polygon.getPosition(), entityPolygon.getVertices(), entityPolygon.getPosition());
                     CollisionResult res = Collision.collisionResolutionSAT(getPolygons().get(i).getVertices(), this.getPosition(), entity.getPolygons().get(j).getVertices(), entity.getPosition());

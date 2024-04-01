@@ -23,18 +23,9 @@ public class MetaObject extends GameplayObject
         this.action = action;
         this.isContinuous = isContinuous;
     }
-    public MetaObject(ArrayList<Polygon> polygons, Vec2 position, Runnable action, boolean isTrigger)
+    public MetaObject(ArrayList<? extends Polygon> polygons, Vec2 position, Runnable action, boolean isTrigger)
     {
-        super(new ArrayList<>(polygons
-                .stream()
-                .map((polygon) -> new Polygon(new ArrayList<>(polygon
-                    .getVertices()
-                    .stream()
-                    .map((vertex)->vertex
-                            .add(position))
-                    .toList())))
-                .toList()),position,0);
-
+        super(polygons,position,0);
         this.action = action;
         this.isContinuous = isTrigger;
     }

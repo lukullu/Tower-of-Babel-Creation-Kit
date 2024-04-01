@@ -4,9 +4,9 @@ import com.lukullu.tbck.enums.Actions;
 import com.lukullu.tbck.utils.DeltaTimer;
 import com.lukullu.tbck.utils.InputManager;
 import com.tbck.math.Vec2;
-import com.lukullu.undersquare.entityTypes.SegmentEntity;
+import com.lukullu.undersquare.entityTypes.Entity;
 
-public class Player extends SegmentEntity {
+public class Player extends Entity {
 
     private static final Vec2 MOVEMENT_FORCE = new Vec2(50,50);
 

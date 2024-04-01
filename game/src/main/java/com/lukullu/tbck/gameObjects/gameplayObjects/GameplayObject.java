@@ -51,6 +51,7 @@ public class GameplayObject implements IGameObject, ProcessingClass
     public Vec2 getPosition() { return position; }
     public ArrayList<Vec2> getVertices(int i){ return polygons.get(i).getVertices(); }
     public ArrayList<Polygon> getPolygons(){ return polygons; }
+    public ArrayList<Polygon> getShape() { return shape; }
     public void setPolygons(ArrayList<Polygon> polygons) { this.polygons = polygons; }
     public void update() {  } // TODO: Check if this can be moved to the updatePos / updateRot functions to save resources
     public void paint()
@@ -132,7 +133,7 @@ public class GameplayObject implements IGameObject, ProcessingClass
         return new Polygon(output);
     }
 
-    protected void paintPolygon(Polygon polygon)
+    public void paintPolygon(Polygon polygon)
     {
         fill(255);
 

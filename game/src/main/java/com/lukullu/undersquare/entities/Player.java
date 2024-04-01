@@ -43,8 +43,6 @@ public class Player extends SegmentEntity {
         if(InputManager.getInstance().isActionQueued(Actions.ROTATE_COUNTERCLOCKWISE   )){ updateRot(-PI * DeltaTimer.getInstance().getDeltaTime());   }
         if(InputManager.getInstance().isActionQueued(Actions.SLOWMO  )){ DeltaTimer.getInstance().setTimeModifier(0.75); } else {DeltaTimer.getInstance().setTimeModifier(1);}
 
-
-
         /*if(InputManager.getInstance().isActionQueued(Actions.FORWARD )){ updatePos(new Vec2(0  , -10)); }
         if(InputManager.getInstance().isActionQueued(Actions.BACKWARD)){ updatePos(new Vec2(0  , 10));  }
         if(InputManager.getInstance().isActionQueued(Actions.LEFT    )){ updatePos(new Vec2(-10, 0));   }

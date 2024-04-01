@@ -53,7 +53,7 @@ public class PSFF_Utils {
                 String[] coords = s.split(",");
                 vertices.add(new Vec2(Double.parseDouble(coords[0]), Double.parseDouble(coords[1])));
             }
-            out.vertices = vertices;
+            //out.vertices = vertices;
 
             return out;
 

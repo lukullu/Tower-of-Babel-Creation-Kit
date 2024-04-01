@@ -50,7 +50,6 @@ public class Polygon implements Serializable
         return acc.divide(counter);
     }
 
-    
     public String toString() {
         return vertices.toString();
     }

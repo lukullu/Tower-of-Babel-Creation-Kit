@@ -22,20 +22,19 @@ public class UnderSquare3 extends ExtendedPApplet {
     public void setup()
     {
         // "../game/src/main/resources/shapeFiles/playerShape.psff"
-        
-        
+
+
         gameObjects.putEntity(new Player("/shapeFiles/playerShape.psff", new Vec2(600,600), 0, 5));
         gameObjects.putEntity(new EntityObject(Shapes.SQUARE,new Vec2(900,600),0,75));
         gameObjects.putEntity(new SegmentEntity("/shapeFiles/testShape.psff",new Vec2(1400,600), 0, 5));
         //gameObjects.putMetaObject(new MetaObject(Shapes.SQUARE,new Vec2(1000,700), 0, 75,()->{System.out.println("Hello World");},false));
-
 
     }
 
     private static final void storeShapes() {
         Player player = new Player("../game/src/main/resources/shapeFiles/legacy/playerShape.psff", new Vec2(600,600), 0, 5);
         SegmentEntity testEntity = new SegmentEntity("../game/src/main/resources/shapeFiles/legacy/testShape.psff",new Vec2(1400,600), 0, 5);
-        
+
         try {
             SegmentDataManager.saveExternal(new File("./playerShape.psff"), player.segments);
             SegmentDataManager.saveExternal(new File("./testShape.psff"), testEntity.segments);
@@ -44,7 +43,7 @@ public class UnderSquare3 extends ExtendedPApplet {
         }
         System.exit(0);
     }
-    
+
     public void draw()
     {
 

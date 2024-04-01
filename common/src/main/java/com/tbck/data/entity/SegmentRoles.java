@@ -1,4 +1,4 @@
-package com.lukullu.undersquare.enums;
+package com.tbck.data.entity;
 
 public enum SegmentRoles
 {

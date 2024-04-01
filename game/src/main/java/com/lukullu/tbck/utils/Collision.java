@@ -1,6 +1,6 @@
 package com.lukullu.tbck.utils;
 
-import com.lukullu.tbck.gameObjects.gameplayObjects.GameplayObject;
+import com.tbck.math.Vec2;
 
 import java.util.ArrayList;
 

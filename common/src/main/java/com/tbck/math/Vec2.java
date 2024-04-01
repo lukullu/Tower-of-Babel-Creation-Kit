@@ -1,8 +1,9 @@
-package com.lukullu.tbck.utils;
+package com.tbck.math;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Vec2
+public class Vec2 implements Serializable
 {
     public static Vec2 ZERO_VECTOR2 = new Vec2(0,0);
     public double x, y;

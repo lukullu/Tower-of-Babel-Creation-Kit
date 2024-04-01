@@ -1,8 +1,8 @@
 package com.lukullu.tbck.gameObjects.gameplayObjects;
 
 import com.lukullu.tbck.enums.Shapes;
-import com.lukullu.tbck.utils.Polygon;
-import com.lukullu.tbck.utils.Vec2;
+import com.tbck.math.Polygon;
+import com.tbck.math.Vec2;
 
 import java.util.ArrayList;
 

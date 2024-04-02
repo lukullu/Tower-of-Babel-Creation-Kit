@@ -110,6 +110,10 @@ public class Viewport extends JPanel {
 	public double getScale() { return scale; }
 	public double getOffsetX() { return offsetX; }
 	public double getOffsetY() { return offsetY; }
+	public Point2D getPointer() {
+		if (pointer == null) return null;
+		return component2viewport(pointer);
+	}
 	
 	public AffineTransform getTransform() {
 		AffineTransform transform = AffineTransform.getTranslateInstance((getWidth() / 2.0) + offsetX, (getHeight() / 2.0) + offsetY);

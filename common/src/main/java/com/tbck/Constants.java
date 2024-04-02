@@ -23,6 +23,5 @@ public interface Constants {
 	Color SHAPE_HOVER = new Color(76, 76, 134);
 	Color SHAPE_SELECTED = new Color(55, 107, 73);
 	String NO_SEGMENT_TITLE = "no segment selected";
-	static String SEGMENT_TITLE(SegmentData segment) { return segment.role + " segment"; }
 	
 }

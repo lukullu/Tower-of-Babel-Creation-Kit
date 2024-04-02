@@ -20,4 +20,9 @@ public class SegmentData extends Polygon implements Serializable
     public SegmentData(ArrayList<Vec2> vertices) {
         super(vertices);
     }
+    
+    public boolean isHead() { return role == SegmentRoles.HEAD; }
+    public boolean isHeart() { return role == SegmentRoles.HEART; }
+    public boolean isSimple() { return role == SegmentRoles.SEGMENT; }
+    
 }

@@ -1,7 +1,6 @@
 package com.kilix.tbck.editor;
 
 import com.kilix.tbck.editor.components.LabeledSlider;
-import com.tbck.Constants;
 import com.tbck.data.entity.SegmentData;
 import com.tbck.data.entity.SegmentDataManager;
 import com.tbck.math.Polygon;
@@ -19,7 +18,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import static com.tbck.Constants.*;
@@ -43,10 +41,6 @@ public class EntityEditor extends EditorPanel {
 	
 	private int polygonPoints = 8;
 	private JPanel segmentPanel;
-	private final TitledBorder segmentBorder = new TitledBorder(
-			new MatteBorder(1, 0, 0, 0, UIManager.getColor("TitledBorder.titleColor")),
-			NO_SEGMENT_TITLE, TitledBorder.CENTER, TitledBorder.TOP
-	);
 	
 	private SegmentData selectedSegment = null;
 	
@@ -94,8 +88,10 @@ public class EntityEditor extends EditorPanel {
 		})), lineConstraints(line++));
 		
 		segmentPanel = new JPanel(new GridBagLayout());
-		segmentPanel.setBorder(segmentBorder);
-		segmentPanel.add(new JButton("Click Me"));
+		segmentPanel.setBorder(new TitledBorder(
+				new MatteBorder(1, 0, 0, 0, UIManager.getColor("TitledBorder.titleColor")),
+				NO_SEGMENT_TITLE, TitledBorder.CENTER, TitledBorder.TOP
+		));
 		
 		toolsPanel.add(segmentPanel, lineConstraints(line++));
 		
@@ -128,8 +124,10 @@ public class EntityEditor extends EditorPanel {
 		
 		final boolean hasSegment = segment != null;
 		
-		segmentBorder.setTitle(hasSegment ? SEGMENT_TITLE(segment) : NO_SEGMENT_TITLE);
-		toolsPanel.repaint();
+		((TitledBorder) segmentPanel.getBorder()).setTitle(hasSegment
+				? String.format("%s %02d\n", segment.role, entityTemplate.indexOf(segment))
+				: NO_SEGMENT_TITLE);
+		repaint();
 	}
 	private void update() {
 		rootFrame.setContext(

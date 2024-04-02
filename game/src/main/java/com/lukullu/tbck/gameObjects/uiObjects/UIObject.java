@@ -2,6 +2,7 @@ package com.lukullu.tbck.gameObjects.uiObjects;
 
 import com.lukullu.tbck.gameObjects.IGameObject;
 import com.tbck.math.Polygon;
+import com.tbck.math.Vec2;
 
 import java.util.ArrayList;
 
@@ -19,6 +20,11 @@ public class UIObject implements IGameObject {
     @Override
     public void paintPolygon(Polygon polygon) {
 
+    }
+
+    @Override
+    public Vec2 getPosition() {
+        return null;
     }
 
     @Override

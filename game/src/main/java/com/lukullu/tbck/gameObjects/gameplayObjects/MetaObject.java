@@ -4,14 +4,16 @@ package com.lukullu.tbck.gameObjects.gameplayObjects;
 import com.lukullu.tbck.enums.Shapes;
 import com.lukullu.tbck.utils.Collision;
 import com.lukullu.tbck.utils.CollisionResult;
+import com.lukullu.undersquare.interfaces.ICollidableObject;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
 import com.lukullu.undersquare.UnderSquare3;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MetaObject extends GameplayObject
+public class MetaObject extends GameplayObject implements ICollidableObject
 {
     Runnable action = null;
     boolean isActive = false;
@@ -33,38 +35,18 @@ public class MetaObject extends GameplayObject
     @Override
     public void update()
     {
-        collisionUpdate();
         if(isContinuous && isActive) action.run();
     }
 
-    private void collisionUpdate()
+    @Override
+    public ArrayList<Polygon> staticCollisionUpdate()
     {
-        @SuppressWarnings("all")
-        List<EntityObject> entities = (List<EntityObject>)(Object) UnderSquare3.getGameObjects().get(EntityObject.class);
+        ArrayList<Polygon> polygonColliders = ICollidableObject.super.staticCollisionUpdate();
 
-        ArrayList<CollisionResult> out = new ArrayList<>();
+        if(polygonColliders.isEmpty())
+            setInActive();
 
-        if(entities == null) return;
-
-        for (EntityObject entity : entities)
-        {
-            for (Polygon polygon : getPolygons())
-            {
-                for (Polygon entityPolygon : entity.getPolygons())
-                {
-                    CollisionResult res = Collision.collisionResolutionSAT(polygon.getVertices(), polygon.getPosition(), entityPolygon.getVertices(), entityPolygon.getPosition());
-
-                    if(res.collisionCheck)
-                    {
-                        // TODO: is right activator (entity.class == ?)
-                        setActive();
-                        out.add(res);
-                    }
-                }
-            }
-        }
-        if(out.isEmpty()) setInActive();
-
+        return polygonColliders;
     }
 
     private void setActive()
@@ -76,5 +58,11 @@ public class MetaObject extends GameplayObject
     private void setInActive()
     {
         isActive = false;
+    }
+
+    @Override
+    public void collisionResponse(CollisionResult res, EntityObject entity) {
+        // TODO: is right activator (entity.class == ?)
+        setActive();
     }
 }

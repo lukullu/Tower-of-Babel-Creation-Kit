@@ -1,17 +1,13 @@
 package com.lukullu.undersquare.objectTypes;
 
 import com.lukullu.tbck.gameObjects.gameplayObjects.EntityObject;
-import com.lukullu.tbck.utils.Collision;
-import com.lukullu.tbck.utils.CollisionResult;
 import com.lukullu.undersquare.interfaces.ISegmentedObject;
 import com.tbck.data.entity.SegmentDataManager;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
-import com.lukullu.undersquare.UnderSquare3;
 import com.tbck.data.entity.SegmentData;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Entity extends EntityObject implements ISegmentedObject
 {
@@ -25,9 +21,9 @@ public class Entity extends EntityObject implements ISegmentedObject
     }
 
     @Override
-    public ArrayList<Polygon> dynamicCollisionUpdatePolygon(int depth)
+    public ArrayList<Polygon> dynamicCollisionUpdate(int depth)
     {
-        ArrayList<Polygon> colliderPolygons = super.dynamicCollisionUpdatePolygon(depth);
+        ArrayList<Polygon> colliderPolygons = super.dynamicCollisionUpdate(depth);
 
         Polygon furthestPolygon = null;
         double furthestDistance = 0;

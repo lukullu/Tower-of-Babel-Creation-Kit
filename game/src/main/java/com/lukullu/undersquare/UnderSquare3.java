@@ -4,10 +4,11 @@ import com.kilix.processing.ExtendedPApplet;
 
 import com.lukullu.tbck.gameObjects.IGameObject;
 import com.lukullu.tbck.gameObjects.gameplayObjects.EntityObject;
-import com.lukullu.tbck.gameObjects.gameplayObjects.GameplayObject;
+import com.lukullu.tbck.gameObjects.gameplayObjects.MetaObject;
 import com.lukullu.tbck.gameObjects.gameplayObjects.StaticObject;
 import com.lukullu.tbck.utils.*;
 import com.lukullu.undersquare.entities.Player;
+import com.lukullu.undersquare.interfaces.ICollidableObject;
 import com.lukullu.undersquare.objectTypes.Entity;
 import com.lukullu.undersquare.objectTypes.Meta;
 import com.lukullu.undersquare.objectTypes.Static;
@@ -29,7 +30,7 @@ public class UnderSquare3 extends ExtendedPApplet {
         gameObjects.putEntity(new Player("/shapeFiles/playerShape.psff", new Vec2(600,600), 0, 1));
         gameObjects.putEntity(new Entity("/shapeFiles/testShape.psff",new Vec2(900,600), 0, 2));
         gameObjects.putEntity(new Entity("/shapeFiles/testShape.psff",new Vec2(500,400), 0, 3));
-        //gameObjects.putMeta(  new Meta  ("/shapeFiles/testShape.psff",new Vec2(1000,700), 0, 1,()->{System.out.println("Hello World");},false));
+        gameObjects.putMeta(  new Meta  ("/shapeFiles/testShape.psff",new Vec2(1000,700), 0, 1,()->{System.out.println("Hello World");},false));
         gameObjects.putStatic(new Static("/shapeFiles/testShape.psff",new Vec2(800,500), PI, 4));
 
     }
@@ -62,11 +63,11 @@ public class UnderSquare3 extends ExtendedPApplet {
             {
                 if(gameObject instanceof EntityObject)
                 {
-                    ((EntityObject) gameObject).dynamicCollisionUpdatePolygon(Constants.COLLISION_RECURSION_MAX_DEPTH);
+                    ((ICollidableObject) gameObject).dynamicCollisionUpdate(Constants.COLLISION_RECURSION_MAX_DEPTH);
                 }
-                else if(gameObject instanceof StaticObject)
+                else if(gameObject instanceof StaticObject || gameObject instanceof MetaObject)
                 {
-                    ((StaticObject) gameObject).dynamicCollisionUpdatePolygon();
+                    ((ICollidableObject) gameObject).staticCollisionUpdate();
                 }
 
             }

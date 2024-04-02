@@ -3,6 +3,7 @@ package com.lukullu.tbck.gameObjects.gameplayObjects;
 import com.lukullu.tbck.utils.*;
 import com.lukullu.undersquare.UnderSquare3;
 import com.lukullu.tbck.enums.Shapes;
+import com.lukullu.undersquare.interfaces.ICollidableObject;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
 
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class EntityObject extends GameplayObject {
+public class EntityObject extends GameplayObject implements ICollidableObject {
 
     public static final double gravity = 10;
     public double mass = 2.5; // Unit: kg
@@ -55,7 +56,7 @@ public class EntityObject extends GameplayObject {
         return delta;
     }
 
-    public ArrayList<Polygon> dynamicCollisionUpdatePolygon(int depth)
+    public ArrayList<Polygon> dynamicCollisionUpdate(int depth)
     {
 
         if(depth <= 0) return new ArrayList<>();
@@ -87,12 +88,12 @@ public class EntityObject extends GameplayObject {
             }
         }
 
-        for (EntityObject entity : colliders) entity.dynamicCollisionUpdatePolygon(depth-1);
+        for (EntityObject entity : colliders) entity.dynamicCollisionUpdate(depth-1);
 
         return out;
     }
 
-    protected void collisionResponse(CollisionResult res, EntityObject entity)
+    public void collisionResponse(CollisionResult res, EntityObject entity)
     {
         Vec2 combinedForce = this.force.subtract(entity.force);
         Vec2 queryForce = combinedForce.multiply(this.mass / (this.mass + entity.mass));

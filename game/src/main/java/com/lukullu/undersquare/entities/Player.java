@@ -39,8 +39,8 @@ public class Player extends Entity {
         
         applyForce(deltaForce);
 
-        if(InputManager.getInstance().isActionQueued(Actions.ROTATE_CLOCKWISE          )){ updateRot(PI * DeltaTimer.getInstance().getDeltaTime());    }
-        if(InputManager.getInstance().isActionQueued(Actions.ROTATE_COUNTERCLOCKWISE   )){ updateRot(-PI * DeltaTimer.getInstance().getDeltaTime());   }
+        if(InputManager.getInstance().isActionQueued(Actions.ROTATE_CLOCKWISE          )){ updateRot(PI/2 * DeltaTimer.getInstance().getDeltaTime());    }
+        if(InputManager.getInstance().isActionQueued(Actions.ROTATE_COUNTERCLOCKWISE   )){ updateRot(-PI/2 * DeltaTimer.getInstance().getDeltaTime());   }
         if(InputManager.getInstance().isActionQueued(Actions.SCALE_UP                  )){ updateSca(0.2 * DeltaTimer.getInstance().getDeltaTime());   }
         if(InputManager.getInstance().isActionQueued(Actions.SCALE_DOWN                )){ updateSca(-0.2 * DeltaTimer.getInstance().getDeltaTime());  }
         if(InputManager.getInstance().isActionQueued(Actions.SLOWMO  )){ DeltaTimer.getInstance().setTimeModifier(0.75); } else {DeltaTimer.getInstance().setTimeModifier(1);}

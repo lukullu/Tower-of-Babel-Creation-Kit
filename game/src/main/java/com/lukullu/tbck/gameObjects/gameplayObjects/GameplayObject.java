@@ -13,6 +13,9 @@ import java.util.ArrayList;
 public class GameplayObject implements IGameObject, ProcessingClass
 {
 
+    protected int[] debugColor = {(int)random(0,255),(int)random(0,255),(int)random(0,255)};
+    protected float debugAlpha = 255;
+
     private int id = ID_Manager.getInstance().generateNewID();
     public Shapes shapeDesc = Shapes.PENTAGON;
     private Vec2 position = new Vec2(0,0);
@@ -143,7 +146,7 @@ public class GameplayObject implements IGameObject, ProcessingClass
 
     public void paintPolygon(Polygon polygon)
     {
-        fill(255);
+        fill(debugColor[0],debugColor[1],debugColor[2],debugAlpha);
 
         beginShape();
         for (int i = 0; i < polygon.getVertices().size() + 1; i++)
@@ -154,7 +157,7 @@ public class GameplayObject implements IGameObject, ProcessingClass
 
         //TODO: Debug remove
 
-        fill(255,0,0);
+        fill(0);
         rectMode(CENTER);
         for (int i = 0; i < polygon.getVertices().size() + 1; i++)
         {

@@ -1,4 +1,4 @@
-package com.lukullu.undersquare.entityTypes;
+package com.lukullu.undersquare.objectTypes;
 
 import com.lukullu.tbck.gameObjects.gameplayObjects.EntityObject;
 import com.lukullu.tbck.utils.Collision;

@@ -38,6 +38,8 @@ public class InputManager implements ProcessingClass {
         keyActions.put('d',Actions.RIGHT);
         keyActions.put('e',Actions.ROTATE_CLOCKWISE);
         keyActions.put('q',Actions.ROTATE_COUNTERCLOCKWISE);
+        keyActions.put('f',Actions.SCALE_UP);
+        keyActions.put('r',Actions.SCALE_DOWN);
         keyActions.put('l',Actions.SLOWMO);
         keyActions.put('k',Actions.DEBUGTOGGLE);
     }

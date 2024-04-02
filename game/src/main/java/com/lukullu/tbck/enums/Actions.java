@@ -7,6 +7,8 @@ public enum Actions {
     RIGHT ("Right"),
     ROTATE_CLOCKWISE ("RotateClockwise"),
     ROTATE_COUNTERCLOCKWISE ("RotateCounterClockwise"),
+    SCALE_UP ("ScaleUp"),
+    SCALE_DOWN ("ScaleDown"),
     SLOWMO ("SlowMo"),
     DEBUGTOGGLE ("DebugEnum");
 

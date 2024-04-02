@@ -115,7 +115,8 @@ public class Viewport extends JPanel {
 			MouseMotionListener,
 			MouseWheelListener,
 			ComponentListener,
-			KeyListener {
+			KeyListener,
+			FocusListener {
 		
 		private final Consumer<ComponentEvent> eventHandler;
 		public ViewportHandler(Consumer<ComponentEvent> eventHandler) {
@@ -125,6 +126,7 @@ public class Viewport extends JPanel {
 			addMouseWheelListener(this);
 			addComponentListener(this);
 			addKeyListener(this);
+			addFocusListener(this);
 		}
 		
 		public void componentResized(ComponentEvent e) { eventHandler.accept(e); }
@@ -134,8 +136,8 @@ public class Viewport extends JPanel {
 		public void mouseClicked(MouseEvent e) { grabFocus(); eventHandler.accept(e); repaint(); }
 		public void mousePressed(MouseEvent e) { grabFocus(); eventHandler.accept(e); repaint(); }
 		public void mouseReleased(MouseEvent e) { eventHandler.accept(e); repaint(); }
-		public void mouseEntered(MouseEvent e) { grabFocus(); pointer = e.getPoint(); eventHandler.accept(e); repaint(); }
-		public void mouseExited(MouseEvent e) { transferFocus(); pointer = null; eventHandler.accept(e); repaint(); }
+		public void mouseEntered(MouseEvent e) { pointer = e.getPoint(); eventHandler.accept(e); repaint(); }
+		public void mouseExited(MouseEvent e) { pointer = null; eventHandler.accept(e); repaint(); }
 		public void mouseDragged(MouseEvent e) { pointer = e.getPoint(); eventHandler.accept(e); repaint(); }
 		public void mouseMoved(MouseEvent e) { pointer = e.getPoint(); eventHandler.accept(e); repaint(); }
 		public void mouseWheelMoved(MouseWheelEvent e) {
@@ -155,6 +157,8 @@ public class Viewport extends JPanel {
 			repaint();
 		}
 		public void keyReleased(KeyEvent e) { eventHandler.accept(e); }
+		public void focusGained(FocusEvent e) { repaint(); }
+		public void focusLost(FocusEvent e) { repaint(); }
 	}
 	
 }

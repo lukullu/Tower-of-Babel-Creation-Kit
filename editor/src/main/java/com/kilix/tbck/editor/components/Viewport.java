@@ -38,6 +38,7 @@ public class Viewport extends JPanel {
 		UNZOOM_ICON = new ImageIcon(unzoom);
 	}
 	
+	// TODO: this shit so easy, we could even animate these :)
 	private final JButton recenterButton = new JButton(RECENTER_ICON);
 	private final JButton unzoomButton = new JButton(UNZOOM_ICON);
 	private int buttonSize = 32;
@@ -50,7 +51,7 @@ public class Viewport extends JPanel {
 	
 	private Point2D pointer = null;
 	private double scale = 1.0;
-	private int offsetX = 0, offsetY = 0;
+	private double offsetX = 0, offsetY = 0;
 	
 	public Viewport(Consumer<Graphics2D> paintMethod, Consumer<ComponentEvent> eventHandler) {
 		super(true);
@@ -89,6 +90,12 @@ public class Viewport extends JPanel {
 		super.paintChildren(g);
 	}
 	
+	public Point2D toViewportScale(Point2D point) {
+		if (point == null) return null;
+		try {
+			return AffineTransform.getScaleInstance(scale, scale).inverseTransform(point, new Point());
+		} catch (NoninvertibleTransformException e) { return null; }
+	}
 	public Point2D component2viewport(Point2D point) {
 		if (point == null) return null;
 		try {
@@ -101,8 +108,8 @@ public class Viewport extends JPanel {
 	}
 	
 	public double getScale() { return scale; }
-	public int getOffsetX() { return offsetX; }
-	public int getOffsetY() { return offsetY; }
+	public double getOffsetX() { return offsetX; }
+	public double getOffsetY() { return offsetY; }
 	
 	public AffineTransform getTransform() {
 		AffineTransform transform = AffineTransform.getTranslateInstance((getWidth() / 2.0) + offsetX, (getHeight() / 2.0) + offsetY);
@@ -117,6 +124,9 @@ public class Viewport extends JPanel {
 			ComponentListener,
 			KeyListener,
 			FocusListener {
+		
+		private static final Cursor MOVE_VIEWPORT_CURSOR = new Cursor(Cursor.MOVE_CURSOR);
+		private static final Cursor DEFAULT_CURSOR = Cursor.getDefaultCursor();
 		
 		private final Consumer<ComponentEvent> eventHandler;
 		public ViewportHandler(Consumer<ComponentEvent> eventHandler) {
@@ -134,11 +144,38 @@ public class Viewport extends JPanel {
 		public void componentShown(ComponentEvent e) { eventHandler.accept(e); }
 		public void componentHidden(ComponentEvent e) { eventHandler.accept(e); }
 		public void mouseClicked(MouseEvent e) { grabFocus(); eventHandler.accept(e); repaint(); }
-		public void mousePressed(MouseEvent e) { grabFocus(); eventHandler.accept(e); repaint(); }
-		public void mouseReleased(MouseEvent e) { eventHandler.accept(e); repaint(); }
+		public void mousePressed(MouseEvent e) {
+			if (e.getButton() == MouseEvent.BUTTON2) {
+				setCursor(MOVE_VIEWPORT_CURSOR);
+				dragPoint = e.getPoint();
+			}
+			grabFocus();
+			eventHandler.accept(e);
+			repaint();
+		}
+		public void mouseReleased(MouseEvent e) {
+			if (e.getButton() == MouseEvent.BUTTON2 && getCursor() == MOVE_VIEWPORT_CURSOR) {
+				setCursor(DEFAULT_CURSOR);
+				dragPoint = null;
+			}
+			eventHandler.accept(e);
+			repaint();
+		}
 		public void mouseEntered(MouseEvent e) { pointer = e.getPoint(); eventHandler.accept(e); repaint(); }
 		public void mouseExited(MouseEvent e) { pointer = null; eventHandler.accept(e); repaint(); }
-		public void mouseDragged(MouseEvent e) { pointer = e.getPoint(); eventHandler.accept(e); repaint(); }
+		
+		private Point dragPoint = null;
+		public void mouseDragged(MouseEvent e) {
+			if (dragPoint != null && (e.getModifiersEx() & MouseEvent.BUTTON2_DOWN_MASK) != 0) {
+				Point p = e.getPoint();
+				offsetX += p.x - dragPoint.x;
+				offsetY += p.y - dragPoint.y;
+				dragPoint = p;
+			}
+			pointer = e.getPoint();
+			eventHandler.accept(e);
+			repaint();
+		}
 		public void mouseMoved(MouseEvent e) { pointer = e.getPoint(); eventHandler.accept(e); repaint(); }
 		public void mouseWheelMoved(MouseWheelEvent e) {
 			scale = Math.max(0.01, scale + (zoomSpeed * (e.getUnitsToScroll() / -3.0) * scale));

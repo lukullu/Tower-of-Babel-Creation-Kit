@@ -62,7 +62,7 @@ public class UnderSquare3 extends ExtendedPApplet {
             {
                 if(gameObject instanceof EntityObject)
                 {
-                    ((EntityObject) gameObject).dynamicCollisionUpdatePolygon();
+                    ((EntityObject) gameObject).dynamicCollisionUpdatePolygon(Constants.COLLISION_RECURSION_MAX_DEPTH);
                 }
                 else if(gameObject instanceof StaticObject)
                 {

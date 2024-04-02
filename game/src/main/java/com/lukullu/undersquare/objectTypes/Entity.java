@@ -25,57 +25,16 @@ public class Entity extends EntityObject implements ISegmentedObject
     }
 
     @Override
-    public ArrayList<Polygon> dynamicCollisionUpdatePolygon()
+    public ArrayList<Polygon> dynamicCollisionUpdatePolygon(int depth)
     {
-        @SuppressWarnings("all")
-        List<EntityObject> entities = (List<EntityObject>)(Object) UnderSquare3.getGameObjects().get(EntityObject.class);
-
-        ArrayList<Polygon> out = new ArrayList<>();
-
-        for (EntityObject entity : entities)
-        {
-            if (this.equals(entity)) { continue; }
-
-            for (int i = 0; i < getPolygons().size(); i++)
-            {
-                for (int j = 0; j < entity.getPolygons().size(); j++)
-                {
-
-                    if(entity instanceof Entity)
-                        if(!((Entity) entity).getSegments().get(j).enabled)
-                            continue;
-
-                    if (!getSegments().get(i).enabled) continue;
-
-                    //CollisionResult res = Collision.collisionResolutionSAT(polygon.getVertices(), polygon.getPosition(), entityPolygon.getVertices(), entityPolygon.getPosition());
-                    CollisionResult res = Collision.collisionResolutionSAT(getPolygons().get(i).getVertices(), this.getPosition(), entity.getPolygons().get(j).getVertices(), entity.getPosition());
-
-                    if (!res.collisionCheck){ continue; }
-
-                    Vec2 combinedForce = this.force.subtract(entity.force);
-                    Vec2 queryForce = combinedForce.multiply(this.mass / (this.mass + entity.mass));
-                    Vec2 generalDirectionQuery = this.getPosition().subtract(entity.getPosition());
-                    Vec2 deltaNorm = res.delta.normalise();
-
-                    if (!(Double.isNaN(deltaNorm.x) || Double.isNaN(deltaNorm.y)))
-                    {
-                        this.applyForce(deltaNorm.multiply(queryForce).align(generalDirectionQuery).multiply(1));
-                        entity.applyForce(deltaNorm.multiply(queryForce).align(generalDirectionQuery).multiply(-1));
-                    }
-
-                    this.updatePos(res.delta.multiply(1));
-
-                    out.add(getPolygons().get(i));
-                }
-            }
-        }
+        ArrayList<Polygon> colliderPolygons = super.dynamicCollisionUpdatePolygon(depth);
 
         Polygon furthestPolygon = null;
         double furthestDistance = 0;
 
-        if(out.size() != 1)
+        if(colliderPolygons.size() != 1)
         {
-            for(Polygon polygon : out)
+            for(Polygon polygon : colliderPolygons)
             {
                 if(polygon.getPosition().subtract(this.getPosition()).length2() > furthestDistance)
                 {
@@ -85,13 +44,13 @@ public class Entity extends EntityObject implements ISegmentedObject
             }
         }else
         {
-            furthestPolygon = out.get(0);
+            furthestPolygon = colliderPolygons.get(0);
         }
 
         //if(getPolygons().contains(furthestPolygon))
-            //segments.get(getPolygons().indexOf(furthestPolygon)).enabled = false;
+        //getSegments().get(getPolygons().indexOf(furthestPolygon)).enabled = false;
 
-        return out;
+        return colliderPolygons;
     }
 
 }

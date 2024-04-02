@@ -55,12 +55,16 @@ public class EntityObject extends GameplayObject {
         return delta;
     }
 
-    public ArrayList<Polygon> dynamicCollisionUpdatePolygon()
+    public ArrayList<Polygon> dynamicCollisionUpdatePolygon(int depth)
     {
+
+        if(depth <= 0) return new ArrayList<>();
+
         @SuppressWarnings("all")
         List<EntityObject> entities = (List<EntityObject>)(Object)UnderSquare3.getGameObjects().get(EntityObject.class);
 
         ArrayList<Polygon> out = new ArrayList<>();
+        ArrayList<EntityObject> colliders = new ArrayList<>();
 
         for (EntityObject entity : entities)
         {
@@ -75,24 +79,33 @@ public class EntityObject extends GameplayObject {
 
                     if (!res.collisionCheck){ continue; }
 
-                    Vec2 combinedForce = this.force.subtract(entity.force);
-                    Vec2 queryForce = combinedForce.multiply(this.mass / (this.mass + entity.mass));
-                    Vec2 generalDirectionQuery = this.getPosition().subtract(entity.getPosition());
-                    Vec2 deltaNorm = res.delta.normalise();
+                    collisionResponse(res,entity);
 
-                    if (!(Double.isNaN(deltaNorm.x) || Double.isNaN(deltaNorm.y)))
-                    {
-                        this.applyForce(deltaNorm.multiply(queryForce).align(generalDirectionQuery).multiply(1));
-                        entity.applyForce(deltaNorm.multiply(queryForce).align(generalDirectionQuery).multiply(-1));
-                    }
-
-                    this.updatePos(res.delta.multiply(1));
-
+                    if(!colliders.contains(entity)){ colliders.add(entity); }
                     out.add(getPolygons().get(i));
                 }
             }
         }
+
+        for (EntityObject entity : colliders) entity.dynamicCollisionUpdatePolygon(depth-1);
+
         return out;
+    }
+
+    protected void collisionResponse(CollisionResult res, EntityObject entity)
+    {
+        Vec2 combinedForce = this.force.subtract(entity.force);
+        Vec2 queryForce = combinedForce.multiply(this.mass / (this.mass + entity.mass));
+        Vec2 generalDirectionQuery = this.getPosition().subtract(entity.getPosition());
+        Vec2 deltaNorm = res.delta.normalise();
+
+        if (!(Double.isNaN(deltaNorm.x) || Double.isNaN(deltaNorm.y)))
+        {
+            this.applyForce(deltaNorm.multiply(queryForce).align(generalDirectionQuery).multiply(1));
+            entity.applyForce(deltaNorm.multiply(queryForce).align(generalDirectionQuery).multiply(-1));
+        }
+
+        this.updatePos(res.delta.multiply(1));
     }
 
     @Override

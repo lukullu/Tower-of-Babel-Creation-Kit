@@ -1,5 +1,7 @@
 package com.kilix.tbck.editor.components;
 
+import com.tbck.Constants;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -42,6 +44,7 @@ public class Viewport extends JPanel {
 	
 	private final Consumer<Graphics2D> paintMethod;
 	private final Color background = UIManager.getColor("Panel.background");
+	private final Color focusColor = UIManager.getColor("Component.focusedBorderColor");
 	
 	public double zoomSpeed = 0.1;
 	
@@ -63,8 +66,11 @@ public class Viewport extends JPanel {
 		add(recenterButton);
 	}
 	public void paint(Graphics g) {
-		g.setColor(background);
+		g.setColor(focusColor);
 		g.fillRect(0, 0, getWidth(), getHeight());
+		int border = hasFocus() ? 2 : 0;
+		g.setColor(background);
+		g.fillRect(border, border, getWidth() - border * 2, getHeight() - border * 2);
 		
 		Graphics2D g2d = (Graphics2D) g.create();
 		g2d.transform(getTransform());
@@ -128,8 +134,8 @@ public class Viewport extends JPanel {
 		public void mouseClicked(MouseEvent e) { grabFocus(); eventHandler.accept(e); repaint(); }
 		public void mousePressed(MouseEvent e) { grabFocus(); eventHandler.accept(e); repaint(); }
 		public void mouseReleased(MouseEvent e) { eventHandler.accept(e); repaint(); }
-		public void mouseEntered(MouseEvent e) { pointer = e.getPoint(); eventHandler.accept(e); repaint(); }
-		public void mouseExited(MouseEvent e) { pointer = null; eventHandler.accept(e); repaint(); }
+		public void mouseEntered(MouseEvent e) { grabFocus(); pointer = e.getPoint(); eventHandler.accept(e); repaint(); }
+		public void mouseExited(MouseEvent e) { transferFocus(); pointer = null; eventHandler.accept(e); repaint(); }
 		public void mouseDragged(MouseEvent e) { pointer = e.getPoint(); eventHandler.accept(e); repaint(); }
 		public void mouseMoved(MouseEvent e) { pointer = e.getPoint(); eventHandler.accept(e); repaint(); }
 		public void mouseWheelMoved(MouseWheelEvent e) {
@@ -148,10 +154,7 @@ public class Viewport extends JPanel {
 			eventHandler.accept(e);
 			repaint();
 		}
-		public void keyReleased(KeyEvent e) {
-			eventHandler.accept(e);
-			repaint();
-		}
+		public void keyReleased(KeyEvent e) { eventHandler.accept(e); }
 	}
 	
 }

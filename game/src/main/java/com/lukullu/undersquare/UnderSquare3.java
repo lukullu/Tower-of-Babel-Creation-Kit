@@ -18,6 +18,7 @@ import com.tbck.math.Vec2;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class UnderSquare3 extends ExtendedPApplet {
 
@@ -30,7 +31,8 @@ public class UnderSquare3 extends ExtendedPApplet {
         gameObjects.putEntity(new Player("/shapeFiles/playerShape.psff", new Vec2(600,600), 0, 1));
         gameObjects.putEntity(new Entity("/shapeFiles/testShape.psff",new Vec2(900,600), 0, 2));
         gameObjects.putEntity(new Entity("/shapeFiles/testShape.psff",new Vec2(500,400), 0, 3));
-        gameObjects.putMeta(  new Meta  ("/shapeFiles/testShape.psff",new Vec2(1000,700), 0, 1,()->{System.out.println("Hello World");},false));
+        gameObjects.putMeta(  new Meta  ("/shapeFiles/testShape.psff",new Vec2(1000,700), 0, 1,(nil)->{System.out.println("heya");},false));
+        gameObjects.putMeta(  new Meta  ("/shapeFiles/testShape.psff",new Vec2(400,300), 0, 1,(res)->{res.collider.reset();},false));
         gameObjects.putStatic(new Static("/shapeFiles/testShape.psff",new Vec2(800,500), PI, 4));
 
     }

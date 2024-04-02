@@ -1,12 +1,13 @@
 package com.lukullu.tbck.utils;
 
+import com.lukullu.undersquare.interfaces.ICollidableObject;
 import com.tbck.math.Vec2;
 
 import java.util.ArrayList;
 
 public class Collision
 {
-    public static CollisionResult collisionResolutionSAT(ArrayList<Vec2> polygon1, Vec2 polygonCenter1, ArrayList<Vec2> polygon2, Vec2 polygonCenter2)
+    public static CollisionResult collisionResolutionSAT(ArrayList<Vec2> polygon1, Vec2 polygonCenter1, ArrayList<Vec2> polygon2, Vec2 polygonCenter2, ICollidableObject collider)
     {
         double overlap = Double.MAX_VALUE;
         double minOverlap = Double.MAX_VALUE;
@@ -62,7 +63,7 @@ public class Collision
                     axisVertices = new Vec2[]{poly1.get(a), poly1.get(a)};
                 }
 
-                if(!(maxPoly2 >= minPoly1 && maxPoly1 >= minPoly2)){return new CollisionResult(false,Vec2.ZERO_VECTOR2,false,null);}
+                if(!(maxPoly2 >= minPoly1 && maxPoly1 >= minPoly2)){return new CollisionResult(false,null, Vec2.ZERO_VECTOR2,false,null);}
 
             }
         }
@@ -71,7 +72,7 @@ public class Collision
 
         Vec2 delta = transformationAxis.multiply(-minOverlap).align(generalDirection);
 
-        return new CollisionResult(true, delta, axisOriginIndex == 0, axisVertices);
+        return new CollisionResult(true, collider, delta, axisOriginIndex == 0, axisVertices);
     }
 
 

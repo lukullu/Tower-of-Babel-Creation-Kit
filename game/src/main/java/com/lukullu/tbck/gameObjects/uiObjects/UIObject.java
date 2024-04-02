@@ -6,6 +6,7 @@ import com.tbck.math.Vec2;
 
 import java.util.ArrayList;
 
+
 public class UIObject implements IGameObject {
     public int getID(){ return 1; }
     public void update()
@@ -14,6 +15,11 @@ public class UIObject implements IGameObject {
     }
     public void paint()
     {
+
+    }
+
+    @Override
+    public void reset() {
 
     }
 

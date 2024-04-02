@@ -70,7 +70,6 @@ public class GameplayObject implements IGameObject, ProcessingClass
         scaling = originalScaling;
         position = originalPosition;
         initVertices();
-        updateVertices(position,rotation,scaling);
     }
     public void updatePos(Vec2 delta)
     {

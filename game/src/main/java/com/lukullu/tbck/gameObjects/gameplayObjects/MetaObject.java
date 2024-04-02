@@ -12,20 +12,22 @@ import com.lukullu.undersquare.UnderSquare3;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class MetaObject extends GameplayObject implements ICollidableObject
 {
-    Runnable action = null;
+    Consumer<CollisionResult> action = null;
     boolean isActive = false;
     boolean isContinuous = true;
 
-    public MetaObject(Shapes shapeDesc, Vec2 position, double rotation, double scaling, Runnable action, boolean isContinuous)
+    public MetaObject(Shapes shapeDesc, Vec2 position, double rotation, double scaling, Consumer<CollisionResult> action, boolean isContinuous)
     {
         super(shapeDesc, position, rotation, scaling);
         this.action = action;
         this.isContinuous = isContinuous;
     }
-    public MetaObject(ArrayList<? extends Polygon> polygons, Vec2 position, double rotation, double scaling, Runnable action, boolean isTrigger)
+    public MetaObject(ArrayList<? extends Polygon> polygons, Vec2 position, double rotation, double scaling, Consumer<CollisionResult> action, boolean isTrigger)
     {
         super(polygons,position,rotation,scaling);
         this.action = action;
@@ -35,7 +37,7 @@ public class MetaObject extends GameplayObject implements ICollidableObject
     @Override
     public void update()
     {
-        if(isContinuous && isActive) action.run();
+        if(isContinuous && isActive) action.accept(null);
     }
 
     @Override
@@ -49,9 +51,9 @@ public class MetaObject extends GameplayObject implements ICollidableObject
         return polygonColliders;
     }
 
-    private void setActive()
+    private void setActive(CollisionResult res)
     {
-        if(!isContinuous && !isActive) action.run();
+        if(!isContinuous && !isActive) action.accept(res);
         isActive = true;
     }
 
@@ -61,8 +63,8 @@ public class MetaObject extends GameplayObject implements ICollidableObject
     }
 
     @Override
-    public void collisionResponse(CollisionResult res, EntityObject entity) {
+    public void collisionResponse(CollisionResult res) {
         // TODO: is right activator (entity.class == ?)
-        setActive();
+        setActive(res);
     }
 }

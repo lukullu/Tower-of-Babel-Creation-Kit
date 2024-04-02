@@ -10,6 +10,7 @@ public interface IGameObject {
     int getID();
     void update();
     void paint();
+    void reset();
     void paintPolygon(Polygon polygon);
     Vec2 getPosition();
     ArrayList<Polygon> getPolygons();

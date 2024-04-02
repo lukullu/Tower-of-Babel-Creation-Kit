@@ -31,11 +31,11 @@ public interface ICollidableObject extends IGameObject
             {
                 for (int j = 0; j < entity.getPolygons().size(); j++)
                 {
-                     CollisionResult res = Collision.collisionResolutionSAT(getPolygons().get(i).getVertices(), this.getPosition(), entity.getPolygons().get(j).getVertices(), entity.getPosition());
+                     CollisionResult res = Collision.collisionResolutionSAT(getPolygons().get(i).getVertices(), this.getPosition(), entity.getPolygons().get(j).getVertices(), entity.getPosition(),entity);
 
                     if (!res.collisionCheck){ continue; }
 
-                    collisionResponse(res,entity);
+                    collisionResponse(res);
 
                     if(!colliders.contains(entity)){ colliders.add(entity); }
                     out.add(getPolygons().get(i));
@@ -61,11 +61,11 @@ public interface ICollidableObject extends IGameObject
             {
                 for (int j = 0; j < entity.getPolygons().size(); j++)
                 {
-                    CollisionResult res = Collision.collisionResolutionSAT(getPolygons().get(i).getVertices(), this.getPosition(), entity.getPolygons().get(j).getVertices(), entity.getPosition());
+                    CollisionResult res = Collision.collisionResolutionSAT(getPolygons().get(i).getVertices(), this.getPosition(), entity.getPolygons().get(j).getVertices(), entity.getPosition(), entity);
 
                     if (!res.collisionCheck){ continue; }
 
-                    collisionResponse(res,entity);
+                    collisionResponse(res);
 
                     out.add(getPolygons().get(i));
                 }
@@ -74,5 +74,5 @@ public interface ICollidableObject extends IGameObject
         return out;
     }
 
-    void collisionResponse(CollisionResult res, EntityObject entity);
+    void collisionResponse(CollisionResult res);
 }

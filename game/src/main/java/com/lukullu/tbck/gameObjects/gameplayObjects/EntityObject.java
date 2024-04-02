@@ -76,11 +76,11 @@ public class EntityObject extends GameplayObject implements ICollidableObject {
                 for (int j = 0; j < entity.getPolygons().size(); j++)
                 {
                     //CollisionResult res = Collision.collisionResolutionSAT(polygon.getVertices(), polygon.getPosition(), entityPolygon.getVertices(), entityPolygon.getPosition());
-                    CollisionResult res = Collision.collisionResolutionSAT(getPolygons().get(i).getVertices(), this.getPosition(), entity.getPolygons().get(j).getVertices(), entity.getPosition());
+                    CollisionResult res = Collision.collisionResolutionSAT(getPolygons().get(i).getVertices(), this.getPosition(), entity.getPolygons().get(j).getVertices(), entity.getPosition(),entity);
 
                     if (!res.collisionCheck){ continue; }
 
-                    collisionResponse(res,entity);
+                    collisionResponse(res);
 
                     if(!colliders.contains(entity)){ colliders.add(entity); }
                     out.add(getPolygons().get(i));
@@ -93,11 +93,14 @@ public class EntityObject extends GameplayObject implements ICollidableObject {
         return out;
     }
 
-    public void collisionResponse(CollisionResult res, EntityObject entity)
+    public void collisionResponse(CollisionResult res)
     {
+        if(!(res.collider instanceof EntityObject)) return;
+        EntityObject entity = (EntityObject)(Object) res.collider;
+
         Vec2 combinedForce = this.force.subtract(entity.force);
         Vec2 queryForce = combinedForce.multiply(this.mass / (this.mass + entity.mass));
-        Vec2 generalDirectionQuery = this.getPosition().subtract(entity.getPosition());
+        Vec2 generalDirectionQuery = this.getPosition().subtract(res.collider.getPosition());
         Vec2 deltaNorm = res.delta.normalise();
 
         if (!(Double.isNaN(deltaNorm.x) || Double.isNaN(deltaNorm.y)))

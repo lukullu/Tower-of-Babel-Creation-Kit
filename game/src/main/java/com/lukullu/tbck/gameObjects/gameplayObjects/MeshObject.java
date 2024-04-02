@@ -6,6 +6,7 @@ import com.tbck.math.Vec2;
 
 import java.util.ArrayList;
 
+@Deprecated
 public class MeshObject extends GameplayObject
 {
 
@@ -14,12 +15,6 @@ public class MeshObject extends GameplayObject
         super(shapeDesc, position, rotation, scaling);
         setPolygons(constructTriangles());
     }
-
-    public MeshObject()
-    {
-
-    }
-
     private ArrayList<Polygon> constructTriangles()
     {
         ArrayList<Polygon> acc = new ArrayList<>();

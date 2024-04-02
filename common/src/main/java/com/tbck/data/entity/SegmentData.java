@@ -13,11 +13,15 @@ public class SegmentData extends Polygon implements Serializable
     
     @Serial private static final long serialVersionUID = 3756687822214555217L;
     
-    public int ArmorPoints;
+    public int ArmorPoints; // TODO lukullu why this not armorPoints?
     public SegmentRoles role;
     public boolean enabled = true;
 
     public SegmentData(ArrayList<Vec2> vertices) {
         super(vertices);
+    }
+    
+    public String toString() {
+        return "SegmentData{" + role + ", " + ArmorPoints + "ap, " + vertices.toString() + '}';
     }
 }

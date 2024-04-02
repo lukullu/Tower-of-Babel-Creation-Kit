@@ -20,9 +20,8 @@ public interface Constants {
 	
 	// -. editor rendering .- \\
 	Color TRANSPARENT = new Color(255, 255, 255, 0);
-	Color SHAPE_HOVER = new Color(76, 76, 134);
-	Color SHAPE_SELECTED = new Color(55, 107, 73);
+	Color SHAPE_HOVER = new Color(76, 76, 134, 200);
+	Color SHAPE_SELECTED = new Color(55, 107, 73, 200);
 	String NO_SEGMENT_TITLE = "no segment selected";
-	static String SEGMENT_TITLE(SegmentData segment) { return segment.role + " segment"; }
 	
 }

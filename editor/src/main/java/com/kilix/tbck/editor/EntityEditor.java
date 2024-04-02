@@ -1,9 +1,10 @@
 package com.kilix.tbck.editor;
 
 import com.kilix.tbck.editor.components.LabeledSlider;
-import com.tbck.Constants;
+import com.tbck.NumberUtils;
 import com.tbck.data.entity.SegmentData;
 import com.tbck.data.entity.SegmentDataManager;
+import com.tbck.data.entity.SegmentRoles;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
 
@@ -19,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import static com.tbck.Constants.*;
@@ -43,10 +43,10 @@ public class EntityEditor extends EditorPanel {
 	
 	private int polygonPoints = 8;
 	private JPanel segmentPanel;
-	private final TitledBorder segmentBorder = new TitledBorder(
-			new MatteBorder(1, 0, 0, 0, UIManager.getColor("TitledBorder.titleColor")),
-			NO_SEGMENT_TITLE, TitledBorder.CENTER, TitledBorder.TOP
-	);
+	
+	// segment control \\
+	private JButton armorPoints;
+	private JButton segmentRole;
 	
 	private SegmentData selectedSegment = null;
 	
@@ -94,8 +94,38 @@ public class EntityEditor extends EditorPanel {
 		})), lineConstraints(line++));
 		
 		segmentPanel = new JPanel(new GridBagLayout());
-		segmentPanel.setBorder(segmentBorder);
-		segmentPanel.add(new JButton("Click Me"));
+		segmentPanel.setBorder(new TitledBorder(
+				new MatteBorder(1, 0, 0, 0, UIManager.getColor("TitledBorder.titleColor")),
+				NO_SEGMENT_TITLE, TitledBorder.CENTER, TitledBorder.TOP
+		));
+		int segmentPanelLine = 0;
+		// -- armor points field -- \\
+		armorPoints = new JButton();
+		armorPoints.addActionListener(e -> {
+			String text = String.valueOf(selectedSegment.ArmorPoints);
+			do {
+				text = JOptionPane.showInputDialog(this, "Set armor points", text);
+			} while (! NumberUtils.isNumericOrNull(text));
+			
+			if (text != null) selectedSegment.ArmorPoints = Integer.parseInt(text);
+			loadSegmentProperties();
+		});
+		segmentPanel.add(armorPoints, lineConstraints(segmentPanelLine++));
+		// -- role field -- \\
+		segmentRole = new JButton();
+		segmentRole.addActionListener(e -> {
+			SegmentRoles role = (SegmentRoles) JOptionPane.showInputDialog(
+					this, "Select segment role", "Input",
+					JOptionPane.PLAIN_MESSAGE, null,
+					SegmentRoles.values(), selectedSegment.role
+			);
+			selectedSegment.role = role;
+			loadSegmentProperties();
+		});
+		segmentPanel.add(segmentRole, lineConstraints(segmentPanelLine++));
+		
+		resetSegmentProperties();
+		setSegmentPanelEnabled(false);
 		
 		toolsPanel.add(segmentPanel, lineConstraints(line++));
 		
@@ -108,7 +138,12 @@ public class EntityEditor extends EditorPanel {
 		));
 	}
 	
-	// © ChatGPT
+	void setSegmentPanelEnabled(Boolean isEnabled) {
+		segmentPanel.setEnabled(isEnabled);
+		for (Component component : segmentPanel.getComponents()) component.setEnabled(isEnabled);
+		segmentPanel.repaint();
+	}
+	
 	public static ArrayList<Vec2> generateRegularPolygon(int sides, double radius) {
 		ArrayList<Vec2> polygonVertices = new ArrayList<>();
 		double angleIncrement = 2 * Math.PI / sides;
@@ -128,9 +163,23 @@ public class EntityEditor extends EditorPanel {
 		
 		final boolean hasSegment = segment != null;
 		
-		segmentBorder.setTitle(hasSegment ? SEGMENT_TITLE(segment) : NO_SEGMENT_TITLE);
-		toolsPanel.repaint();
+		((TitledBorder) segmentPanel.getBorder()).setTitle(hasSegment
+				? String.format("%s %02d\n", segment.role, entityTemplate.indexOf(segment))
+				: NO_SEGMENT_TITLE);
+		setSegmentPanelEnabled(hasSegment);
+		if (hasSegment) loadSegmentProperties();
+		else resetSegmentProperties();
+		repaint();
 	}
+	private void loadSegmentProperties() {
+		armorPoints.setText((selectedSegment.ArmorPoints < 0 ? "impenetrable" : selectedSegment.ArmorPoints) + " armor");
+		segmentRole.setText("role: " + selectedSegment.role.name());
+	}
+	private void resetSegmentProperties() {
+		armorPoints.setText("no armor points");
+		segmentRole.setText("no role");
+	}
+	
 	private void update() {
 		rootFrame.setContext(
 				templateFile != null
@@ -205,6 +254,7 @@ public class EntityEditor extends EditorPanel {
 		this.templateFile = null;
 		this.entityTemplate = new ArrayList<>();
 		unsavedChanges = false;
+		selectSegment(null);
 		update();
 	}
 	public void openTemplate(File file) {
@@ -228,6 +278,7 @@ public class EntityEditor extends EditorPanel {
 			this.unsavedChanges = false;
 			update();
 			System.out.println(entityTemplate.size() + " segments loaded.");
+			selectSegment(null);
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(
 					null,
@@ -236,7 +287,6 @@ public class EntityEditor extends EditorPanel {
 					JOptionPane.ERROR_MESSAGE
 			);
 		}
-		
 	}
 	public final void saveTemplate() { saveTemplate(this.templateFile); }
 	public void saveTemplate(File file) {

@@ -2,12 +2,15 @@ package com.lukullu.undersquare;
 
 import com.kilix.processing.ExtendedPApplet;
 
-import com.lukullu.tbck.enums.Shapes;
 import com.lukullu.tbck.gameObjects.IGameObject;
 import com.lukullu.tbck.gameObjects.gameplayObjects.EntityObject;
+import com.lukullu.tbck.gameObjects.gameplayObjects.GameplayObject;
+import com.lukullu.tbck.gameObjects.gameplayObjects.StaticObject;
 import com.lukullu.tbck.utils.*;
 import com.lukullu.undersquare.entities.Player;
-import com.lukullu.undersquare.entityTypes.SegmentEntity;
+import com.lukullu.undersquare.objectTypes.Entity;
+import com.lukullu.undersquare.objectTypes.Meta;
+import com.lukullu.undersquare.objectTypes.Static;
 import com.tbck.data.entity.SegmentDataManager;
 import com.tbck.math.Vec2;
 
@@ -23,25 +26,12 @@ public class UnderSquare3 extends ExtendedPApplet {
     {
         // "../game/src/main/resources/shapeFiles/playerShape.psff"
 
+        gameObjects.putEntity(new Player("/shapeFiles/playerShape.psff", new Vec2(600,600), 0, 1));
+        gameObjects.putEntity(new Entity("/shapeFiles/testShape.psff",new Vec2(900,600), 0, 2));
+        gameObjects.putEntity(new Entity("/shapeFiles/testShape.psff",new Vec2(500,400), 0, 3));
+        //gameObjects.putMeta(  new Meta  ("/shapeFiles/testShape.psff",new Vec2(1000,700), 0, 1,()->{System.out.println("Hello World");},false));
+        gameObjects.putStatic(new Static("/shapeFiles/testShape.psff",new Vec2(800,500), PI, 4));
 
-        gameObjects.putEntity(new Player("/shapeFiles/playerShape.psff", new Vec2(600,600), 0, 5));
-        gameObjects.putEntity(new EntityObject(Shapes.SQUARE,new Vec2(900,600),0,75));
-        gameObjects.putEntity(new SegmentEntity("/shapeFiles/testShape.psff",new Vec2(1400,600), 0, 5));
-        //gameObjects.putMetaObject(new MetaObject(Shapes.SQUARE,new Vec2(1000,700), 0, 75,()->{System.out.println("Hello World");},false));
-
-    }
-
-    private static final void storeShapes() {
-        Player player = new Player("../game/src/main/resources/shapeFiles/legacy/playerShape.psff", new Vec2(600,600), 0, 5);
-        SegmentEntity testEntity = new SegmentEntity("../game/src/main/resources/shapeFiles/legacy/testShape.psff",new Vec2(1400,600), 0, 5);
-
-        try {
-            SegmentDataManager.saveExternal(new File("./playerShape.psff"), player.segments);
-            SegmentDataManager.saveExternal(new File("./testShape.psff"), testEntity.segments);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        System.exit(0);
     }
 
     public void draw()
@@ -72,7 +62,11 @@ public class UnderSquare3 extends ExtendedPApplet {
             {
                 if(gameObject instanceof EntityObject)
                 {
-                    ((EntityObject) gameObject).dynamicCollisionUpdatePolygon();
+                    ((EntityObject) gameObject).dynamicCollisionUpdatePolygon(Constants.COLLISION_RECURSION_MAX_DEPTH);
+                }
+                else if(gameObject instanceof StaticObject)
+                {
+                    ((StaticObject) gameObject).dynamicCollisionUpdatePolygon();
                 }
 
             }
@@ -89,6 +83,19 @@ public class UnderSquare3 extends ExtendedPApplet {
             }
         }
 
+    }
+
+    private static final void storeShapes() {
+        Player player = new Player("../game/src/main/resources/shapeFiles/legacy/playerShape.psff", new Vec2(600,600), 0, 5);
+        Entity testEntity = new Entity("../game/src/main/resources/shapeFiles/legacy/testShape.psff",new Vec2(1400,600), 0, 5);
+
+        try {
+            SegmentDataManager.saveExternal(new File("./playerShape.psff"), player.getSegments());
+            SegmentDataManager.saveExternal(new File("./testShape.psff"), testEntity.getSegments());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        System.exit(0);
     }
 
     public static GameObjectMultiHashMap getGameObjects() { return gameObjects; }

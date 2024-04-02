@@ -13,11 +13,14 @@ import java.util.ArrayList;
 public class GameplayObject implements IGameObject, ProcessingClass
 {
 
+    protected int[] debugColor = {(int)random(0,255),(int)random(0,255),(int)random(0,255)};
+    protected float debugAlpha = 255;
+
     private int id = ID_Manager.getInstance().generateNewID();
     public Shapes shapeDesc = Shapes.PENTAGON;
-    private Vec2 position = new Vec2(0,0);
-    public double rotation = 0; // Unit: radians
-    private double scaling = 1;
+    private Vec2 position = new Vec2(0,0), originalPosition;
+    public double rotation = 0, originalRotation; // Unit: radians
+    private double scaling = 1, originalScaling;
     public ArrayList<Polygon> shape = new ArrayList<>();
     private ArrayList<Polygon> polygons = new ArrayList<>();
 
@@ -32,18 +35,19 @@ public class GameplayObject implements IGameObject, ProcessingClass
     public GameplayObject(Shapes shapeDesc, Vec2 position, double rotation, double scaling)
     {
         this.shapeDesc = shapeDesc;
-        this.position = position;
-        this.rotation = rotation;
-        this.scaling = scaling;
+        this.position = position; this.originalPosition = position;
+        this.rotation = rotation; this.originalRotation = rotation;
+        this.scaling = scaling; this.originalScaling = scaling;
         initShape();
         initVertices();
     }
 
-    public GameplayObject(ArrayList<? extends Polygon> shape, Vec2 position, double rotation)
+    public GameplayObject(ArrayList<? extends Polygon> shape, Vec2 position, double rotation, double scaling)
     {
         this.shape.addAll(shape);
-        this.rotation = rotation;
-        this.position = position;
+        this.position = position; this.originalPosition = position;
+        this.rotation = rotation; this.originalRotation = rotation;
+        this.scaling = scaling; this.originalScaling = scaling;
         initVertices();
     }
 
@@ -51,6 +55,7 @@ public class GameplayObject implements IGameObject, ProcessingClass
     public Vec2 getPosition() { return position; }
     public ArrayList<Vec2> getVertices(int i){ return polygons.get(i).getVertices(); }
     public ArrayList<Polygon> getPolygons(){ return polygons; }
+    public ArrayList<Polygon> getShape() { return shape; }
     public void setPolygons(ArrayList<Polygon> polygons) { this.polygons = polygons; }
     public void update() {  } // TODO: Check if this can be moved to the updatePos / updateRot functions to save resources
     public void paint()
@@ -59,16 +64,30 @@ public class GameplayObject implements IGameObject, ProcessingClass
             paintPolygon(polygon);
     }
 
+    public void reset()
+    {
+        rotation = originalRotation;
+        scaling = originalScaling;
+        position = originalPosition;
+        initVertices();
+        updateVertices(position,rotation,scaling);
+    }
     public void updatePos(Vec2 delta)
     {
         position = position.add(delta);
-        updateVertices(delta,0);
+        updateVertices(delta,0,0);
     }
 
     public void updateRot(double delta)
     {
         rotation += delta;
-        updateVertices(Vec2.ZERO_VECTOR2,delta);
+        updateVertices(Vec2.ZERO_VECTOR2,delta,0);
+    }
+
+    public void updateSca(double delta)
+    {
+        rotation += delta;
+        updateVertices(Vec2.ZERO_VECTOR2,0,delta);
     }
 
     public void initShape()
@@ -105,36 +124,40 @@ public class GameplayObject implements IGameObject, ProcessingClass
             shape.add(new Polygon(newShape));
         }
     }
+
     private void initVertices()
     {
+        polygons = new ArrayList<>();
         polygons.addAll(shape);
-        updateVertices(position,rotation);
+        updateVertices(position,rotation,scaling);
     }
-    public void updateVertices(Vec2 deltaPos, double deltaRot)
+
+    public void updateVertices(Vec2 deltaPos, double deltaRot, double deltaSca)
     {
         ArrayList<Polygon> newPolygons = new ArrayList<>();
         for (Polygon polygon : polygons)
         {
-            newPolygons.add(calcVertices(polygon.getVertices(),deltaPos,deltaRot));
+            newPolygons.add(calcVertices(polygon.getVertices(),deltaPos,deltaRot,deltaSca));
         }
         polygons = newPolygons;
     }
 
-    private Polygon calcVertices(ArrayList<Vec2> vertices, Vec2 position, double rotation) {
+    private Polygon calcVertices(ArrayList<Vec2> vertices, Vec2 deltaPos, double deltaRot, double deltaSca) {
         ArrayList<Vec2> output = new ArrayList<Vec2>();
         for (Vec2 vertex : vertices) {
 
-            vertex = vertex.add(position);
-            vertex = vertex.rotate(getPosition(),rotation);
+            vertex = vertex.add(deltaPos);
+            vertex = vertex.rotate(getPosition(),deltaRot);
+            vertex = vertex.scale(getPosition(),deltaSca);
 
             output.add(vertex);
         }
         return new Polygon(output);
     }
 
-    protected void paintPolygon(Polygon polygon)
+    public void paintPolygon(Polygon polygon)
     {
-        fill(255);
+        fill(debugColor[0],debugColor[1],debugColor[2],debugAlpha);
 
         beginShape();
         for (int i = 0; i < polygon.getVertices().size() + 1; i++)
@@ -145,7 +168,7 @@ public class GameplayObject implements IGameObject, ProcessingClass
 
         //TODO: Debug remove
 
-        fill(255,0,0);
+        fill(0);
         rectMode(CENTER);
         for (int i = 0; i < polygon.getVertices().size() + 1; i++)
         {

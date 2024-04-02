@@ -54,6 +54,7 @@ public class Vec2 implements Serializable
         );
         return newRelative.add(pivot);
     }
+    public Vec2 scale(Vec2 origin, double value) { return this.add(this.subtract(origin).multiply(value)); }
 
     public Point getPoint() { return new Point((int) x, (int) y); }
     

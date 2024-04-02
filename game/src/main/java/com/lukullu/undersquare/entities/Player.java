@@ -4,9 +4,9 @@ import com.lukullu.tbck.enums.Actions;
 import com.lukullu.tbck.utils.DeltaTimer;
 import com.lukullu.tbck.utils.InputManager;
 import com.tbck.math.Vec2;
-import com.lukullu.undersquare.entityTypes.SegmentEntity;
+import com.lukullu.undersquare.objectTypes.Entity;
 
-public class Player extends SegmentEntity {
+public class Player extends Entity {
 
     private static final Vec2 MOVEMENT_FORCE = new Vec2(50,50);
 
@@ -39,8 +39,10 @@ public class Player extends SegmentEntity {
         
         applyForce(deltaForce);
 
-        if(InputManager.getInstance().isActionQueued(Actions.ROTATE_CLOCKWISE          )){ updateRot(PI * DeltaTimer.getInstance().getDeltaTime());   }
+        if(InputManager.getInstance().isActionQueued(Actions.ROTATE_CLOCKWISE          )){ updateRot(PI * DeltaTimer.getInstance().getDeltaTime());    }
         if(InputManager.getInstance().isActionQueued(Actions.ROTATE_COUNTERCLOCKWISE   )){ updateRot(-PI * DeltaTimer.getInstance().getDeltaTime());   }
+        if(InputManager.getInstance().isActionQueued(Actions.SCALE_UP                  )){ updateSca(0.2 * DeltaTimer.getInstance().getDeltaTime());   }
+        if(InputManager.getInstance().isActionQueued(Actions.SCALE_DOWN                )){ updateSca(-0.2 * DeltaTimer.getInstance().getDeltaTime());  }
         if(InputManager.getInstance().isActionQueued(Actions.SLOWMO  )){ DeltaTimer.getInstance().setTimeModifier(0.75); } else {DeltaTimer.getInstance().setTimeModifier(1);}
 
         /*if(InputManager.getInstance().isActionQueued(Actions.FORWARD )){ updatePos(new Vec2(0  , -10)); }

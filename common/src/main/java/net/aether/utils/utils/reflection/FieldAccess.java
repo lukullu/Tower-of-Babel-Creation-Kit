@@ -37,6 +37,7 @@ public record FieldAccess<O, T>(
 		}
 		public Builder<O, T> setSetter(BiConsumer<O, T> setter) { this.setter = setter; return this; }
 		public Builder<O, T> setGetter(Function<O, T> getter) { this.getter = getter; return this; }
+		/** puts a casting "layer" between your getter and the invocation. */
 		public Builder<O, T> setAutocastGetter(Function<O, Object> getter) { this.getter = (obj) -> (T) getter.apply(obj); return this; }
 		public FieldAccess<O, T> build() { return new FieldAccess<>(objectType, fieldType, name, setter, getter); }
 	}

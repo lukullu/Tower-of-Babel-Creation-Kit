@@ -29,9 +29,9 @@ public record ClassAccess<T>(
 			Class<?> fieldType = field.getType();
 			
 			fields.put(fieldName,
-					(FieldAccess.Builder<T, ?>) FieldAccess.newBuilder(type, fieldType, fieldName)
+					FieldAccess.newBuilder(type, fieldType, fieldName)
 					.setSetter((obj, val) -> { try { field.set(obj, val); } catch (Exception e) { throw new RuntimeException("Unable to set field", e); }})
-					.setAutocastGetter((obj) -> { try { return field.get(obj); } catch (Exception e) { throw new RuntimeException("Unable to get field", e); } })
+					.setAutocastGetter((obj) -> { try { return field.get(obj); } catch (Exception e) { throw new RuntimeException("Unable to get field", e); }})
 			);
 			
 		}
@@ -42,10 +42,20 @@ public record ClassAccess<T>(
 			String fieldName = exposed.as();
 			MethodType methodType = getMethodType(method);
 			
-			
+			// if the method has a setter-like signature
+			if (methodType == MethodType.SETTER)
+				// get an existing field or create a new one
+				fields.computeIfAbsent(fieldName, key -> FieldAccess.newBuilder(type, method.getParameterTypes()[0], fieldName))
+						// and set the setter
+						.setSetter((obj, val) -> { try { method.invoke(obj, val); } catch (Exception e) { throw new RuntimeException("Unable to invoke setter", e); }});
+			// if the method has a getter-like signature
+			if (methodType == MethodType.GETTER)
+				// get an existing field or create a new one
+				fields.computeIfAbsent(fieldName, key -> FieldAccess.newBuilder(type, method.getParameterTypes()[0], fieldName))
+						// and set the getter
+						.setAutocastGetter((obj) -> { try { return method.invoke(obj); } catch (Exception e) { throw new RuntimeException("Unable to invoke setter", e); }});
 			
 		}
-		
 		
 		return fields.values().stream().map(FieldAccess.Builder::build).toArray(FieldAccess[]::new);
 	}

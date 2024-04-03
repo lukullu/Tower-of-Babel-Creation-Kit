@@ -428,7 +428,7 @@ public class ExtendedPApplet extends PApplet {
 					.toList().toArray(new Class<?>[0]);
 
 			java.util.List<Method> validMethods = findMethodsRecursively(methodName,obj.getClass(), types);
-			if (validMethods.size() <= 0) throw new NoSuchMethodException("Unable to find method on object of type " + obj.getClass().getSimpleName());
+			if (validMethods.size() <= 0) throw new NoSuchMethodException("Unable to find method on object of fieldType " + obj.getClass().getSimpleName());
 			Method method = validMethods.get(0); // we want the first, because we always want the overridden version
 
 			method.setAccessible(true);

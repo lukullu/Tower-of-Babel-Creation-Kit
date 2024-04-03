@@ -1,4 +1,4 @@
-package com.kilix.tbck.editor.components;
+package net.aether.utils.utils.swing;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;

@@ -1,6 +1,6 @@
 package com.kilix.tbck.editor;
 
-import com.kilix.tbck.editor.components.Viewport;
+import net.aether.utils.utils.swing.Viewport;
 
 import javax.swing.*;
 import java.awt.*;

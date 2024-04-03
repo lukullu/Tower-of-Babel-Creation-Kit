@@ -1,6 +1,6 @@
 package com.kilix.tbck.editor;
 
-import com.kilix.tbck.editor.components.LabeledSlider;
+import net.aether.utils.utils.swing.LabeledSlider;
 import com.tbck.NumberUtils;
 import com.tbck.data.entity.SegmentData;
 import com.tbck.data.entity.SegmentDataManager;

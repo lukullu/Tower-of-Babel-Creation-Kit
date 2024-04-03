@@ -1,6 +1,4 @@
-package com.kilix.tbck.editor.components;
-
-import com.tbck.Constants;
+package net.aether.utils.utils.swing;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

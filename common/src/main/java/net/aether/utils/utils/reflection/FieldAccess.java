@@ -2,8 +2,9 @@ package net.aether.utils.utils.reflection;
 
 import net.aether.utils.utils.data.Maybe;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -23,6 +24,78 @@ public record FieldAccess<O, T>(
 		Function<O, T> getter
 ) {
 	
+	public static <T> FieldAccess<T, ?>[] createFieldAccess(Class<T> type) {
+		HashMap<String, Builder<T, ?>> fields = new HashMap<>();
+		
+		Exposes exposes = Objects.requireNonNullElse(type.getAnnotation(Exposes.class), Exposes.NOTHING);
+		List<String> exposedFields = Arrays.asList(exposes.value());
+		boolean everything = exposedFields.contains(Exposes.EVERYTHING);
+		// collect fields
+		for (Field field : type.getFields()) {
+			Exposed exposed = getExposed(field, everything, exposedFields);
+			if (exposed.hidden()) continue;
+			String fieldName = getFieldName(field, exposed);
+			Class<?> fieldType = field.getType();
+			
+			fields.put(fieldName,
+					newBuilder(type, fieldType, fieldName)
+					.setSetter((obj, val) -> { try { field.set(obj, val); } catch (Exception e) { throw new RuntimeException("Unable to set field", e); }})
+					.setAutocastGetter((obj) -> { try { return field.get(obj); } catch (Exception e) { throw new RuntimeException("Unable to get field", e); }})
+			);
+			
+		}
+		// collect methods
+		for (Method method : type.getMethods()) {
+			Exposed exposed = getExposed(method);
+			if (exposed.hidden()) continue;
+			String fieldName = exposed.as();
+			MethodType methodType = MethodType.getMethodType(method);
+			
+			if (methodType == MethodType.GENERIC) continue;
+			
+			// if the method has a setter-like signature
+			if (methodType == MethodType.SETTER)
+				// get an existing field or create a new one
+				fields.computeIfAbsent(fieldName, key -> newBuilder(type, method.getParameterTypes()[0], fieldName))
+						// and set the setter
+						.setSetter((obj, val) -> { try { method.invoke(obj, val); } catch (Exception e) { throw new RuntimeException("Unable to invoke setter", e); }});
+			// if the method has a getter-like signature
+			else if (methodType == MethodType.GETTER)
+				// get an existing field or create a new one
+				fields.computeIfAbsent(fieldName, key -> newBuilder(type, method.getReturnType(), fieldName))
+						// and set the getter
+						.setAutocastGetter((obj) -> { try { return method.invoke(obj); } catch (Exception e) { throw new RuntimeException("Unable to invoke setter", e); }});
+			// if the method has a action-like signature
+			else if (methodType == MethodType.ACTION)
+				// get an existing field or create a new one
+				fields.computeIfAbsent(
+						fieldName,
+						key -> newBuilder(type, method.getReturnType(), fieldName)
+								// special setter that ignores the value
+								.setSetter((obj, val) -> { try { method.invoke(obj); } catch (Exception e) { throw new RuntimeException("Unable to invoke action", e); }})
+				);
+		}
+		
+		return fields.values().stream().map(Builder::build).toArray(FieldAccess[]::new);
+	}
+	private static Exposed getExposed(Field field, boolean everything, List<String> exposedFields) {
+		if (field.isAnnotationPresent(Exposed.class)) return field.getAnnotation(Exposed.class);
+		if (everything) return Exposed.VISIBLE;
+		if (exposedFields.contains(field.getName())) return Exposed.VISIBLE;
+		return Exposed.HIDDEN;
+	}
+	private static Exposed getExposed(Method method) {
+		if (method.isAnnotationPresent(Exposed.class)) {
+			Exposed exposed = method.getAnnotation(Exposed.class);
+			if (exposed.as() == null || exposed.as().isBlank()) return Exposed.HIDDEN;
+			return exposed;
+		}
+		return Exposed.HIDDEN;
+	}
+	private static String getFieldName(Field field, Exposed exposed) {
+		if (exposed.as() != null && !exposed.as().isBlank()) return exposed.as();
+		return field.getName();
+	}
 	public static final class Builder<O, T> {
 		private final Class<O> objectType;
 		private final Class<T> fieldType;

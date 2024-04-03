@@ -4,7 +4,6 @@ import com.tbck.data.entity.SegmentRoles;
 import com.tbck.math.Vec2;
 import com.tbck.data.entity.SegmentData;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ public class PSFF_Utils {
                 return null;
             }
 
-            out.ArmorPoints = Integer.parseInt(dataEntries[2]);
+            out.armorPoints = Integer.parseInt(dataEntries[2]);
 
             out.role = SegmentRoles.valueOf(dataEntries[1]);
 

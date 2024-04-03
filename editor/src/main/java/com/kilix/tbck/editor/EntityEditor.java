@@ -1,10 +1,8 @@
 package com.kilix.tbck.editor;
 
 import net.aether.utils.utils.swing.LabeledSlider;
-import com.tbck.NumberUtils;
 import com.tbck.data.entity.SegmentData;
 import com.tbck.data.entity.SegmentDataManager;
-import com.tbck.data.entity.SegmentRoles;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
 import net.aether.utils.utils.swing.PropertiesPanel;
@@ -136,7 +134,7 @@ public class EntityEditor extends EditorPanel {
 		repaint();
 	}
 	private void loadSegmentProperties() {
-		armorPoints.setText((selectedSegment.ArmorPoints < 0 ? "impenetrable" : selectedSegment.ArmorPoints) + " armor");
+		armorPoints.setText((selectedSegment.armorPoints < 0 ? "impenetrable" : selectedSegment.armorPoints) + " armor");
 		segmentRole.setText("role: " + selectedSegment.role.name());
 	}
 	private void resetSegmentProperties() {

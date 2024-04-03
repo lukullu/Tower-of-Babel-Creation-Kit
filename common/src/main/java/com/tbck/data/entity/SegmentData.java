@@ -4,7 +4,6 @@ package com.tbck.data.entity;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
 import net.aether.utils.utils.reflection.Exposed;
-import net.aether.utils.utils.reflection.Exposes;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -15,7 +14,7 @@ public class SegmentData extends Polygon implements Serializable
     
     @Serial private static final long serialVersionUID = 3756687822214555217L;
 
-    @Exposed public int ArmorPoints;
+    @Exposed public int armorPoints;
     @Exposed public SegmentRoles role;
     public boolean enabled = true;
 
@@ -24,6 +23,6 @@ public class SegmentData extends Polygon implements Serializable
     }
     
     public String toString() {
-        return "SegmentData{" + role + ", " + ArmorPoints + "ap, " + vertices.toString() + '}';
+        return "SegmentData{" + role + ", " + armorPoints + "ap, " + vertices.toString() + '}';
     }
 }

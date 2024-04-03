@@ -2,6 +2,8 @@ package net.aether.utils.utils.reflection;
 
 import net.aether.utils.utils.data.Maybe;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -14,6 +16,7 @@ import java.util.function.Function;
  * @param <T> the field fieldType, to remove the need for unchecked object casts
  */
 public record FieldAccess<O, T>(
+		Class<O> objectType,
 		Class<T> fieldType,
 		String name,
 		BiConsumer<O, T> setter,
@@ -21,17 +24,23 @@ public record FieldAccess<O, T>(
 ) {
 	
 	public static final class Builder<O, T> {
-		private Class<T> fieldType;
-		private String name;
+		private final Class<O> objectType;
+		private final Class<T> fieldType;
+		private final String name;
 		private BiConsumer<O, T> setter;
 		private Function<O, T> getter;
 		
-		private Builder(Class<T> type, String name) { this.fieldType = type; this.name = name; }
+		private Builder(Class<O> objectType, Class<T> fieldType, String name) {
+			this.objectType = objectType;
+			this.fieldType = fieldType;
+			this.name = name;
+		}
 		public Builder<O, T> setSetter(BiConsumer<O, T> setter) { this.setter = setter; return this; }
 		public Builder<O, T> setGetter(Function<O, T> getter) { this.getter = getter; return this; }
-		public FieldAccess<O, T> build() { return new FieldAccess<>(fieldType, name, setter, getter); }
+		public Builder<O, T> setAutocastGetter(Function<O, Object> getter) { this.getter = (obj) -> (T) getter.apply(obj); return this; }
+		public FieldAccess<O, T> build() { return new FieldAccess<>(objectType, fieldType, name, setter, getter); }
 	}
-	public static <T> Builder<?, T> newBuilder(Class<T> fieldType, String name) { return new Builder<>(fieldType, name); }
+	public static <O, T> Builder<O, T> newBuilder(Class<O> objectType, Class<T> fieldType, String name) { return new Builder<>(objectType, fieldType, name); }
 	
 	public boolean hasGetter() { return getter != null; }
 	public boolean hasSetter() { return setter != null; }

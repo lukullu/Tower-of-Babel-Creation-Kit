@@ -3,9 +3,6 @@ package net.aether.utils.utils.reflection;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 public record ClassAccess<T>(
 		Class<T> type,
@@ -13,12 +10,13 @@ public record ClassAccess<T>(
 ) {
 	
 	public enum MethodType { GETTER, SETTER, GENERIC }
-	private record Getter(Class<?> returnType, Supplier<?> getter) {}
-	private record Setter(Class<?> paramType, Consumer<?> setter) {}
 	
-	private static <T> FieldAccess<T, ?>[] createAccess(Class<T> type) {
-		HashMap<String, Getter> getters = new HashMap<>();
-		HashMap<String, Setter> setters = new HashMap<>();
+	public static <T> ClassAccess<T> forClass(Class<T> type) {
+		return new ClassAccess<>(type, createFieldAccess(type));
+	}
+	
+	private static <T> FieldAccess<T, ?>[] createFieldAccess(Class<T> type) {
+		HashMap<String, FieldAccess.Builder<T, ?>> fields = new HashMap<>();
 		
 		Exposes exposes = Objects.requireNonNullElse(type.getAnnotation(Exposes.class), Exposes.NOTHING);
 		List<String> exposedFields = Arrays.asList(exposes.value());
@@ -30,8 +28,11 @@ public record ClassAccess<T>(
 			String fieldName = getFieldName(field, exposed);
 			Class<?> fieldType = field.getType();
 			
-			
-			
+			fields.put(fieldName,
+					(FieldAccess.Builder<T, ?>) FieldAccess.newBuilder(type, fieldType, fieldName)
+					.setSetter((obj, val) -> { try { field.set(obj, val); } catch (Exception e) { throw new RuntimeException("Unable to set field", e); }})
+					.setAutocastGetter((obj) -> { try { return field.get(obj); } catch (Exception e) { throw new RuntimeException("Unable to get field", e); } })
+			);
 			
 		}
 		// collect methods
@@ -46,8 +47,7 @@ public record ClassAccess<T>(
 		}
 		
 		
-		List<FieldAccess<T, ?>> fieldAccessList = new ArrayList<>();
-		return fieldAccessList.toArray(FieldAccess[]::new);
+		return fields.values().stream().map(FieldAccess.Builder::build).toArray(FieldAccess[]::new);
 	}
 	
 	private static Exposed getExposed(Field field, boolean everything, List<String> exposedFields) {

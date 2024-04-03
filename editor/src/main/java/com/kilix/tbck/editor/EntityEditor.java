@@ -7,6 +7,7 @@ import com.tbck.data.entity.SegmentDataManager;
 import com.tbck.data.entity.SegmentRoles;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
+import net.aether.utils.utils.swing.PropertiesPanel;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -42,7 +43,7 @@ public class EntityEditor extends EditorPanel {
 	private boolean unsavedChanges = false;
 	
 	private int polygonPoints = 8;
-	private JPanel segmentPanel;
+	private PropertiesPanel<SegmentData> segmentPanel;
 	
 	// segment control \\
 	private JButton armorPoints;
@@ -93,40 +94,11 @@ public class EntityEditor extends EditorPanel {
 			entityTemplate.add(new SegmentData(generateRegularPolygon(polygonPoints, 50)));
 		})), lineConstraints(line++));
 		
-		segmentPanel = new JPanel(new GridBagLayout());
+		segmentPanel = new PropertiesPanel<>(SegmentData.class);
 		segmentPanel.setBorder(new TitledBorder(
 				new MatteBorder(1, 0, 0, 0, UIManager.getColor("TitledBorder.titleColor")),
 				NO_SEGMENT_TITLE, TitledBorder.CENTER, TitledBorder.TOP
 		));
-		int segmentPanelLine = 0;
-		// -- armor points field -- \\
-		armorPoints = new JButton();
-		armorPoints.addActionListener(e -> {
-			String text = String.valueOf(selectedSegment.ArmorPoints);
-			do {
-				text = JOptionPane.showInputDialog(this, "Set armor points", text);
-			} while (! NumberUtils.isNumericOrNull(text));
-			
-			if (text != null) selectedSegment.ArmorPoints = Integer.parseInt(text);
-			loadSegmentProperties();
-		});
-		segmentPanel.add(armorPoints, lineConstraints(segmentPanelLine++));
-		// -- role field -- \\
-		segmentRole = new JButton();
-		segmentRole.addActionListener(e -> {
-			SegmentRoles role = (SegmentRoles) JOptionPane.showInputDialog(
-					this, "Select segment role", "Input",
-					JOptionPane.PLAIN_MESSAGE, null,
-					SegmentRoles.values(), selectedSegment.role
-			);
-			selectedSegment.role = role;
-			loadSegmentProperties();
-		});
-		segmentPanel.add(segmentRole, lineConstraints(segmentPanelLine++));
-		
-		resetSegmentProperties();
-		setSegmentPanelEnabled(false);
-		
 		toolsPanel.add(segmentPanel, lineConstraints(line++));
 		
 		// spacer
@@ -136,12 +108,6 @@ public class EntityEditor extends EditorPanel {
 				new Insets(0, 0, 0, 0),
 				0, 0
 		));
-	}
-	
-	void setSegmentPanelEnabled(Boolean isEnabled) {
-		segmentPanel.setEnabled(isEnabled);
-		for (Component component : segmentPanel.getComponents()) component.setEnabled(isEnabled);
-		segmentPanel.repaint();
 	}
 	
 	public static ArrayList<Vec2> generateRegularPolygon(int sides, double radius) {
@@ -166,9 +132,7 @@ public class EntityEditor extends EditorPanel {
 		((TitledBorder) segmentPanel.getBorder()).setTitle(hasSegment
 				? String.format("%s %02d\n", segment.role, entityTemplate.indexOf(segment))
 				: NO_SEGMENT_TITLE);
-		setSegmentPanelEnabled(hasSegment);
-		if (hasSegment) loadSegmentProperties();
-		else resetSegmentProperties();
+		segmentPanel.setValue(segment);
 		repaint();
 	}
 	private void loadSegmentProperties() {

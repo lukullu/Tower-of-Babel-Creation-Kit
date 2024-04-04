@@ -4,17 +4,14 @@ package com.tbck.data.entity;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
 import net.aether.utils.utils.reflection.Exposed;
-import net.aether.utils.utils.swing.FieldButton;
 
-import javax.swing.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Objects;
 
-public class SegmentData extends Polygon implements Serializable
+public class Segment extends Polygon implements Serializable
 {
 
     @Serial private static final long serialVersionUID = 3756687822214555217L;
@@ -22,21 +19,21 @@ public class SegmentData extends Polygon implements Serializable
     public SegmentRoles role = SegmentRoles.SEGMENT;
     @Exposed(hidden = true) public boolean enabled = true;
     public static boolean isValid = true;
-    public ArrayList<SegmentData> neighborSegments;
+    public ArrayList<Segment> neighborSegments;
     public int armorPoints = 0;
 
-    public SegmentData(ArrayList<Vec2> vertices) {
+    public Segment(ArrayList<Vec2> vertices) {
         super(vertices); enabled = true; isValid = true;
     }
 
-    public HashSet<SegmentData> checkNeighborsRec(HashSet<SegmentData> visited)
+    public HashSet<Segment> checkNeighborsRec(HashSet<Segment> visited)
     {
         if(visited.contains(this))
             return visited;
 
         visited.add(this);
 
-        for (SegmentData neighbor : neighborSegments)
+        for (Segment neighbor : neighborSegments)
         {
             if(neighbor.isValid && neighbor.enabled)
                 visited.addAll(neighbor.checkNeighborsRec(visited));
@@ -51,7 +48,7 @@ public class SegmentData extends Polygon implements Serializable
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof SegmentData that)) return false;
+        if (!(o instanceof Segment that)) return false;
         return ArmorPoints == that.ArmorPoints && enabled == that.enabled && armorPoints == that.armorPoints && role == that.role;
     }
 

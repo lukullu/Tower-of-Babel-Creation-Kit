@@ -1,7 +1,5 @@
 package com.tbck;
 
-import com.tbck.data.entity.SegmentData;
-
 import java.awt.*;
 import java.nio.file.Path;
 

@@ -5,7 +5,7 @@ import com.lukullu.undersquare.interfaces.ISegmentedObject;
 import com.tbck.data.entity.SegmentDataManager;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
-import com.tbck.data.entity.SegmentData;
+import com.tbck.data.entity.Segment;
 
 import java.util.ArrayList;
 
@@ -13,7 +13,7 @@ public class Entity extends EntityObject implements ISegmentedObject
 {
 
     @Deprecated
-    public ArrayList<SegmentData> segments;
+    public ArrayList<Segment> segments;
 
     public Entity(String psff_resource, Vec2 position, double rotation, double scaling)
     {

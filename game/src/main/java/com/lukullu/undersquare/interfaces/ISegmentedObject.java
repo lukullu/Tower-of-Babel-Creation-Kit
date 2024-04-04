@@ -1,7 +1,7 @@
 package com.lukullu.undersquare.interfaces;
 
 import com.lukullu.tbck.gameObjects.IGameObject;
-import com.tbck.data.entity.Segment;
+import com.tbck.data.entity.SegmentData;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
 
@@ -14,10 +14,10 @@ public interface ISegmentedObject extends IGameObject
 
     default void initSegments()
     {
-        for (Segment query : getSegments())
+        for (SegmentData query : getSegments())
         {
             query.neighborSegments = new ArrayList<>();
-            for(Segment segment : getSegments())
+            for(SegmentData segment : getSegments())
             {
                 if(segment.equals(query))
                     continue;
@@ -33,11 +33,11 @@ public interface ISegmentedObject extends IGameObject
         }
     }
 
-    default List<Segment> getSegments()
+    default List<SegmentData> getSegments()
     {
-        return getShape().stream().map((poly)->{return (Segment)(Object)poly;}).toList();
+        return getShape().stream().map((poly)->{return (SegmentData)(Object)poly;}).toList();
     }
-    default void setSegments(List<Segment> segments)
+    default void setSegments(List<SegmentData> segments)
     {
         setShape(new ArrayList<>(segments.stream().map((poly)->{return (Polygon)(Object)poly;}).toList()));
     }
@@ -50,11 +50,11 @@ public interface ISegmentedObject extends IGameObject
     }
 
     // TODO: Test intensively
-    default boolean checkSegmentIntegrity(Segment startSegment)
+    default boolean checkSegmentIntegrity(SegmentData startSegment)
     {
         if(startSegment == null)
         {
-            for(Segment segment : getSegments())
+            for(SegmentData segment : getSegments())
             {
                 if(segment.isValid && segment.enabled)
                 {
@@ -69,8 +69,8 @@ public interface ISegmentedObject extends IGameObject
         }
 
 
-        HashSet<HashSet<Segment>> segmentSetsSet = new HashSet<>();
-        for(Segment neighbor : startSegment.neighborSegments)
+        HashSet<HashSet<SegmentData>> segmentSetsSet = new HashSet<>();
+        for(SegmentData neighbor : startSegment.neighborSegments)
         {
             segmentSetsSet.add(neighbor.checkNeighborsRec(new HashSet<>()));
         }
@@ -95,7 +95,7 @@ public interface ISegmentedObject extends IGameObject
 
     }
 
-    default void setSegmentInactive(Segment segment)
+    default void setSegmentInactive(SegmentData segment)
     {
         segment.enabled = false;
         checkSegmentIntegrity(segment);

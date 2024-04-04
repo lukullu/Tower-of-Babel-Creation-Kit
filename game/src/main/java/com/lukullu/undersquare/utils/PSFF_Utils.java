@@ -2,7 +2,7 @@ package com.lukullu.undersquare.utils;
 
 import com.tbck.data.entity.SegmentRoles;
 import com.tbck.math.Vec2;
-import com.tbck.data.entity.Segment;
+import com.tbck.data.entity.SegmentData;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,13 +28,13 @@ public class PSFF_Utils {
         return out;
     }
 
-    public static Segment getVerticesFromLine(String data)
+    public static SegmentData getVerticesFromLine(String data)
     {
         try {
 
             ArrayList<Vec2> vertices = new ArrayList<>();
 
-            Segment out = new Segment(vertices);
+            SegmentData out = new SegmentData(vertices);
 
             String[] dataEntries = data.split(":");
 
@@ -42,7 +42,7 @@ public class PSFF_Utils {
                 return null;
             }
 
-            out.ArmorPoints = Integer.parseInt(dataEntries[2]);
+            out.armorPoints = Integer.parseInt(dataEntries[2]);
 
             out.role = SegmentRoles.valueOf(dataEntries[1]);
 

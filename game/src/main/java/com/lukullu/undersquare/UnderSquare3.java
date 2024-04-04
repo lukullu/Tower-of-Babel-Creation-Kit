@@ -79,7 +79,7 @@ public class UnderSquare3 extends ExtendedPApplet {
         }
 
         // draw every GameObject
-        /*for (var entry : gameObjects.entrySet())
+        for (var entry : gameObjects.entrySet())
         {
             Class<?> key = entry.getKey();
             List<IGameObject> value = entry.getValue();
@@ -87,7 +87,7 @@ public class UnderSquare3 extends ExtendedPApplet {
             {
                 gameObject.paint(); //TODO Draw hierarchy
             }
-        }*/
+        }
 
     }
 

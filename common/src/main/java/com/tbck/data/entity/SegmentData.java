@@ -11,29 +11,29 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Objects;
 
-public class Segment extends Polygon implements Serializable
+public class SegmentData extends Polygon implements Serializable
 {
 
     @Serial private static final long serialVersionUID = 3756687822214555217L;
-    public int ArmorPoints; // TODO lukullu why this not armorPoints?
+
     public SegmentRoles role = SegmentRoles.SEGMENT;
     @Exposed(hidden = true) public boolean enabled = true;
     public static boolean isValid = true;
-    public ArrayList<Segment> neighborSegments;
+    public ArrayList<SegmentData> neighborSegments;
     public int armorPoints = 0;
 
-    public Segment(ArrayList<Vec2> vertices) {
+    public SegmentData(ArrayList<Vec2> vertices) {
         super(vertices); enabled = true; isValid = true;
     }
 
-    public HashSet<Segment> checkNeighborsRec(HashSet<Segment> visited)
+    public HashSet<SegmentData> checkNeighborsRec(HashSet<SegmentData> visited)
     {
         if(visited.contains(this))
             return visited;
 
         visited.add(this);
 
-        for (Segment neighbor : neighborSegments)
+        for (SegmentData neighbor : neighborSegments)
         {
             if(neighbor.isValid && neighbor.enabled)
                 visited.addAll(neighbor.checkNeighborsRec(visited));
@@ -48,13 +48,13 @@ public class Segment extends Polygon implements Serializable
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Segment that)) return false;
-        return ArmorPoints == that.ArmorPoints && enabled == that.enabled && armorPoints == that.armorPoints && role == that.role;
+        if (!(o instanceof SegmentData that)) return false;
+        return enabled == that.enabled && armorPoints == that.armorPoints && role == that.role;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ArmorPoints, role, enabled, armorPoints);
+        return Objects.hash(armorPoints, role, enabled, armorPoints);
     }
 }
 

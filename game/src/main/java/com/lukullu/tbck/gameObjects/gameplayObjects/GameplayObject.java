@@ -61,7 +61,6 @@ public class GameplayObject implements IGameObject, ProcessingClass
     public void update() {  } // TODO: Check if this can be moved to the updatePos / updateRot functions to save resources
     public void paint()
     {
-        fill(debugColor[0],debugColor[1],debugColor[2],debugAlpha);
         for (Polygon polygon : polygons)
             paintPolygon(polygon);
     }
@@ -154,6 +153,28 @@ public class GameplayObject implements IGameObject, ProcessingClass
             output.add(vertex);
         }
         return new Polygon(output);
+    }
+
+    public void paintPolygon(Polygon polygon)
+    {
+        fill(debugColor[0],debugColor[1],debugColor[2],debugAlpha);
+
+        beginShape();
+        for (int i = 0; i < polygon.getVertices().size() + 1; i++)
+        {
+            vertex((float) polygon.getVertices().get(i % polygon.getVertices().size()).x,(float) polygon.getVertices().get(i % polygon.getVertices().size()).y);
+        }
+        endShape(CLOSE);
+
+        //TODO: Debug remove
+
+        fill(0);
+        rectMode(CENTER);
+        for (int i = 0; i < polygon.getVertices().size() + 1; i++)
+        {
+            ellipse((float)polygon.getPosition().x,(float)polygon.getPosition().y,2,2);
+        }
+        fill(255);
     }
 
 }

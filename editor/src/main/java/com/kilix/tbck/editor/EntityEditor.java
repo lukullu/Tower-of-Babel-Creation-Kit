@@ -1,6 +1,6 @@
 package com.kilix.tbck.editor;
 
-import com.tbck.data.entity.Segment;
+import com.tbck.data.entity.SegmentData;
 import com.tbck.data.entity.SegmentDataManager;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
@@ -40,17 +40,17 @@ public class EntityEditor extends EditorPanel {
 	private static final Cursor MOVE = new Cursor(Cursor.MOVE_CURSOR);
 	
 	private File templateFile = null;
-	private ArrayList<Segment> entityTemplate = new ArrayList<>();
+	private ArrayList<SegmentData> entityTemplate = new ArrayList<>();
 	private boolean unsavedChanges = false;
 	
 	private int polygonPoints = 8;
-	private PropertiesPanel<Segment> segmentPanel;
+	private PropertiesPanel<SegmentData> segmentPanel;
 	
 	// segment control \\
 	private JButton armorPoints;
 	private JButton segmentRole;
 	
-	private Segment selectedSegment = null;
+	private SegmentData selectedSegment = null;
 	
 	public JMenu[] getContextMenus() {
 		final JMenu fileMenu = new JMenu(new SimpleAction("File"));
@@ -92,10 +92,10 @@ public class EntityEditor extends EditorPanel {
 		toolsPanel.add(new JButton(new SimpleAction("create regular polygon", event -> {
 			unsavedChanges = true;
 			repaint();
-			entityTemplate.add(new Segment(generateRegularPolygon(polygonPoints, 50)));
+			entityTemplate.add(new SegmentData(generateRegularPolygon(polygonPoints, 50)));
 		})), lineConstraints(line++));
 		
-		segmentPanel = new PropertiesPanel<>(Segment.class);
+		segmentPanel = new PropertiesPanel<>(SegmentData.class);
 		segmentPanel.setBorder(new TitledBorder(
 				new MatteBorder(1, 0, 0, 0, UIManager.getColor("TitledBorder.titleColor")),
 				NO_SEGMENT_TITLE, TitledBorder.CENTER, TitledBorder.TOP
@@ -124,7 +124,7 @@ public class EntityEditor extends EditorPanel {
 		return polygonVertices;
 	}
 	
-	private void selectSegment(Segment segment) {
+	private void selectSegment(SegmentData segment) {
 		if (selectedSegment == segment) return;
 		selectedSegment = segment;
 		
@@ -155,7 +155,7 @@ public class EntityEditor extends EditorPanel {
 	}
 	
 	private Point2D dragPoint = null;
-	private Segment[] segmentStack = null;
+	private SegmentData[] segmentStack = null;
 	private int segmentStackIndex = 0;
 	protected void eventHandler(ComponentEvent event) {
 		if (event instanceof MouseEvent mouseEvent) {
@@ -163,9 +163,9 @@ public class EntityEditor extends EditorPanel {
 			if (mouseEvent.getID() == MouseEvent.MOUSE_CLICKED && mouseEvent.getButton() == MouseEvent.BUTTON1) {
 				dragPoint = null;
 				Point2D pointer = viewport.component2viewport(mouseEvent.getPoint());
-				Segment[] segments = entityTemplate.stream()
+				SegmentData[] segments = entityTemplate.stream()
 						.filter(poly -> poly.asNative().contains(pointer))
-						.toArray(Segment[]::new);
+						.toArray(SegmentData[]::new);
 				
 				selectSegment(switch (segments.length) {
 					case 0 -> {

@@ -97,6 +97,12 @@ public interface ISegmentedObject extends IGameObject
 
     }
 
+    default void setSegmentInactive(SegmentData segment)
+    {
+        segment.enabled = false;
+        checkSegmentIntegrity(segment);
+    }
+
 
 
 }

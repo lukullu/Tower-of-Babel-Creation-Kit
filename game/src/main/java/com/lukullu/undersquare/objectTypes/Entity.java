@@ -22,13 +22,6 @@ public class Entity extends EntityObject implements ISegmentedObject
     }
 
     @Override
-    public void update()
-    {
-        System.out.println(checkSegmentIntegrity(null));
-        super.update();
-    }
-
-    @Override
     public ArrayList<Polygon> dynamicCollisionUpdate(int depth)
     {
         ArrayList<Polygon> colliderPolygons = super.dynamicCollisionUpdate(depth);

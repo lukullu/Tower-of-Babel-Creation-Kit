@@ -128,7 +128,6 @@ public class Viewport extends JPanel {
 			FocusListener {
 		
 		private static final Cursor MOVE_VIEWPORT_CURSOR = new Cursor(Cursor.MOVE_CURSOR);
-		private static final Cursor DEFAULT_CURSOR = Cursor.getDefaultCursor();
 		
 		private final Consumer<ComponentEvent> eventHandler;
 		public ViewportHandler(Consumer<ComponentEvent> eventHandler) {
@@ -157,7 +156,7 @@ public class Viewport extends JPanel {
 		}
 		public void mouseReleased(MouseEvent e) {
 			if (e.getButton() == MouseEvent.BUTTON2 && getCursor() == MOVE_VIEWPORT_CURSOR) {
-				setCursor(DEFAULT_CURSOR);
+				setCursor(null);
 				dragPoint = null;
 			}
 			eventHandler.accept(e);

@@ -1,10 +1,10 @@
 package com.kilix.tbck.editor;
 
-import net.aether.utils.utils.swing.LabeledSlider;
 import com.tbck.data.entity.SegmentData;
 import com.tbck.data.entity.SegmentDataManager;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
+import net.aether.utils.utils.swing.LabeledSlider;
 import net.aether.utils.utils.swing.PropertiesPanel;
 
 import javax.swing.*;
@@ -35,6 +35,8 @@ public class EntityEditor extends EditorPanel {
 		public boolean accept(File f) { return f.getPath().toLowerCase(Locale.ROOT).endsWith(ENTITY_TEMPLATE_FILE_EXTENSION); }
 		public String getDescription() { return ENTITY_TEMPLATE_FILE_TYPE_DESCRIPTION; }
 	};
+	
+	private static final Cursor MOVE = new Cursor(Cursor.MOVE_CURSOR);
 	
 	private File templateFile = null;
 	private ArrayList<SegmentData> entityTemplate = new ArrayList<>();
@@ -152,24 +154,40 @@ public class EntityEditor extends EditorPanel {
 	}
 	
 	protected void eventHandler(ComponentEvent event) {
-		if (event instanceof MouseEvent mouseEvent && mouseEvent.getID() == MouseEvent.MOUSE_RELEASED && mouseEvent.getButton() == MouseEvent.BUTTON1) {
-			Point2D pointer = viewport.component2viewport(mouseEvent.getPoint());
-			SegmentData[] segments = entityTemplate.stream()
-					.filter(poly -> poly.asNative().contains(pointer))
-					.toArray(SegmentData[]::new);
-			
-			selectSegment(switch (segments.length) {
-				case 0 -> null;
-				case 1 -> segments[0];
-				default -> (SegmentData) JOptionPane.showInputDialog(
-						this,
-						"Which segment should be selected?",
-						"Multiple segments",
-						JOptionPane.PLAIN_MESSAGE, null,
-						segments, segments[0]);
-			});
+		if (event instanceof MouseEvent mouseEvent) {
+			if (mouseEvent.getID() == MouseEvent.MOUSE_CLICKED && mouseEvent.getButton() == MouseEvent.BUTTON1) {
+				Point2D pointer = viewport.component2viewport(mouseEvent.getPoint());
+				SegmentData[] segments = entityTemplate.stream()
+						.filter(poly -> poly.asNative().contains(pointer))
+						.toArray(SegmentData[]::new);
+				
+				selectSegment(switch (segments.length) {
+					case 0 -> null;
+					case 1 -> segments[0];
+					default -> (SegmentData) JOptionPane.showInputDialog(
+							this,
+							"Which segment should be selected?",
+							"Multiple segments",
+							JOptionPane.PLAIN_MESSAGE, null,
+							segments, segments[0]);
+				});
+			}
+			if (mouseEvent.getID() == MouseEvent.MOUSE_MOVED) {
+				checkCursorType();
+			}
 		}
 	}
+	
+	private void checkCursorType() {
+		Point2D pointer = viewport.getPointer();
+		boolean ssContainsCursor = selectedSegment != null && pointer != null && selectedSegment.asNative().contains(pointer);
+		if (! isCursorSet()) {
+			if (ssContainsCursor) setCursor(MOVE);
+		} else if (getCursor() == MOVE) {
+			if (selectedSegment == null || ! ssContainsCursor) setCursor(null);
+		}
+	}
+	
 	private void paintHighlight(Graphics2D g) {
 		Point2D pointer = viewport.component2viewport(viewport.getMousePosition());
 		if (pointer == null) return;
@@ -193,6 +211,8 @@ public class EntityEditor extends EditorPanel {
 		entityTemplate.stream()
 				.map(Polygon::asNative)
 				.forEach(g::drawPolygon);
+		
+		checkCursorType();
 	}
 	
 	/**

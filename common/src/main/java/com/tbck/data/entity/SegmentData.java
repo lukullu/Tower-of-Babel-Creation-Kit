@@ -27,12 +27,13 @@ public class SegmentData extends Polygon implements Serializable
         if(visited.contains(this))
             return visited;
 
+        visited.add(this);
+
         for (SegmentData neighbor : neighborSegments)
         {
             if(neighbor.isValid && neighbor.enabled)
                 visited.addAll(neighbor.checkNeighborsRec(visited));
         }
-        visited.add(this);
         return visited;
     }
     public String toString() {

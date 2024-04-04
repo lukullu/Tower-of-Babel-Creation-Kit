@@ -56,6 +56,7 @@ public class GameplayObject implements IGameObject, ProcessingClass
     public ArrayList<Vec2> getVertices(int i){ return polygons.get(i).getVertices(); }
     public ArrayList<Polygon> getPolygons(){ return polygons; }
     public ArrayList<Polygon> getShape() { return shape; }
+    public void setShape(ArrayList<Polygon> shape) { this.shape = polygons; }
     public void setPolygons(ArrayList<Polygon> polygons) { this.polygons = polygons; }
     public void update() {  } // TODO: Check if this can be moved to the updatePos / updateRot functions to save resources
     public void paint()

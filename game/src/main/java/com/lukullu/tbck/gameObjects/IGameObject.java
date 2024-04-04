@@ -15,5 +15,6 @@ public interface IGameObject {
     Vec2 getPosition();
     ArrayList<Polygon> getPolygons();
     ArrayList<Polygon> getShape();
+    void setShape(ArrayList<Polygon> polygons);
 
 }

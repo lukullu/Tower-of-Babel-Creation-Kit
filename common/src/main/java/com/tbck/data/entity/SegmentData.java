@@ -7,6 +7,7 @@ import com.tbck.math.Vec2;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Objects;
 
 public class SegmentData extends Polygon implements Serializable
@@ -16,9 +17,23 @@ public class SegmentData extends Polygon implements Serializable
     public SegmentRoles role;
     public boolean enabled = true;
     public boolean isValid = true;
-    public ArrayList<SegmentData> NeighborSegments;
+    public ArrayList<SegmentData> neighborSegments;
     public SegmentData(ArrayList<Vec2> vertices) {
         super(vertices);
+    }
+
+    public HashSet<SegmentData> checkNeighborsRec(HashSet<SegmentData> visited)
+    {
+        if(visited.contains(this))
+            return visited;
+
+        for (SegmentData neighbor : neighborSegments)
+        {
+            if(neighbor.isValid && neighbor.enabled)
+                visited.addAll(neighbor.checkNeighborsRec(visited));
+        }
+        visited.add(this);
+        return visited;
     }
     public String toString() {
         return "SegmentData{" + role + ", " + ArmorPoints + "ap, " + vertices.toString() + '}';

@@ -15,6 +15,8 @@ public class SegmentData extends Polygon implements Serializable
     public int ArmorPoints; // TODO lukullu why this not armorPoints?
     public SegmentRoles role;
     public boolean enabled = true;
+    public boolean isValid = true;
+    public ArrayList<SegmentData> NeighborSegments;
     public SegmentData(ArrayList<Vec2> vertices) {
         super(vertices);
     }

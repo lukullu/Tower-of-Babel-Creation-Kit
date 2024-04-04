@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 
 import static com.tbck.Constants.*;
@@ -153,27 +154,39 @@ public class EntityEditor extends EditorPanel {
 		viewport.repaint();
 	}
 	
+	private Point2D dragPoint = null;
+	private SegmentData[] segmentStack = null;
+	private int segmentStackIndex = 0;
 	protected void eventHandler(ComponentEvent event) {
 		if (event instanceof MouseEvent mouseEvent) {
+			
 			if (mouseEvent.getID() == MouseEvent.MOUSE_CLICKED && mouseEvent.getButton() == MouseEvent.BUTTON1) {
+				dragPoint = null;
 				Point2D pointer = viewport.component2viewport(mouseEvent.getPoint());
 				SegmentData[] segments = entityTemplate.stream()
 						.filter(poly -> poly.asNative().contains(pointer))
 						.toArray(SegmentData[]::new);
 				
 				selectSegment(switch (segments.length) {
-					case 0 -> null;
-					case 1 -> segments[0];
-					default -> (SegmentData) JOptionPane.showInputDialog(
-							this,
-							"Which segment should be selected?",
-							"Multiple segments",
-							JOptionPane.PLAIN_MESSAGE, null,
-							segments, segments[0]);
+					case 0 -> {
+						segmentStack = null;
+						segmentStackIndex = 0;
+						yield null;
+					}
+					case 1 -> {
+						segmentStack = null;
+						segmentStackIndex = 0;
+						yield segments[0];
+					}
+					default -> {
+						if (! Arrays.equals(segments, segmentStack)) {
+							segmentStack = segments;
+							segmentStackIndex = 0;
+						}
+						yield segmentStack[(segmentStackIndex++) % segmentStack.length];
+					}
 				});
-			}
-			if (mouseEvent.getID() == MouseEvent.MOUSE_MOVED) {
-				checkCursorType();
+				
 			}
 		}
 	}

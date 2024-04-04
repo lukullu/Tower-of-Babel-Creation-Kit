@@ -30,8 +30,8 @@ public class SegmentData extends Polygon implements Serializable
     
     @Serial private static final long serialVersionUID = 3756687822214555217L;
 
-    public int armorPoints;
-    public SegmentRoles role;
+    public int armorPoints = 0;
+    public SegmentRoles role = SegmentRoles.SEGMENT;
     @Exposed(hidden = true) public boolean enabled = true;
     
     @Exposed(as = "rolename")

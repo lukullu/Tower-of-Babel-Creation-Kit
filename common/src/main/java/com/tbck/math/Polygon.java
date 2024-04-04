@@ -1,5 +1,7 @@
 package com.tbck.math;
 
+import net.aether.utils.utils.reflection.Exposed;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.lang.reflect.Array;
@@ -10,7 +12,7 @@ public class Polygon implements Serializable
     
     @Serial private static final long serialVersionUID = 3756687872714555217L;
     
-    public ArrayList<Vec2> vertices = new ArrayList<>();
+    @Exposed(hidden = true) public ArrayList<Vec2> vertices = new ArrayList<>();
 
     public Polygon(java.util.List<Vec2> vertices) { this(new ArrayList<>(vertices)); }
     

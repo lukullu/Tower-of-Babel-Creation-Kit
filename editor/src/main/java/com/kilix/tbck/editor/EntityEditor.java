@@ -1,12 +1,11 @@
 package com.kilix.tbck.editor;
 
-import com.kilix.tbck.editor.components.LabeledSlider;
-import com.tbck.NumberUtils;
 import com.tbck.data.entity.SegmentData;
 import com.tbck.data.entity.SegmentDataManager;
-import com.tbck.data.entity.SegmentRoles;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
+import net.aether.utils.utils.swing.LabeledSlider;
+import net.aether.utils.utils.swing.PropertiesPanel;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -20,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 
 import static com.tbck.Constants.*;
@@ -37,12 +37,14 @@ public class EntityEditor extends EditorPanel {
 		public String getDescription() { return ENTITY_TEMPLATE_FILE_TYPE_DESCRIPTION; }
 	};
 	
+	private static final Cursor MOVE = new Cursor(Cursor.MOVE_CURSOR);
+	
 	private File templateFile = null;
 	private ArrayList<SegmentData> entityTemplate = new ArrayList<>();
 	private boolean unsavedChanges = false;
 	
 	private int polygonPoints = 8;
-	private JPanel segmentPanel;
+	private PropertiesPanel<SegmentData> segmentPanel;
 	
 	// segment control \\
 	private JButton armorPoints;
@@ -93,40 +95,11 @@ public class EntityEditor extends EditorPanel {
 			entityTemplate.add(new SegmentData(generateRegularPolygon(polygonPoints, 50)));
 		})), lineConstraints(line++));
 		
-		segmentPanel = new JPanel(new GridBagLayout());
+		segmentPanel = new PropertiesPanel<>(SegmentData.class);
 		segmentPanel.setBorder(new TitledBorder(
 				new MatteBorder(1, 0, 0, 0, UIManager.getColor("TitledBorder.titleColor")),
 				NO_SEGMENT_TITLE, TitledBorder.CENTER, TitledBorder.TOP
 		));
-		int segmentPanelLine = 0;
-		// -- armor points field -- \\
-		armorPoints = new JButton();
-		armorPoints.addActionListener(e -> {
-			String text = String.valueOf(selectedSegment.ArmorPoints);
-			do {
-				text = JOptionPane.showInputDialog(this, "Set armor points", text);
-			} while (! NumberUtils.isNumericOrNull(text));
-			
-			if (text != null) selectedSegment.ArmorPoints = Integer.parseInt(text);
-			loadSegmentProperties();
-		});
-		segmentPanel.add(armorPoints, lineConstraints(segmentPanelLine++));
-		// -- role field -- \\
-		segmentRole = new JButton();
-		segmentRole.addActionListener(e -> {
-			SegmentRoles role = (SegmentRoles) JOptionPane.showInputDialog(
-					this, "Select segment role", "Input",
-					JOptionPane.PLAIN_MESSAGE, null,
-					SegmentRoles.values(), selectedSegment.role
-			);
-			selectedSegment.role = role;
-			loadSegmentProperties();
-		});
-		segmentPanel.add(segmentRole, lineConstraints(segmentPanelLine++));
-		
-		resetSegmentProperties();
-		setSegmentPanelEnabled(false);
-		
 		toolsPanel.add(segmentPanel, lineConstraints(line++));
 		
 		// spacer
@@ -136,12 +109,6 @@ public class EntityEditor extends EditorPanel {
 				new Insets(0, 0, 0, 0),
 				0, 0
 		));
-	}
-	
-	void setSegmentPanelEnabled(Boolean isEnabled) {
-		segmentPanel.setEnabled(isEnabled);
-		for (Component component : segmentPanel.getComponents()) component.setEnabled(isEnabled);
-		segmentPanel.repaint();
 	}
 	
 	public static ArrayList<Vec2> generateRegularPolygon(int sides, double radius) {
@@ -166,13 +133,11 @@ public class EntityEditor extends EditorPanel {
 		((TitledBorder) segmentPanel.getBorder()).setTitle(hasSegment
 				? String.format("%s %02d\n", segment.role, entityTemplate.indexOf(segment))
 				: NO_SEGMENT_TITLE);
-		setSegmentPanelEnabled(hasSegment);
-		if (hasSegment) loadSegmentProperties();
-		else resetSegmentProperties();
+		segmentPanel.setValue(segment);
 		repaint();
 	}
 	private void loadSegmentProperties() {
-		armorPoints.setText((selectedSegment.ArmorPoints < 0 ? "impenetrable" : selectedSegment.ArmorPoints) + " armor");
+		armorPoints.setText((selectedSegment.armorPoints < 0 ? "impenetrable" : selectedSegment.armorPoints) + " armor");
 		segmentRole.setText("role: " + selectedSegment.role.name());
 	}
 	private void resetSegmentProperties() {
@@ -189,25 +154,53 @@ public class EntityEditor extends EditorPanel {
 		viewport.repaint();
 	}
 	
+	private Point2D dragPoint = null;
+	private SegmentData[] segmentStack = null;
+	private int segmentStackIndex = 0;
 	protected void eventHandler(ComponentEvent event) {
-		if (event instanceof MouseEvent mouseEvent && mouseEvent.getID() == MouseEvent.MOUSE_RELEASED && mouseEvent.getButton() == MouseEvent.BUTTON1) {
-			Point2D pointer = viewport.component2viewport(mouseEvent.getPoint());
-			SegmentData[] segments = entityTemplate.stream()
-					.filter(poly -> poly.asNative().contains(pointer))
-					.toArray(SegmentData[]::new);
+		if (event instanceof MouseEvent mouseEvent) {
 			
-			selectSegment(switch (segments.length) {
-				case 0 -> null;
-				case 1 -> segments[0];
-				default -> (SegmentData) JOptionPane.showInputDialog(
-						this,
-						"Which segment should be selected?",
-						"Multiple segments",
-						JOptionPane.PLAIN_MESSAGE, null,
-						segments, segments[0]);
-			});
+			if (mouseEvent.getID() == MouseEvent.MOUSE_CLICKED && mouseEvent.getButton() == MouseEvent.BUTTON1) {
+				dragPoint = null;
+				Point2D pointer = viewport.component2viewport(mouseEvent.getPoint());
+				SegmentData[] segments = entityTemplate.stream()
+						.filter(poly -> poly.asNative().contains(pointer))
+						.toArray(SegmentData[]::new);
+				
+				selectSegment(switch (segments.length) {
+					case 0 -> {
+						segmentStack = null;
+						segmentStackIndex = 0;
+						yield null;
+					}
+					case 1 -> {
+						segmentStack = null;
+						segmentStackIndex = 0;
+						yield segments[0];
+					}
+					default -> {
+						if (! Arrays.equals(segments, segmentStack)) {
+							segmentStack = segments;
+							segmentStackIndex = 0;
+						}
+						yield segmentStack[(segmentStackIndex++) % segmentStack.length];
+					}
+				});
+				
+			}
 		}
 	}
+	
+	private void checkCursorType() {
+		Point2D pointer = viewport.getPointer();
+		boolean ssContainsCursor = selectedSegment != null && pointer != null && selectedSegment.asNative().contains(pointer);
+		if (! isCursorSet()) {
+			if (ssContainsCursor) setCursor(MOVE);
+		} else if (getCursor() == MOVE) {
+			if (selectedSegment == null || ! ssContainsCursor) setCursor(null);
+		}
+	}
+	
 	private void paintHighlight(Graphics2D g) {
 		Point2D pointer = viewport.component2viewport(viewport.getMousePosition());
 		if (pointer == null) return;
@@ -231,6 +224,8 @@ public class EntityEditor extends EditorPanel {
 		entityTemplate.stream()
 				.map(Polygon::asNative)
 				.forEach(g::drawPolygon);
+		
+		checkCursorType();
 	}
 	
 	/**

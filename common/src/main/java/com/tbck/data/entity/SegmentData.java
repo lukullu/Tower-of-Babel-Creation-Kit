@@ -7,17 +7,34 @@ import com.tbck.math.Vec2;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Objects;
 
 public class SegmentData extends Polygon implements Serializable
 {
+
+    static {
+        FieldButton.GENERATOR_REGISTRY.put(Vec2.class, oldValue -> {
+            String input = JOptionPane.showInputDialog(null, "Input Vec2", oldValue);
+            System.out.println(input);
+            return new Vec2(0, 0);
+        });
+    }
+
     @Serial private static final long serialVersionUID = 3756687822214555217L;
     public int ArmorPoints; // TODO lukullu why this not armorPoints?
     public SegmentRoles role;
     public boolean enabled = true;
     public static boolean isValid = true;
     public ArrayList<SegmentData> neighborSegments;
+
+    public int armorPoints = 0;
+    public SegmentRoles role = SegmentRoles.SEGMENT;
+    @Exposed(hidden = true) public boolean enabled = true;
+
+    @Exposed(as = "rolename")
+    public String getRole() { return role.name().toLowerCase(Locale.ROOT); }
+
+    public Vec2 testVec = new Vec2(69, 420);
+
     public SegmentData(ArrayList<Vec2> vertices) {
         super(vertices); enabled = true; isValid = true;
     }
@@ -36,9 +53,9 @@ public class SegmentData extends Polygon implements Serializable
         }
         return visited;
     }
-
+    
     public String toString() {
-        return "SegmentData{" + role + ", " + ArmorPoints + "ap, " + vertices.toString() + '}';
+        return "SegmentData{" + role + ", " + armorPoints + "ap, " + vertices.toString() + '}';
     }
 
     @Override

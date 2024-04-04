@@ -24,6 +24,14 @@ public record FieldAccess<O, T>(
 		Function<O, T> getter
 ) {
 	
+	public static FieldAccess<?, ?> forField(Field field) {
+		return new FieldAccess(field.getDeclaringClass(), field.getType(), field.getName(), (obj, val) -> {
+			try { field.set(obj, val); } catch (Exception e) { throw new RuntimeException(e); }
+		}, (obj) -> {
+			try { return field.get(obj); } catch (Exception e) { throw new RuntimeException(e); }
+		});
+	}
+	
 	public static <T> FieldAccess<T, ?>[] createFieldAccess(Class<T> type) {
 		HashMap<String, Builder<T, ?>> fields = new HashMap<>();
 		
@@ -78,6 +86,7 @@ public record FieldAccess<O, T>(
 		
 		return fields.values().stream().map(Builder::build).toArray(FieldAccess[]::new);
 	}
+	
 	private static Exposed getExposed(Field field, boolean everything, List<String> exposedFields) {
 		if (field.isAnnotationPresent(Exposed.class)) return field.getAnnotation(Exposed.class);
 		if (everything) return Exposed.VISIBLE;

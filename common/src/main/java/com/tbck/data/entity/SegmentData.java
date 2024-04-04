@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Locale;
 
 @Exposes("*")
 public class SegmentData extends Polygon implements Serializable
@@ -33,6 +34,9 @@ public class SegmentData extends Polygon implements Serializable
     public SegmentRoles role;
     @Exposed(hidden = true) public boolean enabled = true;
     
+    @Exposed(as = "rolename")
+    public String getRole() { return role.name().toLowerCase(Locale.ROOT); }
+    
     public Vec2 testVec = new Vec2(69, 420);
     
     public SegmentData(ArrayList<Vec2> vertices) {
@@ -42,4 +46,7 @@ public class SegmentData extends Polygon implements Serializable
     public String toString() {
         return "SegmentData{" + role + ", " + armorPoints + "ap, " + vertices.toString() + '}';
     }
+    
+    
+    
 }

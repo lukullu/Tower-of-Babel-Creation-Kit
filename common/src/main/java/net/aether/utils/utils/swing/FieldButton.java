@@ -1,9 +1,9 @@
 package net.aether.utils.utils.swing;
 
-import com.tbck.NumberUtils;
 import net.aether.utils.utils.reflection.FieldAccess;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -26,17 +26,24 @@ public class FieldButton<O, T> extends JButton implements ActionListener {
 			Map.entry(Boolean.class, new BooleanToggleGenerator())
 	));
 	
+	private final Runnable onChange;
 	private final FieldAccess<O, T> field;
 	private O subject;
-	public FieldButton(FieldAccess<O, T> field) { this(field, null); }
-	public FieldButton(FieldAccess<O, T> field, O subject) {
+	public FieldButton(FieldAccess<O, T> field) { this(field, null, null ); }
+	public FieldButton(FieldAccess<O, T> field, O subject) { this(field, subject, null); }
+	public FieldButton(FieldAccess<O, T> field, O subject, Runnable onChange) {
 		this.field = field;
+		this.onChange = onChange;
 		this.addActionListener(this);
 		setSubject(subject);
 		update();
 	}
 	
-	public void actionPerformed(ActionEvent e) { set(); update(); }
+	public void actionPerformed(ActionEvent e) {
+		set();
+		if (onChange != null) onChange.run();
+		update();
+	}
 	
 	public void setSubject(Object subject) {
 		if (subject == null) { this.subject = null; update(); return; }
@@ -119,4 +126,8 @@ public class FieldButton<O, T> extends JButton implements ActionListener {
 		}
 	}
 	
+	public void paint(Graphics g) {
+		update();
+		super.paint(g);
+	}
 }

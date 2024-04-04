@@ -27,12 +27,9 @@ public final class PropertiesPanel<T> extends JPanel {
 	}
 	private PropertiesPanel(FieldAccess<T, ?>[] fields, T value) {
 		super(new GridLayout(fields.length, 1));
-		
 		this.fields = fields;
-		
 		for (FieldAccess<T, ?> field : fields)
-			components.add((FieldButton<T, ?>) add(new FieldButton(field)));
-		
+			components.add((FieldButton<T, ?>) add(new FieldButton(field, null, this::repaint)));
 		setValue(value);
 	}
 	

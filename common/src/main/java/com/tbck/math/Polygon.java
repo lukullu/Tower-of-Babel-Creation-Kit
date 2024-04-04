@@ -12,7 +12,7 @@ public class Polygon implements Serializable
     
     @Serial private static final long serialVersionUID = 3756687872714555217L;
     
-    @Exposed(hidden = true) public ArrayList<Vec2> vertices = new ArrayList<>();
+    @Exposed(hidden = true) public ArrayList<Vec2> vertices;
 
     public Polygon(java.util.List<Vec2> vertices) { this(new ArrayList<>(vertices)); }
     
@@ -44,6 +44,18 @@ public class Polygon implements Serializable
             }
         }
         return true;
+    }
+
+    public void transform(Vec2 origin, Vec2 deltaPos, double deltaRot, double deltaSca)
+    {
+        ArrayList<Vec2> newVertices = new ArrayList<>();
+        for (Vec2 vertex : vertices) {
+            vertex = vertex.add(deltaPos);
+            vertex = vertex.rotate(origin,deltaRot);
+            vertex = vertex.scale(origin,deltaSca);
+            newVertices.add(vertex);
+        }
+        vertices = newVertices;
     }
 
     public Polygon scale(double scale) {

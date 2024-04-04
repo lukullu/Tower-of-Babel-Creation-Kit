@@ -42,15 +42,16 @@ public interface ISegmentedObject extends IGameObject
         setShape(new ArrayList<>(segments.stream().map((poly)->{return (Polygon)(Object)poly;}).toList()));
     }
 
-    default void paint()
+    default void paintSegments()
     {
-        for (int i = 0; i < getPolygons().size(); i++)
-            if(getSegments().get(i).enabled)
-                paintPolygon(getPolygons().get(i));
+        for (Polygon polygon : getPolygons())
+            if(polygon instanceof SegmentData)
+                if(((SegmentData)(Object) polygon).enabled)
+                    paintPolygon(polygon);
     }
 
     // TODO: Test intensively
-    default boolean checkSegmentIntegrity(SegmentData startSegment)
+    default void checkSegmentIntegrity(SegmentData startSegment)
     {
         if(startSegment == null)
         {
@@ -65,7 +66,7 @@ public interface ISegmentedObject extends IGameObject
 
 
             if(startSegment == null)
-                return false;
+                return;
         }
 
 
@@ -77,7 +78,7 @@ public interface ISegmentedObject extends IGameObject
 
         // Everything is Awesome
         if(segmentSetsSet.size() == 1)
-            return true;
+            return;
 
 
         // Die
@@ -85,13 +86,12 @@ public interface ISegmentedObject extends IGameObject
         {
             // TODO: delete this Object
             System.out.println("Anakin, Start Panicking...");
-            return false;
+            return;
         }
 
         // Perform Mitosis
+        System.out.println("We did it lads");
         //TODO: create multiple daughter SegmentObjects from differing Sets
-
-        return false;
 
     }
 

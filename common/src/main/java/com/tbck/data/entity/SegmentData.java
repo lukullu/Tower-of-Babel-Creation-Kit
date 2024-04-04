@@ -16,11 +16,12 @@ public class SegmentData extends Polygon implements Serializable
 
     @Serial private static final long serialVersionUID = 3756687822214555217L;
 
-    public SegmentRoles role = SegmentRoles.SEGMENT;
-    @Exposed(hidden = true) public boolean enabled = true;
-    public static boolean isValid = true;
-    public ArrayList<SegmentData> neighborSegments;
+    public final boolean isValid;
+    public boolean enabled;
     public int armorPoints = 0;
+    public SegmentRoles role = SegmentRoles.SEGMENT;
+    public ArrayList<SegmentData> neighborSegments;
+
 
     public SegmentData(ArrayList<Vec2> vertices) {
         super(vertices); enabled = true; isValid = true;
@@ -42,7 +43,7 @@ public class SegmentData extends Polygon implements Serializable
     }
     
     public String toString() {
-        return "SegmentData{" + role + ", " + armorPoints + "ap, " + vertices.toString() + '}';
+        return "SegmentData{" + role + ", " + armorPoints + "-ap, " + vertices.toString() + '}';
     }
 
     @Override
@@ -69,4 +70,6 @@ static {
 
     @Exposed(as = "rolename")
     public String getRole() { return role.name().toLowerCase(Locale.ROOT); }
+
+    @Exposed(hidden = true)
  */

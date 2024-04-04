@@ -5,6 +5,7 @@ import com.lukullu.tbck.gameObjects.gameplayObjects.EntityObject;
 import com.lukullu.tbck.utils.Collision;
 import com.lukullu.tbck.utils.CollisionResult;
 import com.lukullu.undersquare.UnderSquare3;
+import com.tbck.data.entity.SegmentData;
 import com.tbck.math.Polygon;
 
 import java.util.ArrayList;
@@ -29,8 +30,17 @@ public interface ICollidableObject extends IGameObject
 
             for (int i = 0; i < getPolygons().size(); i++)
             {
+                if(getPolygons().get(i) instanceof SegmentData)
+                    if(!((SegmentData) (Object) getPolygons().get(i)).enabled)
+                        continue;
+
                 for (int j = 0; j < entity.getPolygons().size(); j++)
                 {
+
+                    if(entity.getPolygons().get(j) instanceof SegmentData)
+                        if(!((SegmentData) (Object) entity.getPolygons().get(j)).enabled)
+                            continue;
+
                      CollisionResult res = Collision.collisionResolutionSAT(getPolygons().get(i).getVertices(), this.getPosition(), entity.getPolygons().get(j).getVertices(), entity.getPosition(),entity);
 
                     if (!res.collisionCheck){ continue; }

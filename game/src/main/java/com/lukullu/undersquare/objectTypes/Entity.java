@@ -22,6 +22,12 @@ public class Entity extends EntityObject implements ISegmentedObject
     }
 
     @Override
+    public void paint()
+    {
+        paintSegments();
+    }
+
+    @Override
     public ArrayList<Polygon> dynamicCollisionUpdate(int depth)
     {
         ArrayList<Polygon> colliderPolygons = super.dynamicCollisionUpdate(depth);
@@ -29,7 +35,7 @@ public class Entity extends EntityObject implements ISegmentedObject
         Polygon furthestPolygon = null;
         double furthestDistance = 0;
 
-        if(colliderPolygons.size() != 1)
+        if(colliderPolygons.size() > 1)
         {
             for(Polygon polygon : colliderPolygons)
             {
@@ -39,13 +45,22 @@ public class Entity extends EntityObject implements ISegmentedObject
                     furthestPolygon = polygon;
                 }
             }
-        }else
+        }
+        else if (colliderPolygons.size() == 1)
         {
             furthestPolygon = colliderPolygons.get(0);
         }
 
-        //if(getPolygons().contains(furthestPolygon))
-        //getSegments().get(getPolygons().indexOf(furthestPolygon)).enabled = false;
+        if(furthestPolygon == null) return null;
+
+
+        //TODO: Check if Force is high enough for damage
+        //TODO: Check if Health is set to below 0 on hit
+        //TODO: Only then set Segment Inactive
+        /*if(getPolygons().contains(furthestPolygon))
+            if(furthestPolygon instanceof SegmentData)
+                this.setSegmentInactive((SegmentData) (Object)furthestPolygon);*/
+
 
         return colliderPolygons;
     }

@@ -4,6 +4,7 @@ import com.lukullu.tbck.utils.*;
 import com.lukullu.undersquare.UnderSquare3;
 import com.lukullu.tbck.enums.Shapes;
 import com.lukullu.undersquare.interfaces.ICollidableObject;
+import com.tbck.data.entity.SegmentData;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
 
@@ -16,8 +17,6 @@ public class EntityObject extends GameplayObject implements ICollidableObject {
     public static final double gravity = 10;
     public double mass = 2.5; // Unit: kg
     public Vec2 force = Vec2.ZERO_VECTOR2;
-
-    //DEBUG
     private Vec2 deltaPos = Vec2.ZERO_VECTOR2;
 
     public EntityObject(Shapes shapeDesc, Vec2 position, double rotation, double scaling)
@@ -54,43 +53,6 @@ public class EntityObject extends GameplayObject implements ICollidableObject {
         Vec2 delta = velocity.multiply(DeltaTimer.getInstance().getDeltaTime()).multiply(100).add(deltaPos); // 1px = 1cm
         deltaPos = Vec2.ZERO_VECTOR2;
         return delta;
-    }
-
-    public ArrayList<Polygon> dynamicCollisionUpdate(int depth)
-    {
-
-        if(depth <= 0) return new ArrayList<>();
-
-        @SuppressWarnings("all")
-        List<EntityObject> entities = (List<EntityObject>)(Object)UnderSquare3.getGameObjects().get(EntityObject.class);
-
-        ArrayList<Polygon> out = new ArrayList<>();
-        ArrayList<EntityObject> colliders = new ArrayList<>();
-
-        for (EntityObject entity : entities)
-        {
-            if (this.equals(entity)) { continue; }
-
-            for (int i = 0; i < getPolygons().size(); i++)
-            {
-                for (int j = 0; j < entity.getPolygons().size(); j++)
-                {
-                    //CollisionResult res = Collision.collisionResolutionSAT(polygon.getVertices(), polygon.getPosition(), entityPolygon.getVertices(), entityPolygon.getPosition());
-                    CollisionResult res = Collision.collisionResolutionSAT(getPolygons().get(i).getVertices(), this.getPosition(), entity.getPolygons().get(j).getVertices(), entity.getPosition(),entity);
-
-                    if (!res.collisionCheck){ continue; }
-
-                    collisionResponse(res);
-
-                    if(!colliders.contains(entity)){ colliders.add(entity); }
-                    out.add(getPolygons().get(i));
-                }
-            }
-        }
-
-        for (EntityObject entity : colliders) entity.dynamicCollisionUpdate(depth-1);
-
-        return out;
     }
 
     public void collisionResponse(CollisionResult res)

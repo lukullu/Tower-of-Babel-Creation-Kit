@@ -4,6 +4,7 @@ import com.kilix.processing.ProcessingClass;
 import com.lukullu.tbck.enums.Shapes;
 import com.lukullu.tbck.gameObjects.IGameObject;
 import com.lukullu.tbck.utils.*;
+import com.tbck.data.entity.SegmentData;
 import com.tbck.math.MyMath;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
@@ -134,26 +135,11 @@ public class GameplayObject implements IGameObject, ProcessingClass
 
     public void updateVertices(Vec2 deltaPos, double deltaRot, double deltaSca)
     {
-        ArrayList<Polygon> newPolygons = new ArrayList<>();
-        for (Polygon polygon : polygons)
-        {
-            newPolygons.add(calcVertices(polygon.getVertices(),deltaPos,deltaRot,deltaSca));
+        for (Polygon polygon : polygons) {
+            polygon.transform(getPosition(), deltaPos, deltaRot, deltaSca);
         }
-        polygons = newPolygons;
     }
 
-    private Polygon calcVertices(ArrayList<Vec2> vertices, Vec2 deltaPos, double deltaRot, double deltaSca) {
-        ArrayList<Vec2> output = new ArrayList<Vec2>();
-        for (Vec2 vertex : vertices) {
-
-            vertex = vertex.add(deltaPos);
-            vertex = vertex.rotate(getPosition(),deltaRot);
-            vertex = vertex.scale(getPosition(),deltaSca);
-
-            output.add(vertex);
-        }
-        return new Polygon(output);
-    }
 
     public void paintPolygon(Polygon polygon)
     {

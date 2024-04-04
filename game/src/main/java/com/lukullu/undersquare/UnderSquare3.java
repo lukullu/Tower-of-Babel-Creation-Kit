@@ -14,10 +14,12 @@ import com.lukullu.undersquare.objectTypes.Meta;
 import com.lukullu.undersquare.objectTypes.Static;
 import com.tbck.data.entity.SegmentDataManager;
 import com.tbck.math.MyMath;
+import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -28,8 +30,6 @@ public class UnderSquare3 extends ExtendedPApplet {
     public void setup()
     {
         // "../game/src/main/resources/shapeFiles/playerShape.psff"
-
-        //System.out.println(MyMath.lineSegmentIntersection(new Vec2(0,0),new Vec2(10,10),new Vec2(0,0),new Vec2(10,10)));
 
         gameObjects.putEntity(new Player("/shapeFiles/playerShape.psff", new Vec2(600,600), 0, 1));
         gameObjects.putEntity(new Entity("/shapeFiles/testShape.psff",new Vec2(900,600), 0, 2));

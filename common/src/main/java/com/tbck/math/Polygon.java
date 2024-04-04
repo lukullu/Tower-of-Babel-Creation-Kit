@@ -2,6 +2,7 @@ package com.tbck.math;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Polygon implements Serializable
@@ -17,7 +18,32 @@ public class Polygon implements Serializable
     {
         this.vertices = vertices;
     }
-    
+
+    public boolean isConvex()
+    {
+        boolean direction = false;
+
+        for(int i = 1; i < vertices.size()+1; i++)
+        {
+            Vec2 preVertex = vertices.get((i-1) % vertices.size());
+            Vec2 vertex = vertices.get((i) % vertices.size());
+            Vec2 postVertex = vertices.get((i+1) % vertices.size());
+
+            double crossProduct = ((vertex.x - preVertex.x) * (vertex.y - postVertex.y)) - ((vertex.y - preVertex.y) * (vertex.x - postVertex.x));
+
+            if(i == 1)
+            {
+                direction = crossProduct > 0;
+            }
+
+            if ((crossProduct > 0 != direction))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public Polygon scale(double scale) {
         return new Polygon(new ArrayList<>(
                 vertices.stream().map(vec -> vec.multiply(scale)).toList()

@@ -16,10 +16,10 @@ public class SegmentData extends Polygon implements Serializable
     public int ArmorPoints; // TODO lukullu why this not armorPoints?
     public SegmentRoles role;
     public boolean enabled = true;
-    public boolean isValid = true;
+    public static boolean isValid = true;
     public ArrayList<SegmentData> neighborSegments;
     public SegmentData(ArrayList<Vec2> vertices) {
-        super(vertices);
+        super(vertices); enabled = true; isValid = true;
     }
 
     public HashSet<SegmentData> checkNeighborsRec(HashSet<SegmentData> visited)
@@ -36,6 +36,7 @@ public class SegmentData extends Polygon implements Serializable
         }
         return visited;
     }
+
     public String toString() {
         return "SegmentData{" + role + ", " + ArmorPoints + "ap, " + vertices.toString() + '}';
     }

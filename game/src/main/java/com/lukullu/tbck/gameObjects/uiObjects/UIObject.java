@@ -42,4 +42,9 @@ public class UIObject implements IGameObject {
     public ArrayList<Polygon> getShape() {
         return null;
     }
+
+    @Override
+    public void setShape(ArrayList<Polygon> polygons) {
+
+    }
 }

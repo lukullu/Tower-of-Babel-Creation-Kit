@@ -2,16 +2,19 @@ package com.lukullu.tbck.gameObjects.gameplayObjects;
 
 import com.kilix.processing.ProcessingClass;
 import com.lukullu.tbck.enums.Shapes;
+import com.lukullu.tbck.gameObjects.ICollidableObject;
 import com.lukullu.tbck.gameObjects.IGameObject;
 import com.lukullu.tbck.utils.*;
 import com.tbck.data.entity.SegmentData;
+import com.tbck.math.LineSegment;
 import com.tbck.math.MyMath;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
 
+import javax.sound.sampled.Line;
 import java.util.ArrayList;
 
-public class GameplayObject implements IGameObject, ProcessingClass
+public class GameplayObject implements IGameObject, ProcessingClass, ICollidableObject
 {
 
     protected int[] debugColor = {(int)random(0,255),(int)random(0,255),(int)random(0,255)};
@@ -24,6 +27,7 @@ public class GameplayObject implements IGameObject, ProcessingClass
     private double scaling = 1, originalScaling;
     public ArrayList<Polygon> shape = new ArrayList<>();
     private ArrayList<Polygon> polygons = new ArrayList<>();
+    protected ArrayList<LineSegment> interiorLines = new ArrayList<>();
 
     public boolean debugOverlap = false;
 
@@ -59,7 +63,8 @@ public class GameplayObject implements IGameObject, ProcessingClass
     public ArrayList<Polygon> getShape() { return shape; }
     public void setShape(ArrayList<Polygon> shape) { this.shape = polygons; }
     public void setPolygons(ArrayList<Polygon> polygons) { this.polygons = polygons; }
-    public void update() {  } // TODO: Check if this can be moved to the updatePos / updateRot functions to save resources
+    public void update() { setInteriorLines(initInteriorLines(getPolygons()));
+        System.out.println(initInteriorLines(getPolygons()).size()); } // TODO: Check if this can be moved to the updatePos / updateRot functions to save resources
     public void paint()
     {
         for (Polygon polygon : polygons)
@@ -143,6 +148,7 @@ public class GameplayObject implements IGameObject, ProcessingClass
 
     public void paintPolygon(Polygon polygon)
     {
+
         fill(debugColor[0],debugColor[1],debugColor[2],debugAlpha);
 
         beginShape();
@@ -163,4 +169,16 @@ public class GameplayObject implements IGameObject, ProcessingClass
         fill(255);
     }
 
+    @Override
+    public ArrayList<LineSegment> getInteriorLines() {
+        return this.interiorLines;
+    }
+
+    @Override
+    public void setInteriorLines(ArrayList<LineSegment> lines) {
+        this.interiorLines = lines;
+    }
+
+    @Override
+    public void collisionResponse(CollisionResult res) {}
 }

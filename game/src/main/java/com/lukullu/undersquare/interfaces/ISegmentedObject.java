@@ -1,7 +1,9 @@
 package com.lukullu.undersquare.interfaces;
 
+import com.lukullu.tbck.gameObjects.ICollidableObject;
 import com.lukullu.tbck.gameObjects.IGameObject;
 import com.tbck.data.entity.SegmentData;
+import com.tbck.math.LineSegment;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
 
@@ -9,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public interface ISegmentedObject extends IGameObject
+public interface ISegmentedObject extends IGameObject, ICollidableObject
 {
 
     default void initSegments()
@@ -99,6 +101,41 @@ public interface ISegmentedObject extends IGameObject
     {
         segment.enabled = false;
         checkSegmentIntegrity(segment);
+        setInteriorLines(initInteriorLines(getPolygons()));
+    }
+
+    @Override
+    default ArrayList<LineSegment> initInteriorLines(ArrayList<? extends Polygon> polygons)
+    {
+
+        ArrayList<LineSegment> out = new ArrayList<>();
+
+        for (Polygon query : polygons)
+        {
+            if(query instanceof SegmentData)
+                if(!((SegmentData)query).enabled)
+                    continue;
+
+            for(Polygon polygon : polygons)
+            {
+                if(polygon instanceof SegmentData)
+                    if(!((SegmentData)polygon).enabled)
+                        continue;
+
+                if(polygon.equals(query))
+                    continue;
+
+                for (int j = 0; j < polygon.vertices.size(); j++)
+                {
+
+                    if(query.vertices.contains(polygon.vertices.get(j)) && query.vertices.contains(polygon.vertices.get((j + 1) % polygon.vertices.size())))
+                        out.add(new LineSegment(polygon.vertices.get(j),polygon.vertices.get((j + 1) % polygon.vertices.size())));
+
+                }
+            }
+        }
+
+        return out;
     }
 
 

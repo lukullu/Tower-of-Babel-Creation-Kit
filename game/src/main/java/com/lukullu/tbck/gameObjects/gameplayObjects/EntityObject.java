@@ -1,32 +1,25 @@
 package com.lukullu.tbck.gameObjects.gameplayObjects;
 
 import com.lukullu.tbck.utils.*;
-import com.lukullu.undersquare.UnderSquare3;
-import com.lukullu.tbck.enums.Shapes;
-import com.lukullu.undersquare.interfaces.ICollidableObject;
-import com.tbck.data.entity.SegmentData;
+import com.lukullu.tbck.gameObjects.ICollidableObject;
+import com.tbck.math.LineSegment;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
-public class EntityObject extends GameplayObject implements ICollidableObject {
+public class EntityObject extends GameplayObject{
 
     public static final double gravity = 10;
     public double mass = 2.5; // Unit: kg
     public Vec2 force = Vec2.ZERO_VECTOR2;
     private Vec2 deltaPos = Vec2.ZERO_VECTOR2;
 
-    public EntityObject(Shapes shapeDesc, Vec2 position, double rotation, double scaling)
-    {
-        super(shapeDesc, position, rotation, scaling);
-    }
-
     public EntityObject(ArrayList<? extends Polygon> polygons, Vec2 position, double rotation, double scaling)
     {
         super(polygons, position, rotation, scaling);
+        setInteriorLines(initInteriorLines(getPolygons()));
     }
 
 
@@ -44,6 +37,8 @@ public class EntityObject extends GameplayObject implements ICollidableObject {
         // TODO: Temp; Actually make this work properly | Friction
         double coefficientOfFriction = 0.05;
         if(!force.equals(Vec2.ZERO_VECTOR2)) applyForce(force.multiply(-1 * coefficientOfFriction));
+
+        super.update();
     }
 
     public Vec2 calcDeltaPos()
@@ -70,7 +65,6 @@ public class EntityObject extends GameplayObject implements ICollidableObject {
             this.applyForce(deltaNorm.multiply(queryForce).align(generalDirectionQuery).multiply(1));
             entity.applyForce(deltaNorm.multiply(queryForce).align(generalDirectionQuery).multiply(-1));
         }
-
         this.updatePos(res.delta.multiply(1));
     }
 

@@ -8,20 +8,14 @@ import com.lukullu.tbck.gameObjects.gameplayObjects.MetaObject;
 import com.lukullu.tbck.gameObjects.gameplayObjects.StaticObject;
 import com.lukullu.tbck.utils.*;
 import com.lukullu.undersquare.entities.Player;
-import com.lukullu.undersquare.interfaces.ICollidableObject;
+import com.lukullu.tbck.gameObjects.ICollidableObject;
 import com.lukullu.undersquare.objectTypes.Entity;
-import com.lukullu.undersquare.objectTypes.Meta;
-import com.lukullu.undersquare.objectTypes.Static;
 import com.tbck.data.entity.SegmentDataManager;
-import com.tbck.math.MyMath;
-import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class UnderSquare3 extends ExtendedPApplet {
 

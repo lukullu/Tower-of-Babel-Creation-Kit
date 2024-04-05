@@ -1,11 +1,14 @@
 package com.lukullu.tbck.utils;
 
-import com.lukullu.undersquare.interfaces.ICollidableObject;
+import com.kilix.processing.ProcessingClass;
+import com.lukullu.tbck.gameObjects.ICollidableObject;
+import com.tbck.math.LineSegment;
 import com.tbck.math.Vec2;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
-public class Collision
+public class Collision implements ProcessingClass
 {
     public static CollisionResult collisionResolutionSAT(ArrayList<Vec2> polygon1, Vec2 polygonCenter1, ArrayList<Vec2> polygon2, Vec2 polygonCenter2, ICollidableObject collider)
     {
@@ -72,9 +75,8 @@ public class Collision
 
         Vec2 delta = transformationAxis.multiply(-minOverlap).align(generalDirection);
 
-        return new CollisionResult(true, collider, delta, axisOriginIndex == 0, axisVertices);
+        return new CollisionResult(true, collider, delta, axisOriginIndex == 0, null);
     }
-
 
 
 }

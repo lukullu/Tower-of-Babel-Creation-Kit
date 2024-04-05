@@ -3,6 +3,7 @@ package com.lukullu.undersquare.objectTypes;
 import com.lukullu.tbck.gameObjects.gameplayObjects.EntityObject;
 import com.lukullu.undersquare.interfaces.ISegmentedObject;
 import com.tbck.data.entity.SegmentDataManager;
+import com.tbck.math.LineSegment;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
 import com.tbck.data.entity.SegmentData;
@@ -24,12 +25,15 @@ public class Entity extends EntityObject implements ISegmentedObject
     @Override
     public void paint()
     {
+        //for(LineSegment line : getInteriorLines())
+            //line((float)line.start.x+1000,(float)line.start.y,(float)line.end.x+1000,(float)line.end.y);
         paintSegments();
     }
 
     @Override
     public ArrayList<Polygon> dynamicCollisionUpdate(int depth)
     {
+
         ArrayList<Polygon> colliderPolygons = super.dynamicCollisionUpdate(depth);
 
         Polygon furthestPolygon = null;

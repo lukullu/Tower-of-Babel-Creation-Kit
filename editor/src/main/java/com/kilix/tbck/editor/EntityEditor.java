@@ -46,10 +46,6 @@ public class EntityEditor extends EditorPanel {
 	private int polygonPoints = 8;
 	private PropertiesPanel<SegmentData> segmentPanel;
 	
-	// segment control \\
-	private JButton armorPoints;
-	private JButton segmentRole;
-	
 	private SegmentData selectedSegment = null;
 	
 	public JMenu[] getContextMenus() {
@@ -131,18 +127,10 @@ public class EntityEditor extends EditorPanel {
 		final boolean hasSegment = segment != null;
 		
 		((TitledBorder) segmentPanel.getBorder()).setTitle(hasSegment
-				? String.format("%s %02d\n", segment.role, entityTemplate.indexOf(segment))
+				? String.format("%s segment\n", segment.role)
 				: NO_SEGMENT_TITLE);
 		segmentPanel.setValue(segment);
 		repaint();
-	}
-	private void loadSegmentProperties() {
-		armorPoints.setText((selectedSegment.armorPoints < 0 ? "impenetrable" : selectedSegment.armorPoints) + " armor");
-		segmentRole.setText("role: " + selectedSegment.role.name());
-	}
-	private void resetSegmentProperties() {
-		armorPoints.setText("no armor points");
-		segmentRole.setText("no role");
 	}
 	
 	private void update() {

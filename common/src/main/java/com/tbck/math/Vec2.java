@@ -1,19 +1,42 @@
 package com.tbck.math;
 
+import net.aether.utils.utils.reflection.Exposed;
+import net.aether.utils.utils.swing.FieldButton;
+
+import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Point2D;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Vec2 implements Serializable
 {
+    
+    // register Vec2 to dynamic typing system™
+    static {
+        FieldButton.GENERATOR_REGISTRY.put(Vec2.class, oldValue -> {
+            String input = oldValue.toString();
+            Vec2 value;
+            do {
+                input = JOptionPane.showInputDialog(null, "Input Vec2", input);
+                // user closed or pressed cancel
+                if (input == null) return oldValue;
+                value = Vec2.fromString(input);
+            } while (value == null);
+            
+            return value;
+        });
+    }
+    
     @Serial private static final long serialVersionUID = 4559635089051247664L;
+    public static final Pattern VEC2_PATTERN = Pattern.compile("\\[?(.+),([^\\]]+)\\]?");
     
     public static Vec2 ZERO_VECTOR2 = new Vec2(0,0);
     public double x, y;
-    public Vec2(double x, double y){ this.x = x; this.y = y; }
-
+    public Vec2(double x, double y) { this.x = x; this.y = y; }
+    
     // Vector Arithmetic
     public Vec2 add(Vec2 other_vector)
     {
@@ -59,9 +82,31 @@ public class Vec2 implements Serializable
     public Point getPoint() { return new Point((int) x, (int) y); }
     
     public String toString() {
-        return '[' + Math.round(x * 100) / 100.0 + ", " + Math.round(y * 100) / 100.0 + ']';
+        return "[" + (Math.round(x * 100) / 100.0) + ", " + (Math.round(y * 100) / 100.0) + "]";
     }
 
+    public static Vec2 fromString(String string) {
+        if (string == null) return null;
+        Matcher matcher = VEC2_PATTERN.matcher(string.replace(" ", ""));
+        
+        // unparsable
+        if (! matcher.find() || matcher.groupCount() != 2) return null;
+        
+        try {
+            double x = Double.parseDouble(matcher.group(1));
+            double y = Double.parseDouble(matcher.group(2));
+            return new Vec2(x, y);
+        } catch (NumberFormatException e) { return null; }
+    }
+    
+    @Exposed(as = "position")
+    public void setPosition(Vec2 newPos) {
+        this.x = newPos.x;
+        this.y = newPos.y;
+    }
+    @Exposed(as = "position")
+    public Vec2 getPosition() { return this; }
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

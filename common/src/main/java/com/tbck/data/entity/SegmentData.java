@@ -27,6 +27,15 @@ public class SegmentData extends Polygon implements Serializable
         super(vertices); enabled = true; isValid = true;
     }
 
+    public SegmentData(SegmentData data) {
+        super(data.vertices);
+        enabled = data.enabled;
+        isValid = data.isValid;
+        armorPoints = data.armorPoints;
+        role = data.role;
+        neighborSegments = data.neighborSegments;
+    }
+
     public HashSet<SegmentData> checkNeighborsRec(HashSet<SegmentData> visited)
     {
         if(visited.contains(this))

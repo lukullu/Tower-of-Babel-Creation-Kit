@@ -5,13 +5,12 @@ import com.lukullu.tbck.enums.Shapes;
 import com.lukullu.tbck.gameObjects.ICollidableObject;
 import com.lukullu.tbck.gameObjects.IGameObject;
 import com.lukullu.tbck.utils.*;
-import com.tbck.data.entity.SegmentData;
+import com.lukullu.undersquare.UnderSquare3;
 import com.tbck.math.LineSegment;
 import com.tbck.math.MyMath;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
 
-import javax.sound.sampled.Line;
 import java.util.ArrayList;
 
 public class GameplayObject implements IGameObject, ProcessingClass, ICollidableObject
@@ -28,8 +27,6 @@ public class GameplayObject implements IGameObject, ProcessingClass, ICollidable
     public ArrayList<Polygon> shape = new ArrayList<>();
     private ArrayList<Polygon> polygons = new ArrayList<>();
     protected ArrayList<LineSegment> interiorLines = new ArrayList<>();
-
-    public boolean debugOverlap = false;
 
     public GameplayObject()
     {
@@ -56,23 +53,28 @@ public class GameplayObject implements IGameObject, ProcessingClass, ICollidable
         initVertices();
     }
 
-    public int getID() { return 0; }
+    public int getID() { return id; }
     public Vec2 getPosition() { return position; }
     public ArrayList<Vec2> getVertices(int i){ return polygons.get(i).getVertices(); }
     public ArrayList<Polygon> getPolygons(){ return polygons; }
     public ArrayList<Polygon> getShape() { return shape; }
     public void setShape(ArrayList<Polygon> shape) { this.shape = polygons; }
     public void setPolygons(ArrayList<Polygon> polygons) { this.polygons = polygons; }
-    public void update() { setInteriorLines(initInteriorLines(getPolygons()));
-        System.out.println(initInteriorLines(getPolygons()).size()); } // TODO: Check if this can be moved to the updatePos / updateRot functions to save resources
+    public void update() { setInteriorLines(initInteriorLines(getPolygons())); } // TODO: Check if this can be moved to the updatePos / updateRot functions to save resources
     public void paint()
     {
         for (Polygon polygon : polygons)
             paintPolygon(polygon);
     }
 
+    public void die()
+    {
+        UnderSquare3.toKill.add(this);
+    }
+
     public void reset()
     {
+        // TODO: repair
         rotation = originalRotation;
         scaling = originalScaling;
         position = originalPosition;
@@ -145,7 +147,6 @@ public class GameplayObject implements IGameObject, ProcessingClass, ICollidable
         }
     }
 
-
     public void paintPolygon(Polygon polygon)
     {
 
@@ -181,4 +182,5 @@ public class GameplayObject implements IGameObject, ProcessingClass, ICollidable
 
     @Override
     public void collisionResponse(CollisionResult res) {}
+
 }

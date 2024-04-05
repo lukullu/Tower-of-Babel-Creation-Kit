@@ -13,9 +13,6 @@ import java.util.ArrayList;
 public class Entity extends EntityObject implements ISegmentedObject
 {
 
-    @Deprecated
-    public ArrayList<SegmentData> segments;
-
     public Entity(String psff_resource, Vec2 position, double rotation, double scaling)
     {
         super(SegmentDataManager.loadInternal(psff_resource),position,rotation, scaling);
@@ -25,8 +22,6 @@ public class Entity extends EntityObject implements ISegmentedObject
     @Override
     public void paint()
     {
-        //for(LineSegment line : getInteriorLines())
-            //line((float)line.start.x+1000,(float)line.start.y,(float)line.end.x+1000,(float)line.end.y);
         paintSegments();
     }
 

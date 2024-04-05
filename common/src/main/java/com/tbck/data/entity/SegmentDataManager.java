@@ -18,7 +18,6 @@ public class SegmentDataManager {
 	/** load SegmentData from an external file */
 	public static ArrayList<SegmentData> loadExternal(File file) throws IOException {
 		Objects.requireNonNull(file, "file must not be null!");
-		
 		ArrayList<SegmentData> data = DATA_CACHE.computeIfAbsent(file, key -> {
 			try (ObjectInputStream is = new ObjectInputStream(Files.newInputStream(file.toPath()))) {
 				Object o = is.readObject();
@@ -35,7 +34,7 @@ public class SegmentDataManager {
 			return null;
 		});
 		if (data == null) return null;
-		return new ArrayList<>(data); // only give out copies of the template
+		return new ArrayList<>(data.stream().map(SegmentData::new).toList()); // only give out copies of the template
 	}
 	/** load SegmentData from an internal resource */
 	public static ArrayList<SegmentData> loadInternal(String resourceName) {

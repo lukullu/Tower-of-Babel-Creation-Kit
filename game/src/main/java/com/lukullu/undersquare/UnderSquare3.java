@@ -4,22 +4,28 @@ import com.kilix.processing.ExtendedPApplet;
 
 import com.lukullu.tbck.gameObjects.IGameObject;
 import com.lukullu.tbck.gameObjects.gameplayObjects.EntityObject;
+import com.lukullu.tbck.gameObjects.gameplayObjects.GameplayObject;
 import com.lukullu.tbck.gameObjects.gameplayObjects.MetaObject;
 import com.lukullu.tbck.gameObjects.gameplayObjects.StaticObject;
 import com.lukullu.tbck.utils.*;
 import com.lukullu.undersquare.entities.Player;
 import com.lukullu.tbck.gameObjects.ICollidableObject;
+import com.lukullu.undersquare.objectTypes.Debris;
 import com.lukullu.undersquare.objectTypes.Entity;
+import com.lukullu.undersquare.objectTypes.Meta;
+import com.lukullu.undersquare.objectTypes.Static;
 import com.tbck.data.entity.SegmentDataManager;
 import com.tbck.math.Vec2;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UnderSquare3 extends ExtendedPApplet {
 
     public static GameObjectMultiHashMap gameObjects = new GameObjectMultiHashMap();
+    public static ArrayList<GameplayObject> toKill = new ArrayList<>();
 
     public void setup()
     {
@@ -27,10 +33,11 @@ public class UnderSquare3 extends ExtendedPApplet {
 
         gameObjects.putEntity(new Player("/shapeFiles/playerShape.psff", new Vec2(600,600), 0, 1));
         gameObjects.putEntity(new Entity("/shapeFiles/testShape.psff",new Vec2(900,600), 0, 2));
-        //gameObjects.putEntity(new Entity("/shapeFiles/testShape.psff",new Vec2(500,400), 0, 3));
-        //gameObjects.putMeta(  new Meta  ("/shapeFiles/testShape.psff",new Vec2(1000,700), 0, 1,(nil)->{System.out.println("heya");},false));
-        //gameObjects.putMeta(  new Meta  ("/shapeFiles/testShape.psff",new Vec2(400,300), 0, 1,(res)->{res.collider.reset();},false));
-        //gameObjects.putStatic(new Static("/shapeFiles/testShape.psff",new Vec2(800,500), PI, 4));
+        gameObjects.putEntity(new Entity("/shapeFiles/testShape.psff",new Vec2(1500,600), 0, 2));
+        gameObjects.putEntity(new Debris("/shapeFiles/testShape.psff",new Vec2(1200,600), 0, 3,3));
+        gameObjects.putMeta(  new Meta  ("/shapeFiles/testShape.psff",new Vec2(1000,700), 0, 1,(nil)->{System.out.println("heya");},false));
+        gameObjects.putMeta(  new Meta  ("/shapeFiles/testShape.psff",new Vec2(400,300), 0, 1,(res)->{res.collider.reset();},false));
+        gameObjects.putStatic(new Static("/shapeFiles/testShape.psff",new Vec2(800,500), PI, 4));
 
     }
 
@@ -46,7 +53,7 @@ public class UnderSquare3 extends ExtendedPApplet {
         for (var entry : gameObjects.entrySet())
         {
             Class<?> key = entry.getKey();
-            List<IGameObject> value = entry.getValue();
+            List<GameplayObject> value = entry.getValue();
             for (var gameObject : value)
             {
                 gameObject.update();
@@ -57,7 +64,7 @@ public class UnderSquare3 extends ExtendedPApplet {
         for (var entry : gameObjects.entrySet())
         {
             Class<?> key = entry.getKey();
-            List<IGameObject> value = entry.getValue();
+            List<GameplayObject> value = entry.getValue();
             for (var gameObject : value)
             {
                 if(gameObject instanceof EntityObject)
@@ -76,12 +83,17 @@ public class UnderSquare3 extends ExtendedPApplet {
         for (var entry : gameObjects.entrySet())
         {
             Class<?> key = entry.getKey();
-            List<IGameObject> value = entry.getValue();
+            List<GameplayObject> value = entry.getValue();
             for (var gameObject : value)
             {
                 gameObject.paint(); //TODO Draw hierarchy
             }
         }
+
+        for (GameplayObject obj : toKill)
+            gameObjects.remove(obj);
+
+        toKill = new ArrayList<>();
 
     }
 

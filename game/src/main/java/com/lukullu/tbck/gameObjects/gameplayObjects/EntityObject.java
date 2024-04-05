@@ -15,6 +15,7 @@ public class EntityObject extends GameplayObject{
     public double mass = 2.5; // Unit: kg
     public Vec2 force = Vec2.ZERO_VECTOR2;
     private Vec2 deltaPos = Vec2.ZERO_VECTOR2;
+    public double coefficientOfFriction = 0.05;
 
     public EntityObject(ArrayList<? extends Polygon> polygons, Vec2 position, double rotation, double scaling)
     {
@@ -35,7 +36,7 @@ public class EntityObject extends GameplayObject{
         updatePos(calcDeltaPos());
 
         // TODO: Temp; Actually make this work properly | Friction
-        double coefficientOfFriction = 0.05;
+
         if(!force.equals(Vec2.ZERO_VECTOR2)) applyForce(force.multiply(-1 * coefficientOfFriction));
 
         super.update();
@@ -66,17 +67,5 @@ public class EntityObject extends GameplayObject{
             entity.applyForce(deltaNorm.multiply(queryForce).align(generalDirectionQuery).multiply(-1));
         }
         this.updatePos(res.delta.multiply(1));
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof EntityObject that)) return false;
-        return Double.compare(mass, that.mass) == 0 && Objects.equals(force, that.force) && Objects.equals(deltaPos, that.deltaPos);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash( mass, force, deltaPos);
     }
 }

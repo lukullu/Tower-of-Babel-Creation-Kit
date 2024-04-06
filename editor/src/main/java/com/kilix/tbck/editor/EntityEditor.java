@@ -263,7 +263,9 @@ public class EntityEditor extends EditorPanel {
 		}
 		
 		try {
-			this.entityTemplate = SegmentDataManager.loadExternal(file);
+			var data = SegmentDataManager.loadExternal(file);
+			if (data == null) return;
+			this.entityTemplate = data;
 			this.templateFile = file;
 			this.unsavedChanges = false;
 			update();

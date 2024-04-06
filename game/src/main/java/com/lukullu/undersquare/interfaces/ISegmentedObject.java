@@ -108,7 +108,8 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
     {
         // ToDo: implement
         segment.healthPoints--;
-        System.out.println("I took damage: " + force.toString());
+        if(segment.healthPoints <= 0)
+            setSegmentInactive(segment);
     }
 
     @Override

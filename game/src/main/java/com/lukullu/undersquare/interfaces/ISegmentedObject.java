@@ -104,6 +104,13 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
         setInteriorLines(initInteriorLines(getPolygons()));
     }
 
+    default void takeDamage(SegmentData segment, Vec2 force)
+    {
+        // ToDo: implement
+        segment.healthPoints--;
+        System.out.println("I took damage: " + force.toString());
+    }
+
     @Override
     default ArrayList<LineSegment> initInteriorLines(ArrayList<? extends Polygon> polygons)
     {

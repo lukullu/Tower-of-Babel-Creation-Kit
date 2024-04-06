@@ -19,6 +19,7 @@ public class SegmentData extends Polygon implements Serializable
     public final boolean isValid;
     public boolean enabled;
     public int armorPoints = 0;
+    public int healthPoints = 0;
     public SegmentRoles role = SegmentRoles.SEGMENT;
     public ArrayList<SegmentData> neighborSegments;
 

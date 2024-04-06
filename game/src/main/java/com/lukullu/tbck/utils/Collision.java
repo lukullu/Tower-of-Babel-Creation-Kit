@@ -66,7 +66,7 @@ public class Collision implements ProcessingClass
                     axisVertices = new Vec2[]{poly1.get(a), poly1.get(a)};
                 }
 
-                if(!(maxPoly2 >= minPoly1 && maxPoly1 >= minPoly2)){return new CollisionResult(false,null, Vec2.ZERO_VECTOR2,false,null);}
+                if(!(maxPoly2 >= minPoly1 && maxPoly1 >= minPoly2)){return new CollisionResult(false,null,null, Vec2.ZERO_VECTOR2,false,null);}
 
             }
         }
@@ -75,7 +75,7 @@ public class Collision implements ProcessingClass
 
         Vec2 delta = transformationAxis.multiply(-minOverlap).align(generalDirection);
 
-        return new CollisionResult(true, collider, delta, axisOriginIndex == 0, null);
+        return new CollisionResult(true, collider, null, delta, axisOriginIndex == 0, null);
     }
 
 

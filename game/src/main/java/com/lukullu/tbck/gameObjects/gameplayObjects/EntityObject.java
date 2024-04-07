@@ -2,6 +2,7 @@ package com.lukullu.tbck.gameObjects.gameplayObjects;
 
 import com.lukullu.tbck.utils.*;
 import com.lukullu.tbck.gameObjects.ICollidableObject;
+import com.tbck.data.entity.SegmentData;
 import com.tbck.math.LineSegment;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;

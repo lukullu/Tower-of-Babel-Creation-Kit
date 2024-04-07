@@ -13,12 +13,4 @@ public class Static extends StaticObject implements ISegmentedObject
         super(SegmentDataManager.loadInternal(psff_resource), position, rotation, scaling);
     }
 
-    @Override
-    public void paintPolygon(Polygon polygon)
-    {
-        noStroke();
-        super.paintPolygon(polygon);
-        stroke(0);
-    }
-
 }

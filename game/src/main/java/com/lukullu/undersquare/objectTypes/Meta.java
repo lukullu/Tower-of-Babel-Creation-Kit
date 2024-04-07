@@ -20,12 +20,4 @@ public class Meta extends MetaObject implements ISegmentedObject
         super.debugAlpha = 50f;
     }
 
-    @Override
-    public void paintPolygon(Polygon polygon)
-    {
-        noStroke();
-        super.paintPolygon(polygon);
-        stroke(0);
-    }
-
 }

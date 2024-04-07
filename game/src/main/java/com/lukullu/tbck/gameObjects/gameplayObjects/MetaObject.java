@@ -36,6 +36,14 @@ public class MetaObject extends GameplayObject implements ICollidableObject
     }
 
     @Override
+    public void paint()
+    {
+        noStroke();
+        super.paint();
+        stroke(0);
+    }
+
+    @Override
     public ArrayList<Polygon> staticCollisionUpdate()
     {
         ArrayList<Polygon> polygonColliders = super.staticCollisionUpdate();
@@ -62,4 +70,6 @@ public class MetaObject extends GameplayObject implements ICollidableObject
         // TODO: is right activator (entity.class == ?)
         setActive(res);
     }
+
+
 }

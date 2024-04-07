@@ -21,6 +21,14 @@ public class StaticObject extends GameplayObject implements ICollidableObject
     }
 
     @Override
+    public void paint()
+    {
+        noStroke();
+        super.paint();
+        stroke(0);
+    }
+
+    @Override
     public void collisionResponse(CollisionResult res) {
 
         if(!(res.collider instanceof EntityObject))
@@ -38,4 +46,5 @@ public class StaticObject extends GameplayObject implements ICollidableObject
         entity.updatePos(res.delta.multiply(-1));
 
     }
+
 }

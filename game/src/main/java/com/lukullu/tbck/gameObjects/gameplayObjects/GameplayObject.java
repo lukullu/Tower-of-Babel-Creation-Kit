@@ -82,12 +82,9 @@ public class GameplayObject implements IGameObject, ProcessingClass, ICollidable
 
     public void reset()
     {
-        // TODO: repair
-        //updateVertices(originalPosition.subtract(position),originalRotation-rotation,0);
         updatePos(originalPosition.subtract(position));
         updateRot(originalRotation-rotation);
         updateSca(originalScaling-scaling);
-
     }
     public void updatePos(Vec2 delta)
     {
@@ -158,7 +155,6 @@ public class GameplayObject implements IGameObject, ProcessingClass, ICollidable
 
     public void paintPolygon(Polygon polygon)
     {
-
         fill(debugColor[0],debugColor[1],debugColor[2],debugAlpha);
 
         beginShape();
@@ -167,16 +163,6 @@ public class GameplayObject implements IGameObject, ProcessingClass, ICollidable
             vertex((float) polygon.getVertices().get(i % polygon.getVertices().size()).x,(float) polygon.getVertices().get(i % polygon.getVertices().size()).y);
         }
         endShape(CLOSE);
-
-        //TODO: Debug remove
-
-        fill(0);
-        rectMode(CENTER);
-        for (int i = 0; i < polygon.getVertices().size() + 1; i++)
-        {
-            ellipse((float)polygon.getPosition().x,(float)polygon.getPosition().y,2,2);
-        }
-        fill(255);
     }
 
     @Override

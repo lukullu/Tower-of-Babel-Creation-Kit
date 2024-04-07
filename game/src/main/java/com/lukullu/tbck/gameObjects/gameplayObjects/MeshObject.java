@@ -9,12 +9,6 @@ import java.util.ArrayList;
 @Deprecated
 public class MeshObject extends GameplayObject
 {
-
-    public MeshObject(Shapes shapeDesc, Vec2 position, double rotation, double scaling)
-    {
-        super(shapeDesc, position, rotation, scaling);
-        setPolygons(constructTriangles());
-    }
     private ArrayList<Polygon> constructTriangles()
     {
         ArrayList<Polygon> acc = new ArrayList<>();

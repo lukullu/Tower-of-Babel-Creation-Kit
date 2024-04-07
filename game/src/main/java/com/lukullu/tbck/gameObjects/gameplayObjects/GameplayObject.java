@@ -83,8 +83,10 @@ public class GameplayObject implements IGameObject, ProcessingClass, ICollidable
     public void reset()
     {
         // TODO: repair
-        updateVertices(originalPosition.subtract(position),originalRotation-rotation,0);
-        position = originalPosition;
+        //updateVertices(originalPosition.subtract(position),originalRotation-rotation,0);
+        updatePos(originalPosition.subtract(position));
+        updateRot(originalRotation-rotation);
+        updateSca(originalScaling-scaling);
 
     }
     public void updatePos(Vec2 delta)
@@ -101,7 +103,7 @@ public class GameplayObject implements IGameObject, ProcessingClass, ICollidable
 
     public void updateSca(double delta)
     {
-        rotation += delta;
+        scaling += delta;
         updateVertices(Vec2.ZERO_VECTOR2,0,delta);
     }
 

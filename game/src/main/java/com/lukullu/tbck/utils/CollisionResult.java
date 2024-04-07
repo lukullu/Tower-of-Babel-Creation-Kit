@@ -15,14 +15,16 @@ public class CollisionResult
     public final boolean collisionAxisOriginIsQuery;
     public LineSegment collisionAxisVertices;
     public Polygon colliderPolygon;
+    public Polygon queryPolygon;
 
-    CollisionResult(boolean collisionCheck, ICollidableObject collider, Polygon colliderPolygon, Vec2 delta, boolean collisionAxisOriginIsQuery, LineSegment collisionAxisVertices)
+    CollisionResult(boolean collisionCheck, ICollidableObject collider, Polygon colliderPolygon, Polygon queryPolygon, Vec2 delta, boolean collisionAxisOriginIsQuery, LineSegment collisionAxisVertices)
     {
         this.collisionAxisOriginIsQuery = collisionAxisOriginIsQuery;
         this.delta = delta;
         this.collisionCheck = collisionCheck;
         this.collider = collider;
         this.colliderPolygon = colliderPolygon;
+        this.queryPolygon = queryPolygon;
 
     }
 }

@@ -6,6 +6,7 @@ import com.lukullu.tbck.gameObjects.ICollidableObject;
 import com.lukullu.tbck.gameObjects.IGameObject;
 import com.lukullu.tbck.utils.*;
 import com.lukullu.undersquare.UnderSquare3;
+import com.tbck.data.entity.SegmentData;
 import com.tbck.math.LineSegment;
 import com.tbck.math.MyMath;
 import com.tbck.math.Polygon;
@@ -46,7 +47,14 @@ public class GameplayObject implements IGameObject, ProcessingClass, ICollidable
 
     public GameplayObject(ArrayList<? extends Polygon> shape, Vec2 position, double rotation, double scaling)
     {
-        this.shape.addAll(shape);
+        this.shape.addAll(shape.stream().map((poly)->
+        {
+            if(poly instanceof SegmentData)
+                return new SegmentData((SegmentData) poly);
+            else
+                return new Polygon(poly);
+        }).toList());
+
         this.position = position; this.originalPosition = position;
         this.rotation = rotation; this.originalRotation = rotation;
         this.scaling = scaling; this.originalScaling = scaling;
@@ -75,10 +83,9 @@ public class GameplayObject implements IGameObject, ProcessingClass, ICollidable
     public void reset()
     {
         // TODO: repair
-        rotation = originalRotation;
-        scaling = originalScaling;
+        updateVertices(originalPosition.subtract(position),originalRotation-rotation,0);
         position = originalPosition;
-        initVertices();
+
     }
     public void updatePos(Vec2 delta)
     {

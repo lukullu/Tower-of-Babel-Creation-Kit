@@ -36,8 +36,8 @@ public class EntityObject extends GameplayObject{
         updatePos(calcDeltaPos());
 
         // TODO: Temp; Actually make this work properly | Friction
-
-        if(!force.equals(Vec2.ZERO_VECTOR2)) applyForce(force.multiply(-1 * coefficientOfFriction));
+        if(force.x != 0 || force.y != 0)
+            applyForce(force.multiply(-1 * coefficientOfFriction));
 
         super.update();
     }
@@ -58,7 +58,7 @@ public class EntityObject extends GameplayObject{
 
         Vec2 combinedForce = this.force.subtract(entity.force);
         Vec2 queryForce = combinedForce.multiply(this.mass / (this.mass + entity.mass));
-        Vec2 generalDirectionQuery = this.getPosition().subtract(res.collider.getPosition());
+        Vec2 generalDirectionQuery = res.queryPolygon.getPosition().subtract(res.colliderPolygon.getPosition());
         Vec2 deltaNorm = res.delta.normalise();
 
         if (!(Double.isNaN(deltaNorm.x) || Double.isNaN(deltaNorm.y)))
@@ -66,6 +66,6 @@ public class EntityObject extends GameplayObject{
             this.applyForce(deltaNorm.multiply(queryForce).align(generalDirectionQuery).multiply(1));
             entity.applyForce(deltaNorm.multiply(queryForce).align(generalDirectionQuery).multiply(-1));
         }
-        this.updatePos(res.delta.multiply(1));
+        this.updatePos(res.delta.multiply(1.001));
     }
 }

@@ -66,17 +66,21 @@ public interface ICollidableObject extends IGameObject
                         if(!((SegmentData) (Object) entity.getPolygons().get(j)).enabled)
                             continue;
 
-                    CollisionResult res = Collision.collisionResolutionSAT(getPolygons().get(i).getVertices(), this.getPosition(), entity.getPolygons().get(j).getVertices(), entity.getPosition(),entity);
+                    CollisionResult res = Collision.collisionResolutionSAT(getPolygons().get(i).getVertices(), getPolygons().get(i).getPosition(), entity.getPolygons().get(j).getVertices(), entity.getPolygons().get(j).getPosition(),entity);
 
                     if (!res.collisionCheck)
                         continue;
 
-                    collisionResponse(res);
+                    res.queryPolygon = getPolygons().get(i);
+                    res.colliderPolygon = entity.getPolygons().get(j);
 
                     if(!colliders.contains(entity))
+                    {
                         colliders.add(entity);
+                    }
 
-                    res.colliderPolygon = getPolygons().get(i);
+                    collisionResponse(res);
+
                     results.add(res);
                 }
             }
@@ -105,6 +109,9 @@ public interface ICollidableObject extends IGameObject
 
                     if (!res.collisionCheck)
                         continue;
+
+                    res.queryPolygon = getPolygons().get(i);
+                    res.colliderPolygon = entity.getPolygons().get(j);
 
                     collisionResponse(res);
 

@@ -20,6 +20,10 @@ public class Polygon implements Serializable
     {
         this.vertices = vertices;
     }
+    public Polygon(Polygon poly)
+    {
+        this.vertices = poly.vertices;
+    }
 
     public boolean isConvex()
     {

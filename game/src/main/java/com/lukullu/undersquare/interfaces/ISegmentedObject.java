@@ -1,7 +1,9 @@
 package com.lukullu.undersquare.interfaces;
 
+import com.lukullu.tbck.enums.Actions;
 import com.lukullu.tbck.gameObjects.ICollidableObject;
 import com.lukullu.tbck.gameObjects.IGameObject;
+import com.lukullu.tbck.utils.InputManager;
 import com.tbck.data.entity.SegmentData;
 import com.tbck.math.LineSegment;
 import com.tbck.math.Polygon;
@@ -108,7 +110,7 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
     {
         // ToDo: implement
         segment.healthPoints--;
-        if(segment.healthPoints <= 0)
+        if(segment.healthPoints <= 0 && InputManager.getInstance().isActionQueued(Actions.DEBUGTOGGLE))
             setSegmentInactive(segment);
     }
 

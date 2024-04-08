@@ -81,6 +81,33 @@ public class Polygon implements Serializable
     public ArrayList<Vec2> getVertices(){ return vertices; }
     public Vec2 getPosition() { return calcPos(); }
 
+    public static Vec2 getPositionFromPolygons(ArrayList<Polygon> polygons)
+    {
+        Vec2 acc = Vec2.ZERO_VECTOR2;
+        for(Polygon polygon : polygons)
+        {
+            acc = acc.add(polygon.getPosition());
+        }
+        return acc.divide(polygons.size());
+    }
+
+    public static Polygon getPolygonFurthestFromPoint(ArrayList<Polygon> polygons, Vec2 origin)
+    {
+        Polygon out = null;
+        double furthestDistance = Double.MIN_VALUE;
+
+        if (polygons.size() > 1) {
+            for (Polygon polygon : polygons) {
+                if (polygon.getPosition().subtract(origin).length2() > furthestDistance) {
+                    furthestDistance = polygon.getPosition().subtract(origin).length2();
+                    out = polygon;
+                }
+            }
+        } else {
+            out = polygons.get(0);
+        }
+        return out;
+    }
 
     private Vec2 calcPos()
     {

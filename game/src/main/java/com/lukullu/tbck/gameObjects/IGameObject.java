@@ -1,6 +1,7 @@
 package com.lukullu.tbck.gameObjects;
 
 import com.kilix.processing.ProcessingClass;
+import com.lukullu.tbck.gameObjects.gameplayObjects.EntityObject;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
 
@@ -12,6 +13,8 @@ public interface IGameObject extends ProcessingClass {
     void update();
     void paint();
     void reset();
+    void die();
+    void birth(EntityObject obj);
 
     void paintPolygon(Polygon polygon);
 

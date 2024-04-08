@@ -1,6 +1,7 @@
 package com.lukullu.tbck.gameObjects.uiObjects;
 
 import com.lukullu.tbck.gameObjects.IGameObject;
+import com.lukullu.tbck.gameObjects.gameplayObjects.EntityObject;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
 
@@ -20,6 +21,16 @@ public class UIObject implements IGameObject {
 
     @Override
     public void reset() {
+
+    }
+
+    @Override
+    public void die() {
+
+    }
+
+    @Override
+    public void birth(EntityObject obj) {
 
     }
 

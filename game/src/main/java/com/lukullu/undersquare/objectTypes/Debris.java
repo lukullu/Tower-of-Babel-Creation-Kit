@@ -1,7 +1,10 @@
 package com.lukullu.undersquare.objectTypes;
 
 import com.lukullu.tbck.utils.DeltaTimer;
+import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
+
+import java.util.ArrayList;
 
 public class Debris extends Entity
 {

@@ -37,7 +37,7 @@ public class SegmentData extends Polygon implements Serializable
         neighborSegments = data.neighborSegments;
     }
 
-    public HashSet<SegmentData> checkNeighborsRec(HashSet<SegmentData> visited)
+    public ArrayList<SegmentData> checkNeighborsRec(ArrayList<SegmentData> visited)
     {
         if(visited.contains(this))
             return visited;
@@ -60,7 +60,7 @@ public class SegmentData extends Polygon implements Serializable
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof SegmentData that)) return false;
-        return enabled == that.enabled && armorPoints == that.armorPoints && role == that.role;
+        return enabled == that.enabled && armorPoints == that.armorPoints && role == that.role && vertices.equals(that.vertices);
     }
 
     @Override

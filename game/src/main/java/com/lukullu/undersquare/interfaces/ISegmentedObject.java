@@ -3,7 +3,11 @@ package com.lukullu.undersquare.interfaces;
 import com.lukullu.tbck.enums.Actions;
 import com.lukullu.tbck.gameObjects.ICollidableObject;
 import com.lukullu.tbck.gameObjects.IGameObject;
+import com.lukullu.tbck.gameObjects.gameplayObjects.EntityObject;
 import com.lukullu.tbck.utils.InputManager;
+import com.lukullu.undersquare.UnderSquare3;
+import com.lukullu.undersquare.objectTypes.Entity;
+import com.lukullu.undersquare.objectTypes.Meta;
 import com.tbck.data.entity.SegmentData;
 import com.tbck.math.LineSegment;
 import com.tbck.math.Polygon;
@@ -18,7 +22,8 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
 
     default void initSegments()
     {
-        for (SegmentData query : getSegments())
+
+        for(SegmentData query : getSegments())
         {
             query.neighborSegments = new ArrayList<>();
             for(SegmentData segment : getSegments())
@@ -26,15 +31,18 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
                 if(segment.equals(query))
                     continue;
 
-                for (Vec2 vertex : query.vertices)
+                int counter = 0;
+                for(Vec2 queryVertex : query.vertices)
                 {
-                    if(segment.vertices.contains(vertex))
-                    {
-                        query.neighborSegments.add(segment);
-                    }
+                    if(segment.vertices.contains(queryVertex))
+                        counter++;
                 }
+                if(counter >= 2)
+                    query.neighborSegments.add(segment);
             }
+            System.out.println(query.neighborSegments.size());
         }
+
     }
 
     default List<SegmentData> getSegments()
@@ -57,6 +65,7 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
     // TODO: Test intensively
     default void checkSegmentIntegrity(SegmentData startSegment)
     {
+
         if(startSegment == null)
         {
             for(SegmentData segment : getSegments())
@@ -74,19 +83,23 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
         }
 
 
-        HashSet<HashSet<SegmentData>> segmentSetsSet = new HashSet<>();
+        ArrayList<ArrayList<SegmentData>> segmentGroups = new ArrayList<>();
         for(SegmentData neighbor : startSegment.neighborSegments)
         {
-            segmentSetsSet.add(neighbor.checkNeighborsRec(new HashSet<>()));
+            if(neighbor.enabled)
+                segmentGroups.add(neighbor.checkNeighborsRec(new ArrayList<>()));
         }
 
+        System.out.println(startSegment.neighborSegments.size());
+
+
         // Everything is Awesome
-        if(segmentSetsSet.size() == 1)
+        if(segmentGroups.size() == 1)
             return;
 
 
         // Die
-        if(segmentSetsSet.isEmpty())
+        if(segmentGroups.isEmpty())
         {
             // TODO: delete this Object
             System.out.println("Anakin, Start Panicking...");
@@ -96,6 +109,26 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
         // Perform Mitosis
         System.out.println("We did it lads");
         //TODO: create multiple daughter SegmentObjects from differing Sets
+        die();
+        for(ArrayList<SegmentData> segments : segmentGroups)
+        {
+            Vec2 position = Polygon.getPositionFromPolygons(new ArrayList<>(segments));
+
+            for(SegmentData segment : segments)
+            {
+                ArrayList<Vec2> newVertices = new ArrayList<>();
+                for(Vec2 vertex : segment.vertices)
+                {
+                    newVertices.add(vertex.subtract(position));
+                }
+                segment.vertices = newVertices;
+            }
+
+            birth(new Entity(new ArrayList<>(segments),position,0,0));
+        }
+
+        System.out.println("Amount of possible new Entities: " + startSegment.neighborSegments.size());
+        System.out.println("Amount of new Entities: " + segmentGroups.size());
 
     }
 

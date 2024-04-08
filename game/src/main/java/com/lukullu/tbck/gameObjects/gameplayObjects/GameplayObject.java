@@ -80,6 +80,9 @@ public class GameplayObject implements IGameObject, ProcessingClass, ICollidable
         UnderSquare3.toKill.add(this);
     }
 
+    @Override
+    public void birth(EntityObject obj) { UnderSquare3.toBirth.add(obj); }
+
     public void reset()
     {
         updatePos(originalPosition.subtract(position));
@@ -163,6 +166,7 @@ public class GameplayObject implements IGameObject, ProcessingClass, ICollidable
             vertex((float) polygon.getVertices().get(i % polygon.getVertices().size()).x,(float) polygon.getVertices().get(i % polygon.getVertices().size()).y);
         }
         endShape(CLOSE);
+
     }
 
     @Override

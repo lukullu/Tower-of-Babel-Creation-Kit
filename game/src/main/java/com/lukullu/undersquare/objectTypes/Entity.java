@@ -67,13 +67,6 @@ public class Entity extends EntityObject implements ISegmentedObject
                 }
 
             }
-        //TODO: Check if Force is high enough for damage
-        //TODO: Check if Health is set to below 0 on hit
-        //TODO: Only then set Segment Inactive
-        /*if(getPolygons().contains(furthestPolygon))
-            if(furthestPolygon instanceof SegmentData)
-                this.setSegmentInactive((SegmentData) (Object)furthestPolygon);*/
-
 
         return collisionResults;
     }

@@ -36,6 +36,10 @@ public class EntityEditor extends EditorPanel {
 		public boolean accept(File f) { return f.getPath().toLowerCase(Locale.ROOT).endsWith(ENTITY_TEMPLATE_FILE_EXTENSION); }
 		public String getDescription() { return ENTITY_TEMPLATE_FILE_TYPE_DESCRIPTION; }
 	};
+	private static final FileFilter JSON_FILE_FILTER = new FileFilter() {
+		public boolean accept(File f) { return f.getPath().toLowerCase(Locale.ROOT).endsWith(".json"); }
+		public String getDescription() { return "Json"; }
+	};
 	
 	private static final Cursor MOVE = new Cursor(Cursor.MOVE_CURSOR);
 	
@@ -55,6 +59,9 @@ public class EntityEditor extends EditorPanel {
 		fileMenu.add(new JSeparator(JSeparator.HORIZONTAL));
 		fileMenu.add(new JMenuItem(new SimpleAction("Save", event -> saveTemplate())));
 		fileMenu.add(new JMenuItem(new SimpleAction("Save as", event -> saveTemplate(null))));
+		fileMenu.add(new JSeparator(JSeparator.HORIZONTAL));
+		fileMenu.add(new JMenuItem(new SimpleAction("Import", event -> importTemplate())));
+		fileMenu.add(new JMenuItem(new SimpleAction("Export", event -> exportTemplate())));
 		fileMenu.add(new JSeparator(JSeparator.HORIZONTAL));
 		fileMenu.add(new JMenuItem(new SimpleAction("Close", event -> {
 			if (confirmExit("exit")) rootFrame.dispose();
@@ -296,6 +303,60 @@ public class EntityEditor extends EditorPanel {
 					null,
 					"IOException:\n" + e.getLocalizedMessage(),
 					"Error saving entity template",
+					JOptionPane.ERROR_MESSAGE
+			);
+		}
+	}
+	
+	public void importTemplate() {
+		if (!confirmExit("import a file")) return;
+		
+		JFileChooser chooser = new JFileChooser();
+		chooser.setDialogType(JFileChooser.OPEN_DIALOG);
+		chooser.setVisible(true);
+		chooser.setMultiSelectionEnabled(false);
+		chooser.setFileFilter(JSON_FILE_FILTER);
+		chooser.setCurrentDirectory(ENTITY_TEMPLATE_DIRECTORY.toFile());
+		
+		if (chooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) return;
+		File file = chooser.getSelectedFile();
+		if (! file.toString().endsWith(".json")) file = new File(file + ".json");
+		
+		try {
+			this.entityTemplate = SegmentDataManager.importJson(file);
+			this.templateFile = null;
+			this.unsavedChanges = false;
+			update();
+			System.out.println(entityTemplate.size() + " segments imported.");
+			selectSegment(null);
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(
+					null,
+					"IOException:\n" + e.getLocalizedMessage(),
+					"Error opening entity template",
+					JOptionPane.ERROR_MESSAGE
+			);
+		}
+	}
+	public void exportTemplate() {
+		JFileChooser chooser = new JFileChooser();
+		chooser.setDialogType(JFileChooser.SAVE_DIALOG);
+		chooser.setVisible(true);
+		chooser.setMultiSelectionEnabled(false);
+		chooser.setFileFilter(FILE_FILTER);
+		chooser.setCurrentDirectory(ENTITY_TEMPLATE_DIRECTORY.toFile());
+		
+		if (chooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) return;
+		File file = chooser.getSelectedFile();
+		if (! file.toString().endsWith(".json")) file = new File(file + ".json");
+		try {
+			SegmentDataManager.exportJson(file, this.entityTemplate);
+			System.out.println(entityTemplate.size() + " segments exported.");
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(
+					null,
+					"IOException:\n" + e.getLocalizedMessage(),
+					"Error exporting entity template",
 					JOptionPane.ERROR_MESSAGE
 			);
 		}

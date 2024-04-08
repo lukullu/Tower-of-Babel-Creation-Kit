@@ -101,14 +101,11 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
         // Die
         if(segmentGroups.isEmpty())
         {
-            // TODO: delete this Object
-            System.out.println("Anakin, Start Panicking...");
+            die();
             return;
         }
 
         // Perform Mitosis
-        System.out.println("We did it lads");
-        //TODO: create multiple daughter SegmentObjects from differing Sets
         die();
         for(ArrayList<SegmentData> segments : segmentGroups)
         {
@@ -126,9 +123,6 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
 
             birth(new Entity(new ArrayList<>(segments),position,0,0));
         }
-
-        System.out.println("Amount of possible new Entities: " + startSegment.neighborSegments.size());
-        System.out.println("Amount of new Entities: " + segmentGroups.size());
 
     }
 

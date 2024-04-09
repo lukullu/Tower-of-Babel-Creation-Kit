@@ -3,12 +3,12 @@ package com.tbck.data.entity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.tbck.math.Polygon;
+import com.tbck.math.Vec2;
 
 import javax.swing.*;
 import java.io.*;
-import java.lang.reflect.Array;
 import java.lang.reflect.Type;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
@@ -18,6 +18,8 @@ public class SegmentDataManager {
 	private static final Gson GSON = new GsonBuilder()
 			.setPrettyPrinting()
 			.setLenient()
+			.registerTypeAdapter(Vec2.class, Vec2.TYPE_ADAPTER)
+			.registerTypeAdapter(Polygon.class, Polygon.TYPE_ADAPTER)
 			.create();
 	private static final Map<String, ArrayList<SegmentData>> DATA_CACHE = new HashMap<>(8);
 	private static Type LIST_TYPE = new TypeToken<ArrayList<SegmentData>>(){}.getType();

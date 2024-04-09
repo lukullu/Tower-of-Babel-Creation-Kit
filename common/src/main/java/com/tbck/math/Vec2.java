@@ -1,18 +1,46 @@
 package com.tbck.math;
 
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import net.aether.utils.utils.reflection.Exposed;
 import net.aether.utils.utils.swing.FieldButton;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Vec2 implements Serializable
 {
+    
+    public static final TypeAdapter<Vec2> TYPE_ADAPTER = new TypeAdapter<>() {
+        
+        public void write(JsonWriter jsonWriter, Vec2 vec2) throws IOException {
+			// to have zero indent, but to not break the rest of the json file
+			// we create a seperate jsonWriter with the desired indent, and then use it's value
+			StringWriter sWriter = new StringWriter();
+			JsonWriter writer = new JsonWriter(sWriter);
+			writer.setIndent("");
+			writer.beginArray()
+				.value(vec2.x)
+				.value(vec2.y)
+				.endArray();
+			jsonWriter.jsonValue(sWriter.getBuffer().toString());
+        }
+        public Vec2 read(JsonReader jsonReader) throws IOException {
+            jsonReader.beginArray();
+            double x = jsonReader.nextDouble();
+            double y = jsonReader.nextDouble();
+            jsonReader.endArray();
+            return new Vec2(x, y);
+        }
+    };
     
     // register Vec2 to dynamic typing system™
     static {

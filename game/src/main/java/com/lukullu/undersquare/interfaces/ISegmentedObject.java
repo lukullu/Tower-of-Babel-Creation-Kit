@@ -135,7 +135,7 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
 
     default void takeDamage(SegmentData segment, Vec2 force)
     {
-        // ToDo: implement
+        // ToDo: implement ArmorPoints and Force based damage
         segment.healthPoints--;
         if(segment.healthPoints <= 0 && InputManager.getInstance().isActionQueued(Actions.DEBUGTOGGLE))
             setSegmentInactive(segment);

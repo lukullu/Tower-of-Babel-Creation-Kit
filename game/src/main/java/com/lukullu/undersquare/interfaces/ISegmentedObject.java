@@ -40,7 +40,6 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
                 if(counter >= 2)
                     query.neighborSegments.add(segment);
             }
-            System.out.println(query.neighborSegments.size());
         }
 
     }
@@ -106,6 +105,7 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
         }
 
         // Perform Mitosis
+        System.out.println(this.getClass().getName()); // why does this happen 4 times?
         die();
         for(ArrayList<SegmentData> segments : segmentGroups)
         {

@@ -3,39 +3,24 @@ package com.tbck.data.entity;
 public enum SegmentRoles
 {
     // Body
-    SEGMENT (new RoleAttribute(false, "segment.png")),
-    ARMOR (new RoleAttribute(false, "armor.png")),
-    WEAKPOINT (new RoleAttribute(false, "weakpoint.png")),
+    SEGMENT (false, "segment.png"),
+    ARMOR (false, "armor.png"),
+    WEAK_POINT (false, "weak_point.png"),
 
     // Organs
-    HEART (new RoleAttribute(false, "heart.png")),
-    HEAD (new RoleAttribute(false, "head.png")),
+    HEART (false, "heart.png"),
+    HEAD (false, "head.png"),
 
     // Util
-    GUN (new RoleAttribute(true, "gun.png")),
-    TURRET (new RoleAttribute(true, "turret.png"));
+    GUN (true, "gun.png"),
+    TURRET (true, "turret.png");
 
-    private final RoleAttribute attribute;
+    boolean isDirectional = false;
+    String texture_url = "nil"; // ToDo make actual Texture Class
 
-    SegmentRoles(RoleAttribute attribute)
+    SegmentRoles(boolean isDirectional, String texture_url)
     {
-        this.attribute = attribute;
-    }
-
-    public RoleAttribute getAttributes()
-    {
-        return attribute;
-    }
-
-    public static class RoleAttribute
-    {
-        boolean isDirectional = false;
-        String texture_url = "nil"; // ToDo make actual Texture Class
-
-        RoleAttribute(boolean isDirectional, String texture_url)
-        {
-            this.isDirectional = isDirectional;
-            this.texture_url = texture_url;
-        }
+        this.isDirectional = isDirectional;
+        this.texture_url = texture_url;
     }
 }

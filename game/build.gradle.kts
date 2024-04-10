@@ -8,9 +8,9 @@ plugins {
 group = "com.lukullu"
 version = "1.0-SNAPSHOT"
 
-//repositories {
-//    mavenCentral()
-//}
+repositories {
+    mavenCentral()
+}
 
 dependencies {
     implementation(fileTree("lib"))

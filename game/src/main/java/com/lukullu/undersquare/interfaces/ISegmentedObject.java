@@ -65,6 +65,8 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
     default void checkSegmentIntegrity(SegmentData startSegment)
     {
 
+        System.out.println(this.getClass().getName());
+
         if(startSegment == null)
         {
             for(SegmentData segment : getSegments())
@@ -81,7 +83,6 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
                 return;
         }
 
-
         ArrayList<ArrayList<SegmentData>> segmentGroups = new ArrayList<>();
         for(SegmentData neighbor : startSegment.neighborSegments)
         {
@@ -95,7 +96,6 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
         // Everything is Awesome
         if(segmentGroups.size() == 1)
             return;
-
 
         // Die
         if(segmentGroups.isEmpty())

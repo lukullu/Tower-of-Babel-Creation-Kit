@@ -1,7 +1,12 @@
 package com.tbck.math;
 
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import com.google.gson.stream.JsonWriter;
 import net.aether.utils.utils.reflection.Exposed;
 
+import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
 import java.lang.reflect.Array;
@@ -10,6 +15,25 @@ import java.util.ArrayList;
 public class Polygon implements Serializable
 {
     
+    public static final TypeAdapter<Polygon> TYPE_ADAPTER = new TypeAdapter<>() {
+        public void write(JsonWriter jsonWriter, Polygon polygon) throws IOException {
+            jsonWriter.beginArray();
+            polygon.vertices.forEach(vec2 -> {
+				try { Vec2.TYPE_ADAPTER.write(jsonWriter, vec2); }
+                catch (IOException e) { throw new RuntimeException(e); }
+			});
+            jsonWriter.endArray();
+        }
+        public Polygon read(JsonReader jsonReader) throws IOException {
+            jsonReader.beginArray();
+            Polygon out = new Polygon(new ArrayList<>());
+            while (jsonReader.peek() != JsonToken.END_ARRAY) {
+                out.vertices.add(Vec2.TYPE_ADAPTER.read(jsonReader));
+            }
+            jsonReader.endArray();
+            return out;
+        }
+    };
     @Serial private static final long serialVersionUID = 3756687872714555217L;
     
     @Exposed(hidden = true) public ArrayList<Vec2> vertices;

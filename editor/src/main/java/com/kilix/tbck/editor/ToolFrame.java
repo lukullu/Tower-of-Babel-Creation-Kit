@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class ToolFrame extends JFrame {
 	
-	private static final Rectangle NINTH_OF_SCREEN;
+	public static final Rectangle NINTH_OF_SCREEN;
 	static {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		NINTH_OF_SCREEN = new Rectangle(

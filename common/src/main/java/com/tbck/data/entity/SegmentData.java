@@ -3,7 +3,7 @@ package com.tbck.data.entity;
 
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
-import net.aether.utils.utils.reflection.Exposed;
+import net.aether.utils.utils.reflection.Exposes;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -11,10 +11,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Objects;
 
+@Exposes({"armorPoints", "role", "health"})
 public class SegmentData extends Polygon implements Serializable
 {
 
-    @Serial private static final long serialVersionUID = 3756687822214555217L;
+    @Serial private static final long serialVersionUID = 3756687822214555218L;
 
     public final boolean isValid;
     public boolean enabled;
@@ -37,7 +38,7 @@ public class SegmentData extends Polygon implements Serializable
         neighborSegments = data.neighborSegments;
     }
 
-    public ArrayList<SegmentData> checkNeighborsRec(ArrayList<SegmentData> visited)
+    public HashSet<SegmentData> checkNeighborsRec(HashSet<SegmentData> visited)
     {
         if(visited.contains(this))
             return visited;

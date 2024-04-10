@@ -38,7 +38,7 @@ public class SegmentData extends Polygon implements Serializable
         neighborSegments = data.neighborSegments;
     }
 
-    public HashSet<SegmentData> checkNeighborsRec(HashSet<SegmentData> visited)
+    public ArrayList<SegmentData> checkNeighborsRec(ArrayList<SegmentData> visited)
     {
         if(visited.contains(this))
             return visited;

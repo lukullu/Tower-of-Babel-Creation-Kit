@@ -86,7 +86,7 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
         for(SegmentData neighbor : startSegment.neighborSegments)
         {
             if(neighbor.enabled)
-                segmentGroups.add(neighbor.checkNeighborsRec(new ArrayList<>()));
+                segmentGroups.add(neighbor.checkNeighborsRec(new ArrayList<SegmentData>()));
         }
 
         System.out.println(startSegment.neighborSegments.size());

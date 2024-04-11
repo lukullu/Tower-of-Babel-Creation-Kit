@@ -54,7 +54,7 @@ public class EntityObject extends GameplayObject{
 
     public void collisionResponse(CollisionResult result)
     {
-        this.updatePos(result.delta.multiply(1));
+        this.updatePos(result.delta.multiply(1.001));
     }
 
     public void collisionResolutionResponse(ArrayList<CollisionResult> results)

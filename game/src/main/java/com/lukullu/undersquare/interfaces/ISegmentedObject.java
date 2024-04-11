@@ -107,22 +107,19 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
         {
             Vec2 position = Polygon.getPositionFromPolygons(new ArrayList<>(segments));
 
-            System.out.println(position); // ToDo: Fix bug
-            System.out.println(segments.toString());
-
+            ArrayList<SegmentData> newSegments = new ArrayList<>();
             for(SegmentData segment : segments)
             {
+                SegmentData newSegment = new SegmentData(segment);
                 ArrayList<Vec2> newVertices = new ArrayList<>();
                 for(Vec2 vertex : segment.vertices)
                 {
                     newVertices.add(vertex.subtract(position));
                 }
-                segment.vertices = newVertices;
+                newSegment.vertices = newVertices;
+                newSegments.add(newSegment);
             }
-
-            System.out.println(position);
-            System.out.println(segments.toString());
-            birth(new Entity(new ArrayList<>(segments),position,0,0));
+            birth(new Entity(newSegments,position,0,0));
         }
 
     }

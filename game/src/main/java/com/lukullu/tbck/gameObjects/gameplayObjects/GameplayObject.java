@@ -22,7 +22,7 @@ public class GameplayObject implements IGameObject, ProcessingClass, ICollidable
 
     private int id = ID_Manager.getInstance().generateNewID();
     public Shapes shapeDesc = Shapes.PENTAGON;
-    private Vec2 position = new Vec2(0,0), originalPosition;
+    private Vec2 position, originalPosition;
     public double rotation = 0, originalRotation; // Unit: radians
     private double scaling = 1, originalScaling;
     public ArrayList<Polygon> shape = new ArrayList<>();
@@ -47,6 +47,9 @@ public class GameplayObject implements IGameObject, ProcessingClass, ICollidable
 
     public GameplayObject(ArrayList<? extends Polygon> shape, Vec2 position, double rotation, double scaling)
     {
+        System.out.println(shape);
+        System.out.println(position);
+
         this.shape.addAll(shape.stream().map((poly)->
         {
             if(poly instanceof SegmentData)

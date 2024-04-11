@@ -93,13 +93,14 @@ public interface ICollidableObject extends IGameObject
         return results;
     }
 
-    default ArrayList<Polygon> staticCollisionUpdate()
+    default ArrayList<Polygon> staticCollisionUpdate(int depth)
     {
         @SuppressWarnings("all")
         List<EntityObject> entities = (List<EntityObject>)(Object) UnderSquare3.getGameObjects().get(EntityObject.class);
 
         ArrayList<Polygon> out = new ArrayList<>();
         ArrayList<CollisionResult> results = new ArrayList<>();
+        ArrayList<EntityObject> colliders = new ArrayList<>();
 
         for (EntityObject entity : entities)
         {
@@ -125,14 +126,15 @@ public interface ICollidableObject extends IGameObject
                     res.queryPolygon = getPolygons().get(i);
                     res.colliderPolygon = entity.getPolygons().get(j);
 
+                    if(!colliders.contains(entity))
+                        colliders.add(entity);
+
                     collisionResponse(res);
                     results.add(res);
                     out.add(getPolygons().get(i));
                 }
             }
         }
-
-
 
         return out;
     }

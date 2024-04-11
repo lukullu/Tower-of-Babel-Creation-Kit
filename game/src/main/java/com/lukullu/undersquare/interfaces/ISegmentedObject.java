@@ -100,7 +100,6 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
         }
 
         // Perform Mitosis
-        System.out.println(segmentGroups.size()); // why does this happen 4 times?
 
         die();
         for(ArrayList<SegmentData> segments : segmentGroups)
@@ -119,6 +118,7 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
                 newSegment.vertices = newVertices;
                 newSegments.add(newSegment);
             }
+
             birth(new Entity(newSegments,position,0,0));
         }
 
@@ -139,8 +139,7 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
         // ToDo: implement ArmorPoints and Force based damage
         segment.healthPoints--;
 
-        //if(segment.healthPoints <= 0 && InputManager.getInstance().isActionQueued(Actions.DEBUGTOGGLE))
-        if(InputManager.getInstance().isActionQueued(Actions.DEBUGTOGGLE))
+        if(segment.healthPoints <= 0 && InputManager.getInstance().isActionQueued(Actions.DEBUGTOGGLE))
             setSegmentInactive(segment);
     }
 

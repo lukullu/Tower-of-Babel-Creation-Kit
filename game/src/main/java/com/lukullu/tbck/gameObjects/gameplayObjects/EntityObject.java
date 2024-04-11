@@ -71,7 +71,9 @@ public class EntityObject extends GameplayObject{
 
             Vec2 combinedForce = this.force.subtract(entity.force);
             Vec2 queryForce = combinedForce.multiply(this.mass / (this.mass + entity.mass));
-            Vec2 deltaNorm = result.delta;
+            Vec2 deltaNorm = result.delta.normalise();
+
+            //System.out.println(new Vec2(1,1).multiply(deltaNorm).toString());
 
             this.applyForce(queryForce.align(deltaNorm).multiply(0.1));
             entity.applyForce(queryForce.align(deltaNorm).multiply(-0.1));

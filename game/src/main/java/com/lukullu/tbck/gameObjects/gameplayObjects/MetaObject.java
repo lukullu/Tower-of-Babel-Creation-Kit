@@ -44,9 +44,9 @@ public class MetaObject extends GameplayObject implements ICollidableObject
     }
 
     @Override
-    public ArrayList<Polygon> staticCollisionUpdate()
+    public ArrayList<Polygon> staticCollisionUpdate(int depth)
     {
-        ArrayList<Polygon> polygonColliders = super.staticCollisionUpdate();
+        ArrayList<Polygon> polygonColliders = super.staticCollisionUpdate(depth);
 
         if(polygonColliders.isEmpty())
             setInActive();

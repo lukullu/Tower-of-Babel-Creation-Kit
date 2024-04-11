@@ -1,0 +1,67 @@
+[
+  {
+    "isValid": true,
+    "enabled": true,
+    "armorPoints": 10,
+    "health": 100.0,
+    "role": "HEART",
+    "vertices": [
+      [-1.0,-1.0],
+      [1.0,-1.0],
+      [1.0,1.0],
+      [-1.0,1.0]
+    ]
+  },
+  {
+    "isValid": true,
+    "enabled": true,
+    "armorPoints": 10,
+    "health": 100.0,
+    "role": "SEGMENT",
+    "vertices": [
+      [-1.0,-1.0],
+      [1.0,-1.0],
+      [1.0,-1.5],
+      [-1.0,-1.5]
+    ]
+  },
+  {
+    "isValid": true,
+    "enabled": true,
+    "armorPoints": 10,
+    "health": 100.0,
+    "role": "SEGMENT",
+    "vertices": [
+      [-1.0,1.0],
+      [1.0,1.0],
+      [1.0,1.5],
+      [-1.0,1.5]
+    ]
+  },
+  {
+    "isValid": true,
+    "enabled": true,
+    "armorPoints": 10,
+    "health": 100.0,
+    "role": "SEGMENT",
+    "vertices": [
+      [-1.0,1.0],
+      [-1.0,-1.0],
+      [-1.5,-1.0],
+      [-1.5,1.0]
+    ]
+  },
+  {
+    "isValid": true,
+    "enabled": true,
+    "armorPoints": 10,
+    "health": 100.0,
+    "role": "SEGMENT",
+    "vertices": [
+      [1.0,1.0],
+      [1.0,-1.0],
+      [1.5,-1.0],
+      [1.5,1.0]
+    ]
+  }
+]

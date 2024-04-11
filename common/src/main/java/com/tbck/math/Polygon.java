@@ -103,7 +103,7 @@ public class Polygon implements Serializable
     }
     
     public ArrayList<Vec2> getVertices(){ return vertices; }
-    public Vec2 getPosition() { return calcPos(); }
+    public Vec2 getPosition() { return calcPos(vertices); }
 
     public static Vec2 getPositionFromPolygons(ArrayList<Polygon> polygons)
     {
@@ -133,7 +133,7 @@ public class Polygon implements Serializable
         return out;
     }
 
-    private Vec2 calcPos()
+    public static Vec2 calcPos(ArrayList<Vec2> vertices)
     {
         Vec2 acc = Vec2.ZERO_VECTOR2;
         int counter = 0;

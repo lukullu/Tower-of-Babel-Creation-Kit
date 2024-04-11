@@ -66,9 +66,8 @@ public class MetaObject extends GameplayObject implements ICollidableObject
     }
 
     @Override
-    public void collisionResponse(CollisionResult res) {
-        // TODO: is right activator (entity.class == ?)
-        setActive(res);
+    public void collisionResponse(CollisionResult result) {
+        setActive(result);
     }
 
 

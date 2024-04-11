@@ -52,21 +52,30 @@ public class EntityObject extends GameplayObject{
         return delta;
     }
 
-    public void collisionResponse(CollisionResult res)
+    public void collisionResponse(CollisionResult result)
     {
-        if(!(res.collider instanceof EntityObject)) return;
-        EntityObject entity = (EntityObject)(Object) res.collider;
+        this.updatePos(result.delta.multiply(1));
+    }
 
-        Vec2 combinedForce = this.force.subtract(entity.force);
-        Vec2 queryForce = combinedForce.multiply(this.mass / (this.mass + entity.mass));
-        Vec2 generalDirectionQuery = res.queryPolygon.getPosition().subtract(res.colliderPolygon.getPosition());
-        Vec2 deltaNorm = res.delta.normalise();
-
-        if (!(Double.isNaN(deltaNorm.x) || Double.isNaN(deltaNorm.y)))
+    public void collisionResolutionResponse(ArrayList<CollisionResult> results)
+    {
+        ArrayList<EntityObject> processedEntities = new ArrayList<>();
+        for(CollisionResult result : results)
         {
-            this.applyForce(deltaNorm.multiply(queryForce).align(generalDirectionQuery).multiply(1));
-            entity.applyForce(deltaNorm.multiply(queryForce).align(generalDirectionQuery).multiply(-1));
+            if(!(result.collider instanceof EntityObject))
+                continue;
+
+            EntityObject entity = (EntityObject) result.collider;
+
+            processedEntities.add(entity);
+
+            Vec2 combinedForce = this.force.subtract(entity.force);
+            Vec2 queryForce = combinedForce.multiply(this.mass / (this.mass + entity.mass));
+            Vec2 deltaNorm = result.delta;
+
+            this.applyForce(queryForce.align(deltaNorm).multiply(0.1));
+            entity.applyForce(queryForce.align(deltaNorm).multiply(-0.1));
+            // inter polygon friction ... .add(queryForce.multiply(0.1*other.coefficientOfFriction))
         }
-        this.updatePos(res.delta.multiply(1.001));
     }
 }

@@ -3,8 +3,11 @@ package com.lukullu.tbck.utils;
 import com.kilix.processing.ProcessingClass;
 import com.lukullu.tbck.gameObjects.ICollidableObject;
 import com.tbck.math.LineSegment;
+import com.tbck.math.MyMath;
+import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
 
+import javax.sound.sampled.Line;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
@@ -14,9 +17,10 @@ public class Collision implements ProcessingClass
     {
         double overlap = Double.MAX_VALUE;
         double minOverlap = Double.MAX_VALUE;
+        LineSegment transformationLine = new LineSegment(Vec2.ZERO_VECTOR2,Vec2.ZERO_VECTOR2);
         Vec2 transformationAxis = Vec2.ZERO_VECTOR2;
         int axisOriginIndex = -1;
-        Vec2[] axisVertices = null;
+        ArrayList<Vec2> axisOrigin = null;
 
         ArrayList<Vec2> poly1 = polygon1;
         ArrayList<Vec2> poly2 = polygon2;
@@ -56,26 +60,68 @@ public class Collision implements ProcessingClass
                     minPoly2 = Math.min(minPoly2,dotProduct);
                 }
 
+                if(!(maxPoly2 >= minPoly1 && maxPoly1 >= minPoly2)){return new CollisionResult(false);}
+
+
                 overlap = Math.min(maxPoly1,maxPoly2) - Math.max(minPoly1,minPoly2);
 
                 if(overlap < minOverlap)
                 {
                     minOverlap = overlap;
-                    transformationAxis = projectionAxis.normalise();
+                    transformationLine = new LineSegment(poly1.get(a),poly1.get(b));
+                    transformationAxis = projectionAxis;
                     axisOriginIndex = i;
-                    axisVertices = new Vec2[]{poly1.get(a), poly1.get(a)};
+                    axisOrigin = poly1;
                 }
-
-                if(!(maxPoly2 >= minPoly1 && maxPoly1 >= minPoly2)){return new CollisionResult(false,null,null, null, Vec2.ZERO_VECTOR2,false,null);}
-
             }
         }
+        return new CollisionResult(true, collider, null, null, null, axisOriginIndex == 0, null,minOverlap,transformationAxis);
+    }
 
-        Vec2 generalDirection = polygonCenter1.subtract(polygonCenter2);
+    public static CollisionResult interpretCollisionDetectionSAT(ArrayList<Vec2> polygon1, Vec2 polygonCenter1, ArrayList<Vec2> polygon2, Vec2 polygonCenter2, ICollidableObject collider)
+    {
 
-        Vec2 delta = transformationAxis.multiply(-minOverlap).align(generalDirection);
+        CollisionResult res = collisionResolutionSAT(polygon1,polygonCenter1,polygon2,polygonCenter2,collider);
 
-        return new CollisionResult(true, collider, null, null, delta, axisOriginIndex == 0, null);
+        if(!res.collisionCheck)
+            return res;
+
+        Vec2 delta = res.transformationAxis.multiply(res.minOverlap*1.0001);
+
+        Vec2 finalDelta = delta;
+        ArrayList<Vec2> postPolygon = new ArrayList<>(polygon1.stream().map((v)->{return v.add(finalDelta);}).toList());
+        CollisionResult collisionAfterDelta = Collision.collisionResolutionSAT(postPolygon,polygonCenter1.add(delta),polygon2,polygonCenter2,collider);
+
+        if(collisionAfterDelta.collisionCheck)
+        {
+            delta = res.transformationAxis.multiply(res.minOverlap*-1);
+        }
+        else
+        {
+            delta = res.transformationAxis.multiply(res.minOverlap*1);
+        }
+
+        res.delta = delta;
+
+        return res;
+    }
+
+    // ToDo: Test
+    public static boolean pointPolygonCollision(Vec2 point, ArrayList<Vec2> polygon)
+    {
+
+        Vec2 polygonCenter = Polygon.calcPos(polygon);
+        Vec2 lineFromPointToPolygonCenter = polygonCenter.subtract(point);
+
+        for(int i = 0; i < polygon.size(); i++)
+        {
+            int j = (i+1)%polygon.size();
+
+            if(MyMath.lineSegmentIntersection(point,lineFromPointToPolygonCenter,polygon.get(i),polygon.get(j)))
+                return false;
+
+        }
+        return true;
     }
 
 

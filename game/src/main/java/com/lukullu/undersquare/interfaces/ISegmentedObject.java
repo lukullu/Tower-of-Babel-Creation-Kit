@@ -65,8 +65,6 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
     default void checkSegmentIntegrity(SegmentData startSegment)
     {
 
-        System.out.println(this.getClass().getName());
-
         if(startSegment == null)
         {
             for(SegmentData segment : getSegments())
@@ -90,9 +88,6 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
                 segmentGroups.add(neighbor.checkNeighborsRec(new ArrayList<SegmentData>()));
         }
 
-        System.out.println(startSegment.neighborSegments.size());
-
-
         // Everything is Awesome
         if(segmentGroups.size() == 1)
             return;
@@ -105,11 +100,15 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
         }
 
         // Perform Mitosis
-        System.out.println(this.getClass().getName()); // why does this happen 4 times?
+        System.out.println(segmentGroups.size()); // why does this happen 4 times?
+
         die();
         for(ArrayList<SegmentData> segments : segmentGroups)
         {
             Vec2 position = Polygon.getPositionFromPolygons(new ArrayList<>(segments));
+
+            System.out.println(position); // ToDo: Fix bug
+            System.out.println(segments.toString());
 
             for(SegmentData segment : segments)
             {
@@ -121,6 +120,8 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
                 segment.vertices = newVertices;
             }
 
+            System.out.println(position);
+            System.out.println(segments.toString());
             birth(new Entity(new ArrayList<>(segments),position,0,0));
         }
 
@@ -128,6 +129,9 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
 
     default void setSegmentInactive(SegmentData segment)
     {
+        if(!segment.enabled)
+            return;
+
         segment.enabled = false;
         checkSegmentIntegrity(segment);
         setInteriorLines(initInteriorLines(getPolygons()));
@@ -137,7 +141,9 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
     {
         // ToDo: implement ArmorPoints and Force based damage
         segment.healthPoints--;
-        if(segment.healthPoints <= 0 && InputManager.getInstance().isActionQueued(Actions.DEBUGTOGGLE))
+
+        //if(segment.healthPoints <= 0 && InputManager.getInstance().isActionQueued(Actions.DEBUGTOGGLE))
+        if(InputManager.getInstance().isActionQueued(Actions.DEBUGTOGGLE))
             setSegmentInactive(segment);
     }
 

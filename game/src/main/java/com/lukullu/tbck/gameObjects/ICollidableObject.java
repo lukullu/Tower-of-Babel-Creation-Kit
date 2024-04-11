@@ -66,7 +66,7 @@ public interface ICollidableObject extends IGameObject
                         if(!((SegmentData) (Object) entity.getPolygons().get(j)).enabled)
                             continue;
 
-                    CollisionResult res = Collision.collisionResolutionSAT(getPolygons().get(i).getVertices(), getPolygons().get(i).getPosition(), entity.getPolygons().get(j).getVertices(), entity.getPolygons().get(j).getPosition(),entity);
+                    CollisionResult res = Collision.interpretCollisionDetectionSAT(getPolygons().get(i).getVertices(), getPolygons().get(i).getPosition(), entity.getPolygons().get(j).getVertices(), entity.getPolygons().get(j).getPosition(),entity);
 
                     if (!res.collisionCheck)
                         continue;
@@ -85,6 +85,8 @@ public interface ICollidableObject extends IGameObject
                 }
             }
         }
+
+        collisionResolutionResponse(results);
 
         for (EntityObject entity : colliders) entity.dynamicCollisionUpdate(depth-1);
 
@@ -115,7 +117,7 @@ public interface ICollidableObject extends IGameObject
                         if(!((SegmentData) (Object) entity.getPolygons().get(j)).enabled)
                             continue;
 
-                    CollisionResult res = Collision.collisionResolutionSAT(getPolygons().get(i).getVertices(), this.getPosition(), entity.getPolygons().get(j).getVertices(), entity.getPosition(), entity);
+                    CollisionResult res = Collision.interpretCollisionDetectionSAT(getPolygons().get(i).getVertices(), this.getPosition(), entity.getPolygons().get(j).getVertices(), entity.getPosition(), entity);
 
                     if (!res.collisionCheck)
                         continue;
@@ -124,14 +126,18 @@ public interface ICollidableObject extends IGameObject
                     res.colliderPolygon = entity.getPolygons().get(j);
 
                     collisionResponse(res);
-
+                    results.add(res);
                     out.add(getPolygons().get(i));
                 }
             }
         }
 
+
+
         return out;
     }
 
     void collisionResponse(CollisionResult res);
+
+    void collisionResolutionResponse(ArrayList<CollisionResult> res);
 }

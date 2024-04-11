@@ -34,7 +34,7 @@ public class Entity extends EntityObject implements ISegmentedObject
         paintSegments();
     }
 
-    @Override
+    //@Override
     public ArrayList<CollisionResult> dynamicCollisionUpdate(int depth) {
 
         ArrayList<CollisionResult> collisionResults = super.dynamicCollisionUpdate(depth);
@@ -51,7 +51,6 @@ public class Entity extends EntityObject implements ISegmentedObject
             queryPolygons.add(res.queryPolygon);
         });
 
-
         Polygon furthestPolygon = Polygon.getPolygonFurthestFromPoint(queryPolygons,this.getPosition());
 
         if(furthestPolygon instanceof SegmentData)
@@ -59,7 +58,10 @@ public class Entity extends EntityObject implements ISegmentedObject
             {
                 Vec2 deltaForce = Vec2.ZERO_VECTOR2;
                 if(result.collider instanceof EntityObject)
+                {
                     deltaForce = this.force.subtract(((EntityObject)result.collider).force);
+                }
+
 
                 if(deltaForce.length() > ((SegmentData) furthestPolygon).armorPoints * Constants.COLLISION_FORCE_TOLERANCE_PER_ARMOR_POINT)
                 {
@@ -69,25 +71,23 @@ public class Entity extends EntityObject implements ISegmentedObject
 
             }
 
-        for(CollisionResult res : collisionResults)
-        {
-            furthestPolygon = Polygon.getPolygonFurthestFromPoint(colliderPolygons,res.collider.getPosition());
+        for (CollisionResult res : collisionResults) {
+            furthestPolygon = Polygon.getPolygonFurthestFromPoint(colliderPolygons, res.collider.getPosition());
 
-            if(furthestPolygon instanceof SegmentData)
-                for (CollisionResult result : collisionResults)
-                {
+            if (furthestPolygon instanceof SegmentData)
+                for (CollisionResult result : collisionResults) {
                     Vec2 deltaForce = Vec2.ZERO_VECTOR2;
-                    if(result.collider instanceof EntityObject)
-                        deltaForce = this.force.subtract(((EntityObject)result.collider).force);
+                    if (result.collider instanceof EntityObject)
+                        deltaForce = this.force.subtract(((EntityObject) result.collider).force);
 
-                    if(deltaForce.length() > ((SegmentData) furthestPolygon).armorPoints * Constants.COLLISION_FORCE_TOLERANCE_PER_ARMOR_POINT)
-                    {
-                        if(result.collider instanceof ISegmentedObject)
-                            ((ISegmentedObject) res.collider).takeDamage((SegmentData)furthestPolygon,deltaForce);
+                    if (deltaForce.length() > ((SegmentData) furthestPolygon).armorPoints * Constants.COLLISION_FORCE_TOLERANCE_PER_ARMOR_POINT) {
+                        if (result.collider instanceof ISegmentedObject)
+                            ((ISegmentedObject) res.collider).takeDamage((SegmentData) furthestPolygon, deltaForce);
                     }
 
                 }
-        }
+            }
+
 
         return collisionResults;
     }

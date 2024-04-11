@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Objects;
 
-@Exposes({"armorPoints", "role", "health"})
+@Exposes({"armorPoints", "healthPoints", "role"})
 public class SegmentData extends Polygon implements Serializable
 {
 

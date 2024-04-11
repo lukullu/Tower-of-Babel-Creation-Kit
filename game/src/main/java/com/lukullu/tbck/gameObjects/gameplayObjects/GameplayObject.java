@@ -180,6 +180,14 @@ public class GameplayObject implements IGameObject, ProcessingClass, ICollidable
     }
 
     @Override
-    public void collisionResponse(CollisionResult res) {}
+    public void collisionResponse(CollisionResult res) {
+        //ToDo: Remove
+    }
+
+    @Override
+    public void collisionResolutionResponse(ArrayList<CollisionResult> res) {
+
+    }
+
 
 }

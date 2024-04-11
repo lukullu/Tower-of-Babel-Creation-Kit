@@ -34,11 +34,11 @@ public class UnderSquare3 extends ExtendedPApplet {
 
         gameObjects.putEntity(new Player("/shapeFiles/playerShape.psff", new Vec2(600,600), 0, 1));
         gameObjects.putEntity(new Entity("/shapeFiles/playerShape.psff",new Vec2(900,600) , 0, 2));
-        gameObjects.putEntity(new Entity("/shapeFiles/playerShape.psff",new Vec2(1500,600), 0, 2));
-        gameObjects.putEntity(new Debris("/shapeFiles/playerShape.psff",new Vec2(1200,600), 0, 0.1,3));
-        gameObjects.putMeta(  new Meta  ("/shapeFiles/testShape.psff"  ,new Vec2(1000,700), 0, 1,(nil)->{System.out.println("heya");},false));
-        gameObjects.putMeta(  new Meta  ("/shapeFiles/testShape.psff"  ,new Vec2(400,300) , 0, 1,(res)->{res.collider.reset();},false));
-        gameObjects.putStatic(new Static("/shapeFiles/testShape.psff"  ,new Vec2(800,500) , PI, 4));
+        gameObjects.putEntity(new Entity("/shapeFiles/segmentDemo.psff",new Vec2(1500,600), 0, 40));
+        //gameObjects.putEntity(new Debris("/shapeFiles/playerShape.psff",new Vec2(1200,600), 0, 0.1,3));
+        //gameObjects.putMeta(  new Meta  ("/shapeFiles/testShape.psff"  ,new Vec2(1000,700), 0, 1,(nil)->{System.out.println("heya");},false));
+        //gameObjects.putMeta(  new Meta  ("/shapeFiles/testShape.psff"  ,new Vec2(400,300) , 0, 1,(res)->{res.collider.reset();},false));
+        //gameObjects.putStatic(new Static("/shapeFiles/testShape.psff"  ,new Vec2(800,500) , PI, 4));
 
     }
 
@@ -96,7 +96,6 @@ public class UnderSquare3 extends ExtendedPApplet {
 
         for (GameplayObject obj : toBirth)
         {
-            System.out.println(obj.getClass().getName());
             gameObjects.putEntity(obj);
         }
 

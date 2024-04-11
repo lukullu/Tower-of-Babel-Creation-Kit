@@ -29,21 +29,27 @@ public class StaticObject extends GameplayObject implements ICollidableObject
     }
 
     @Override
-    public void collisionResponse(CollisionResult res) {
+    public void collisionResponse(CollisionResult result) {
 
-        if(!(res.collider instanceof EntityObject))
+
+        if(!(result.collider instanceof EntityObject))
             return;
 
-        EntityObject entity = (EntityObject)(Object) res.collider;
+        EntityObject entity = (EntityObject)(Object) result.collider;
 
         Vec2 generalDirectionQuery = this.getPosition().subtract(entity.getPosition());
-        Vec2 deltaNorm = res.delta.normalise();
+        Vec2 deltaNorm = result.delta.normalise();
 
         if (!(Double.isNaN(deltaNorm.x) || Double.isNaN(deltaNorm.y)))
             entity.applyForce(deltaNorm.multiply(entity.force).align(generalDirectionQuery).multiply(-1));
 
 
-        entity.updatePos(res.delta.multiply(-1));
+        entity.updatePos(result.delta.multiply(-1.001));
+
+    }
+
+    @Override
+    public void collisionResolutionResponse(ArrayList<CollisionResult> res) {
 
     }
 

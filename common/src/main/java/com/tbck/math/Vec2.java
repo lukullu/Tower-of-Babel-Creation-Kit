@@ -64,6 +64,7 @@ public class Vec2 implements Serializable
     public static Vec2 ZERO_VECTOR2 = new Vec2(0,0);
     public double x, y;
     public Vec2(double x, double y) { this.x = x; this.y = y; }
+    public Vec2(Vec2 in) { this.x = in.x; this.y = in.y; }
 
     // Vector Arithmetic
     public Vec2 add(Vec2 other_vector)

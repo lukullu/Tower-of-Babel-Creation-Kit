@@ -26,7 +26,7 @@ public class SegmentData extends Polygon implements Serializable
 
 
     public SegmentData(ArrayList<Vec2> vertices) {
-        super(vertices); enabled = true; isValid = true;
+        super(SegmentDataManager.copyFromVertices(vertices)); enabled = true; isValid = true;
     }
 
     public SegmentData(SegmentData data) {

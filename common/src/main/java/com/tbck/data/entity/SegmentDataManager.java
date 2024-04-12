@@ -106,5 +106,16 @@ public class SegmentDataManager {
 		try (FileWriter writer = new FileWriter(file)) { GSON.toJson(segments, writer); }
 		invalidate("json:" + file);
 	}
+
+	// create new instances of everything
+	public static ArrayList<SegmentData> copyFromResource(ArrayList<SegmentData> input)
+	{
+		return new ArrayList<>(input.stream().map(SegmentData::new).toList());
+	}
+
+	public static ArrayList<Vec2> copyFromVertices(ArrayList<Vec2> input)
+	{
+		return new ArrayList<>(input.stream().map(Vec2::new).toList());
+	}
 	
 }

@@ -78,10 +78,11 @@ public class Polygon implements Serializable
     {
         ArrayList<Vec2> newVertices = new ArrayList<>();
         for (Vec2 vertex : vertices) {
-            vertex = vertex.add(deltaPos);
-            vertex = vertex.rotate(origin,deltaRot);
-            vertex = vertex.scale(origin,deltaSca);
-            newVertices.add(vertex);
+            Vec2 newVertex;
+            newVertex = vertex.add(deltaPos);
+            newVertex = newVertex.rotate(origin,deltaRot);
+            newVertex = newVertex.scale(origin,deltaSca);
+            newVertices.add(newVertex);
         }
         vertices = newVertices;
     }

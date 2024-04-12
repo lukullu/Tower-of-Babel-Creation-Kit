@@ -47,17 +47,7 @@ public class GameplayObject implements IGameObject, ProcessingClass, ICollidable
 
     public GameplayObject(ArrayList<? extends Polygon> shape, Vec2 position, double rotation, double scaling)
     {
-        System.out.println(shape);
-        System.out.println(position);
-
-        this.shape.addAll(shape.stream().map((poly)->
-        {
-            if(poly instanceof SegmentData)
-                return new SegmentData((SegmentData) poly);
-            else
-                return new Polygon(poly);
-        }).toList());
-
+        this.shape.addAll(shape);
         this.position = position; this.originalPosition = position;
         this.rotation = rotation; this.originalRotation = rotation;
         this.scaling = scaling; this.originalScaling = scaling;
@@ -71,7 +61,7 @@ public class GameplayObject implements IGameObject, ProcessingClass, ICollidable
     public ArrayList<Polygon> getShape() { return shape; }
     public void setShape(ArrayList<Polygon> shape) { this.shape = polygons; }
     public void setPolygons(ArrayList<Polygon> polygons) { this.polygons = polygons; }
-    public void update() { setInteriorLines(initInteriorLines(getPolygons())); } // TODO: Check if this can be moved to the updatePos / updateRot functions to save resources
+    public void update() {} //setInteriorLines(initInteriorLines(getPolygons())); } // TODO: Check if this can be moved to the updatePos / updateRot functions to save resources
     public void paint()
     {
         for (Polygon polygon : polygons)

@@ -19,7 +19,7 @@ public class Entity extends EntityObject implements ISegmentedObject
 
     public Entity(String psff_resource, Vec2 position, double rotation, double scaling)
     {
-        super(SegmentDataManager.loadInternal(psff_resource),position,rotation, scaling);
+        super(SegmentDataManager.copyFromResource(SegmentDataManager.loadInternal(psff_resource)),position,rotation, scaling);
         initSegments();
     }
 
@@ -71,7 +71,8 @@ public class Entity extends EntityObject implements ISegmentedObject
 
             }
 
-        for (CollisionResult res : collisionResults) {
+        for (CollisionResult res : collisionResults)
+        {
             furthestPolygon = Polygon.getPolygonFurthestFromPoint(colliderPolygons, res.collider.getPosition());
 
             if (furthestPolygon instanceof SegmentData)
@@ -84,9 +85,8 @@ public class Entity extends EntityObject implements ISegmentedObject
                         if (result.collider instanceof ISegmentedObject)
                             ((ISegmentedObject) res.collider).takeDamage((SegmentData) furthestPolygon, deltaForce);
                     }
-
                 }
-            }
+        }
 
 
         return collisionResults;

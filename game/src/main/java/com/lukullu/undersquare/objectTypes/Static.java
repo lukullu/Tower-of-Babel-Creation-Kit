@@ -10,7 +10,7 @@ public class Static extends StaticObject implements ISegmentedObject
 {
     public Static(String psff_resource, Vec2 position, double rotation, double scaling)
     {
-        super(SegmentDataManager.loadInternal(psff_resource), position, rotation, scaling);
+        super(SegmentDataManager.copyFromResource(SegmentDataManager.loadInternal(psff_resource)), position, rotation, scaling);
     }
 
 }

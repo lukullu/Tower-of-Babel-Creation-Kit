@@ -15,7 +15,6 @@ public class EntityObject extends GameplayObject{
     public static final double gravity = 10;
     public double mass = 2.5; // Unit: kg
     public Vec2 force = Vec2.ZERO_VECTOR2;
-    private Vec2 deltaPos = Vec2.ZERO_VECTOR2;
     public double coefficientOfFriction = 0.05;
 
     public EntityObject(ArrayList<? extends Polygon> polygons, Vec2 position, double rotation, double scaling)
@@ -33,8 +32,7 @@ public class EntityObject extends GameplayObject{
     @Override
     public void update()
     {
-
-        updatePos(calcDeltaPos());
+        updatePos(calcDeltaPos(force,mass));
 
         // TODO: Temp; Actually make this work properly | Friction
         if(force.x != 0 || force.y != 0)
@@ -43,41 +41,47 @@ public class EntityObject extends GameplayObject{
         super.update();
     }
 
-    public Vec2 calcDeltaPos()
+    public static Vec2 calcDeltaPos(Vec2 force,double mass)
     {
         Vec2 acceleration = force.divide(mass);
         Vec2 velocity = acceleration.multiply(DeltaTimer.getInstance().getDeltaTime());
-        Vec2 delta = velocity.multiply(DeltaTimer.getInstance().getDeltaTime()).multiply(100).add(deltaPos); // 1px = 1cm
-        deltaPos = Vec2.ZERO_VECTOR2;
-        return delta;
+        return velocity.multiply(DeltaTimer.getInstance().getDeltaTime()).multiply(100);
     }
 
     public void collisionResponse(CollisionResult result)
     {
-        this.updatePos(result.delta.multiply(1.001));
+        if(!result.delta.equals(Vec2.ZERO_VECTOR2))
+            this.updatePos(result.delta.multiply(1.001));
     }
 
     public void collisionResolutionResponse(ArrayList<CollisionResult> results)
     {
-        ArrayList<EntityObject> processedEntities = new ArrayList<>();
         for(CollisionResult result : results)
         {
-            if(!(result.collider instanceof EntityObject))
+            if(!(result.collider instanceof EntityObject entity))
                 continue;
-
-            EntityObject entity = (EntityObject) result.collider;
-
-            processedEntities.add(entity);
 
             Vec2 combinedForce = this.force.subtract(entity.force);
             Vec2 queryForce = combinedForce.multiply(this.mass / (this.mass + entity.mass));
             Vec2 deltaNorm = result.delta.normalise();
 
-            //System.out.println(new Vec2(1,1).multiply(deltaNorm).toString());
+            if(!Double.isNaN(deltaNorm.x) && !Double.isNaN(deltaNorm.y))
+            {
+                double overlap = (double)Math.round(result.minOverlap * 10d) / 10d;
 
-            this.applyForce(queryForce.align(deltaNorm).multiply(0.1));
-            entity.applyForce(queryForce.align(deltaNorm).multiply(-0.1));
-            // inter polygon friction ... .add(queryForce.multiply(0.1*other.coefficientOfFriction))
+                Vec2 alignment = new Vec2(
+                        Math.min(1,(double)Math.abs(Math.round(result.delta.x * 10d) / 10d)),
+                        Math.min(1,(double)Math.abs(Math.round(result.delta.y * 10d) / 10d)));
+
+                System.out.println(alignment);
+
+                //ToDo: This still isn't really working
+                //this.applyForce(queryForce.multiply(-1).multiply(Math.signum(overlap)));
+                //entity.applyForce(queryForce.multiply(1).multiply(Math.signum(overlap)));
+                this.applyForce(queryForce.multiply(-1).multiply(alignment));
+                entity.applyForce(queryForce.multiply(1).multiply(alignment));
+                // inter polygon friction ... .add(queryForce.multiply(0.1*other.coefficientOfFriction))
+            }
         }
     }
 }

@@ -23,6 +23,8 @@ public class StaticObject extends GameplayObject implements ICollidableObject
     @Override
     public void paint()
     {
+        System.out.println(getPolygons());
+
         noStroke();
         super.paint();
         stroke(0);

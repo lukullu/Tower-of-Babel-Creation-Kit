@@ -17,7 +17,7 @@ public class Meta extends MetaObject implements ISegmentedObject
 {
 
     public Meta(String psff_resource, Vec2 position, double rotation, double scaling, Consumer<CollisionResult> action, boolean isTrigger) {
-        super(SegmentDataManager.loadInternal(psff_resource), position, rotation, scaling, action, isTrigger);
+        super(SegmentDataManager.copyFromResource(SegmentDataManager.loadInternal(psff_resource)), position, rotation, scaling, action, isTrigger);
         // TODO: remove Debug
         super.debugAlpha = 100f;
     }

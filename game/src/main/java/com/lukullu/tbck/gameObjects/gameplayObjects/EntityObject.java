@@ -62,25 +62,18 @@ public class EntityObject extends GameplayObject{
                 continue;
 
             Vec2 combinedForce = this.force.subtract(entity.force);
-            Vec2 queryForce = combinedForce.multiply(this.mass / (this.mass + entity.mass));
+            Vec2 queryForce = combinedForce.multiply(entity.mass / (this.mass + entity.mass));
             Vec2 deltaNorm = result.delta.normalise();
 
             if(!Double.isNaN(deltaNorm.x) && !Double.isNaN(deltaNorm.y))
             {
-                double overlap = (double)Math.round(result.minOverlap * 10d) / 10d;
-
                 Vec2 alignment = new Vec2(
                         Math.min(1,(double)Math.abs(Math.round(result.delta.x * 10d) / 10d)),
                         Math.min(1,(double)Math.abs(Math.round(result.delta.y * 10d) / 10d)));
 
-                System.out.println(alignment);
-
-                //ToDo: This still isn't really working
-                //this.applyForce(queryForce.multiply(-1).multiply(Math.signum(overlap)));
-                //entity.applyForce(queryForce.multiply(1).multiply(Math.signum(overlap)));
                 this.applyForce(queryForce.multiply(-1).multiply(alignment));
                 entity.applyForce(queryForce.multiply(1).multiply(alignment));
-                // inter polygon friction ... .add(queryForce.multiply(0.1*other.coefficientOfFriction))
+                // ToDo: inter polygon friction ... .add(queryForce.multiply(0.1*other.coefficientOfFriction))
             }
         }
     }

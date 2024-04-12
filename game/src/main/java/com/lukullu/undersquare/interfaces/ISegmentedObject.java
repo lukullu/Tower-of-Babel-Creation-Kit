@@ -61,7 +61,6 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
                     paintPolygon(polygon);
     }
 
-    // TODO: Test intensively
     default void checkSegmentIntegrity(SegmentData startSegment)
     {
 

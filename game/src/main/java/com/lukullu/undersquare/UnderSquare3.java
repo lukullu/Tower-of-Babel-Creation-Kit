@@ -14,6 +14,7 @@ import com.lukullu.undersquare.objectTypes.Debris;
 import com.lukullu.undersquare.objectTypes.Entity;
 import com.lukullu.undersquare.objectTypes.Meta;
 import com.lukullu.undersquare.objectTypes.Static;
+import com.lukullu.undersquare.utils.DebugUtil;
 import com.tbck.data.entity.SegmentDataManager;
 import com.tbck.math.Vec2;
 
@@ -40,6 +41,13 @@ public class UnderSquare3 extends ExtendedPApplet {
         gameObjects.putMeta(  new Meta  ("/shapeFiles/playerShape.psff"  ,new Vec2(400,300) , 0, 40,(res)->{res.collider.reset();},false));
         gameObjects.putStatic(new Static("/shapeFiles/playerShape.psff"  ,new Vec2(800,500) , PI, 40));
 
+        // Write instructions
+        DebugUtil.getInstance().addStaticText("Move with: [W, A, S, D]");
+        DebugUtil.getInstance().addStaticText("Rotate with: [Q, E]");
+        DebugUtil.getInstance().addStaticText("Scale with: [R, F]");
+        DebugUtil.getInstance().addStaticText("Activate Slow-Motion with: [L] (Keep Pressed)");
+        DebugUtil.getInstance().addStaticText("Activate Experimental Features with: [K] (Keep Pressed)");
+
     }
 
     public void draw()
@@ -49,6 +57,7 @@ public class UnderSquare3 extends ExtendedPApplet {
 
         // calc new frame-time
         DeltaTimer.getInstance().update();
+        DebugUtil.getInstance().addDynamicText(1/(DeltaTimer.getInstance().getDeltaTime()) + " FPS");
 
         // tick every GameObject
         for (var entry : gameObjects.entrySet())
@@ -64,6 +73,7 @@ public class UnderSquare3 extends ExtendedPApplet {
         // collide every GameObject
         for (var entry : gameObjects.entrySet())
         {
+            // ToDo: Space Partitioning with KD-Tree
             Class<?> key = entry.getKey();
             List<GameplayObject> value = entry.getValue();
             for (var gameObject : value)
@@ -91,12 +101,14 @@ public class UnderSquare3 extends ExtendedPApplet {
             }
         }
 
+        // Display Debug Messages
+        DebugUtil.getInstance().update();
+
         for (GameplayObject obj : toKill)
             gameObjects.remove(obj);
 
         for (GameplayObject obj : toBirth)
             gameObjects.putEntity(obj);
-
 
         toKill = new ArrayList<>();
         toBirth = new ArrayList<>();

@@ -106,7 +106,6 @@ public class Camera implements ProcessingClass
                 {
                     lastdeltaPos = lastdeltaPos.subtract(lastdeltaPos.multiply((DeltaTimer.getInstance().getDeltaTime() * 1000)/breakTime));
                     cameraPosition = cameraPosition.add(lastdeltaPos);
-                    System.out.println(lastdeltaPos);
                 }
             }
 

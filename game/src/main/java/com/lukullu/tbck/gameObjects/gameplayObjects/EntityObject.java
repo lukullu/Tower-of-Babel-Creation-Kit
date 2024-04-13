@@ -36,7 +36,13 @@ public class EntityObject extends GameplayObject{
 
         // TODO: Temp; Actually make this work properly | Friction
         if(force.x != 0 || force.y != 0)
+        {
             applyForce(force.multiply(-1 * coefficientOfFriction));
+
+            if(force.length2() <= 1E-1)
+                force = Vec2.ZERO_VECTOR2;
+        }
+
 
         super.update();
     }

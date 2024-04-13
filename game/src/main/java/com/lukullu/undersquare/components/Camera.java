@@ -7,6 +7,7 @@ import com.lukullu.tbck.utils.Collision;
 import com.lukullu.tbck.utils.DebugUtil;
 import com.lukullu.tbck.utils.DeltaTimer;
 import com.lukullu.tbck.utils.InputManager;
+import com.lukullu.undersquare.entities.Player;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
 
@@ -25,7 +26,7 @@ public class Camera implements ProcessingClass
     }
     private GameplayObject target;
     private ArrayList<GameplayObject> possibleTargets = new ArrayList<>();
-    private int currentTargetIndex = 0;
+    public int currentTargetIndex = 0;
     private Vec2 lastPosition = new Vec2(0,0);
     private Vec2 cameraPosition = new Vec2(0,0);
     private boolean matrixIsActive = false;
@@ -48,8 +49,6 @@ public class Camera implements ProcessingClass
 
     public void update()
     {
-
-        DebugUtil.getInstance().addDynamicText("Current Camera: " + currentTargetIndex);
 
         if(hasBeenReleased)
         {
@@ -85,15 +84,19 @@ public class Camera implements ProcessingClass
         matrixIsActive = true;
         pushMatrix();
 
-        boolean isCollidingX;
-        boolean isCollidingY;
+        boolean isCollidingX = false;
+        boolean isCollidingY = false;
 
         if(target != null)
         {
             Vec2 cameraMidPos = cameraPosition.add(new Vec2(getWidth()/2d,getHeight()/2d));
 
-            isCollidingX = Math.abs(target.getPosition().subtract(cameraMidPos).x) <= freeZoneDimensions.x/2d;
-            isCollidingY = Math.abs(target.getPosition().subtract(cameraMidPos).y) <= freeZoneDimensions.y/2d;
+
+            if(target instanceof Player)
+            {
+                isCollidingX = Math.abs(target.getPosition().subtract(cameraMidPos).x) <= freeZoneDimensions.x/2d;
+                isCollidingY = Math.abs(target.getPosition().subtract(cameraMidPos).y) <= freeZoneDimensions.y/2d;
+            }
 
             if(!isCollidingX || !isCollidingY)
             {
@@ -106,6 +109,11 @@ public class Camera implements ProcessingClass
                 {
                     lastdeltaPos = lastdeltaPos.subtract(lastdeltaPos.multiply((DeltaTimer.getInstance().getDeltaTime() * 1000)/breakTime));
                     cameraPosition = cameraPosition.add(lastdeltaPos);
+
+                    System.out.println(lastdeltaPos);
+
+                    if(lastdeltaPos.length2() >= 1E-6)
+                        lastdeltaPos = Vec2.ZERO_VECTOR2;
                 }
             }
 

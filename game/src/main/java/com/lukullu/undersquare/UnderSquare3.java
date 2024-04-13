@@ -63,6 +63,8 @@ public class UnderSquare3 extends ExtendedPApplet {
 
         // Display FPS
         DebugUtil.getInstance().addDynamicText(1/(DeltaTimer.getInstance().getDeltaTime()) + " FPS");
+        // Display Current Camera
+        DebugUtil.getInstance().addDynamicText("Current Camera: " + Camera.getInstance().currentTargetIndex);
 
         // tick every GameObject
         for (var entry : gameObjects.entrySet())

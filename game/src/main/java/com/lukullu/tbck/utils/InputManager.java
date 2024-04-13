@@ -42,6 +42,7 @@ public class InputManager implements ProcessingClass {
         keyActions.put('r',Actions.SCALE_DOWN);
         keyActions.put('l',Actions.SLOWMO);
         keyActions.put('k',Actions.DEBUGTOGGLE);
+        keyActions.put('c',Actions.CYCLE_CAMERA);
     }
     private void saveConfig(){}
     private void changeKey(){}

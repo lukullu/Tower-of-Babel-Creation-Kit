@@ -92,6 +92,8 @@ public class Vec2 implements Serializable
     public double length2(){return x*x + y*y; }
     public Vec2 normalise(){ return this.divide(this.length()); }
     public static double dotProduct(Vec2 v1, Vec2 v2){ return v1.x * v2.x + v1.y * v2.y; }
+    public static double distance(Vec2 v1, Vec2 v2){ return v1.subtract(v2).length(); }
+    public static double distance2(Vec2 v1, Vec2 v2){ return v1.subtract(v2).length2(); }
     public Vec2 align(Vec2 other_vector){ return new Vec2 (Math.signum(other_vector.x) * Math.abs(x), Math.signum(other_vector.y) * Math.abs(y)); }
     public Vec2 normalVector() { return new Vec2(y,-x); }
     public Vec2 abs() { return new Vec2(Math.abs(x),Math.abs(y)); }

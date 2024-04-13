@@ -10,6 +10,7 @@ public enum Actions {
     SCALE_UP ("ScaleUp"),
     SCALE_DOWN ("ScaleDown"),
     SLOWMO ("SlowMo"),
+    CYCLE_CAMERA ("Cycle Camera"),
     DEBUGTOGGLE ("DebugEnum");
 
     private final String name;
@@ -19,7 +20,6 @@ public enum Actions {
     }
 
     public boolean equalsName(String otherName) {
-        // (otherName == null) check is not needed because name.equals(null) returns false
         return name.equals(otherName);
     }
 

@@ -1,10 +1,8 @@
-package com.lukullu.undersquare.utils;
+package com.lukullu.tbck.utils;
 
 import com.kilix.processing.ProcessingClass;
-import com.lukullu.tbck.utils.DeltaTimer;
 import com.tbck.math.Vec2;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class DebugUtil implements ProcessingClass

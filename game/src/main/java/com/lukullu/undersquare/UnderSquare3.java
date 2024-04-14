@@ -10,6 +10,7 @@ import com.lukullu.tbck.utils.*;
 import com.lukullu.undersquare.components.Camera;
 import com.lukullu.undersquare.entities.Player;
 import com.lukullu.tbck.gameObjects.ICollidableObject;
+import com.lukullu.undersquare.enums.Affiliation;
 import com.lukullu.undersquare.objectTypes.Debris;
 import com.lukullu.undersquare.objectTypes.Entity;
 import com.lukullu.undersquare.objectTypes.Meta;
@@ -33,8 +34,8 @@ public class UnderSquare3 extends ExtendedPApplet {
     {
 
         gameObjects.putEntity(new Player("/shapeFiles/playerShape.psff",new Vec2(600,600) , 0, 40));
-        gameObjects.putEntity(new Entity("/shapeFiles/playerShape.psff",new Vec2(900,600) , 0, 40));
-        gameObjects.putEntity(new Entity("/shapeFiles/segmentDemo.psff",new Vec2(1500,600), 0, 40));
+        gameObjects.putEntity(new Entity("/shapeFiles/playerShape.psff",new Vec2(900,600) , 0, 40, Affiliation.ENEMY));
+        gameObjects.putEntity(new Entity("/shapeFiles/segmentDemo.psff",new Vec2(1500,600), 0, 40, Affiliation.NONE));
         gameObjects.putEntity(new Debris("/shapeFiles/playerShape.psff",new Vec2(1200,600), 0, 10,3));
         gameObjects.putMeta(  new Meta  ("/shapeFiles/playerShape.psff",new Vec2(1000,700), 0, 40,(nil)->{System.out.println("heya");},false));
         gameObjects.putMeta(  new Meta  ("/shapeFiles/playerShape.psff",new Vec2(400,300) , 0, 40,(res)->{res.collider.reset();},false));
@@ -134,7 +135,7 @@ public class UnderSquare3 extends ExtendedPApplet {
 
     private static final void storeShapes() {
         Player player = new Player("../game/src/main/resources/shapeFiles/legacy/playerShape.psff", new Vec2(600,600), 0, 5);
-        Entity testEntity = new Entity("../game/src/main/resources/shapeFiles/legacy/testShape.psff",new Vec2(1400,600), 0, 5);
+        Entity testEntity = new Entity("../game/src/main/resources/shapeFiles/legacy/testShape.psff",new Vec2(1400,600), 0, 5, Affiliation.NONE);
 
         try {
             SegmentDataManager.saveExternal(new File("./playerShape.psff"), player.getSegments());

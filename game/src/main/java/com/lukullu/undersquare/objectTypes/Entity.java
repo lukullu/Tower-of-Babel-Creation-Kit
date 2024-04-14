@@ -1,31 +1,33 @@
 package com.lukullu.undersquare.objectTypes;
 
 import com.lukullu.tbck.gameObjects.gameplayObjects.EntityObject;
-import com.lukullu.tbck.utils.Collision;
 import com.lukullu.tbck.utils.CollisionResult;
 import com.lukullu.undersquare.Constants;
+import com.lukullu.undersquare.enums.Affiliation;
 import com.lukullu.undersquare.interfaces.ISegmentedObject;
 import com.tbck.data.entity.SegmentDataManager;
-import com.tbck.math.LineSegment;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
 import com.tbck.data.entity.SegmentData;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Entity extends EntityObject implements ISegmentedObject
 {
 
-    public Entity(String psff_resource, Vec2 position, double rotation, double scaling)
+    private Affiliation affiliation;
+
+    public Entity(String psff_resource, Vec2 position, double rotation, double scaling, Affiliation affiliation)
     {
         super(SegmentDataManager.copyFromResource(SegmentDataManager.loadInternal(psff_resource)),position,rotation, scaling);
+        this.affiliation = affiliation;
         initSegments();
     }
 
-    public Entity(ArrayList<? extends Polygon> polygons, Vec2 position, double rotation, double scaling)
+    public Entity(ArrayList<? extends Polygon> polygons, Vec2 position, double rotation, double scaling, Affiliation affiliation)
     {
         super(polygons,position,rotation, scaling);
+        this.affiliation = affiliation;
     }
 
     @Override
@@ -92,4 +94,27 @@ public class Entity extends EntityObject implements ISegmentedObject
         return collisionResults;
     }
 
+    public static ArrayList<Entity> getEntitiesInRange(Vec2 origin, ArrayList<Entity> entities, double range)
+    {
+        ArrayList<Entity> out = new ArrayList<>();
+        for(Entity entity : entities)
+        {
+            if(isEntityInRange(origin,entity,range))
+                out.add(entity);
+        }
+        return out;
+    }
+
+    public static boolean isEntityInRange(Vec2 origin, Entity query, double range)
+    {
+        return query.getPosition().subtract(origin).length2() <= range * range;
+    }
+
+    public Affiliation getAffiliation() {
+        return affiliation;
+    }
+
+    public void setAffiliation(Affiliation affiliation) {
+        this.affiliation = affiliation;
+    }
 }

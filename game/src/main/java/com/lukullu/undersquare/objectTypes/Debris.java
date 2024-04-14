@@ -1,6 +1,7 @@
 package com.lukullu.undersquare.objectTypes;
 
 import com.lukullu.tbck.utils.DeltaTimer;
+import com.lukullu.undersquare.enums.Affiliation;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
 
@@ -15,7 +16,7 @@ public class Debris extends Entity
     private boolean isDead = false;
 
     public Debris(String psff_resource, Vec2 position, double rotation, double scaling, double timeToLive) {
-        super(psff_resource, position, rotation, scaling);
+        super(psff_resource, position, rotation, scaling, Affiliation.NONE);
         this.timeToLive = timeToLive;
     }
 

@@ -3,6 +3,7 @@ package com.lukullu.undersquare.entities;
 import com.lukullu.tbck.enums.Actions;
 import com.lukullu.tbck.utils.DeltaTimer;
 import com.lukullu.tbck.utils.InputManager;
+import com.lukullu.undersquare.enums.Affiliation;
 import com.tbck.math.Vec2;
 import com.lukullu.undersquare.objectTypes.Entity;
 
@@ -11,7 +12,7 @@ public class Player extends Entity {
     private static final Vec2 MOVEMENT_FORCE = new Vec2(50,50);
 
     public Player(String psff_resource, Vec2 position, double rotation, double scaling) {
-        super(psff_resource, position, rotation, scaling);
+        super(psff_resource, position, rotation, scaling, Affiliation.PLAYER);
         mass = 2;
     }
 

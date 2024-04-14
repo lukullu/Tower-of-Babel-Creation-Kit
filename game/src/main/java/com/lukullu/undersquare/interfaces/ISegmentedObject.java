@@ -6,6 +6,7 @@ import com.lukullu.tbck.gameObjects.IGameObject;
 import com.lukullu.tbck.gameObjects.gameplayObjects.EntityObject;
 import com.lukullu.tbck.utils.InputManager;
 import com.lukullu.undersquare.UnderSquare3;
+import com.lukullu.undersquare.enums.Affiliation;
 import com.lukullu.undersquare.objectTypes.Entity;
 import com.lukullu.undersquare.objectTypes.Meta;
 import com.tbck.data.entity.SegmentData;
@@ -118,7 +119,11 @@ public interface ISegmentedObject extends IGameObject, ICollidableObject
                 newSegments.add(newSegment);
             }
 
-            birth(new Entity(newSegments,position,0,0));
+            if(this instanceof Entity)
+                birth(new Entity(newSegments,position,0,0,((Entity)this).getAffiliation()));
+            else
+                birth(new Entity(newSegments,position,0,0, Affiliation.NONE));
+
         }
 
     }

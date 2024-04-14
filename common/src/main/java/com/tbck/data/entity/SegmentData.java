@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Objects;
 
 @Exposes({"armorPoints", "healthPoints", "role"})
-public class SegmentData extends Polygon implements Serializable
+public class SegmentData extends Polygon implements Serializable, ISegment
 {
 
     @Serial private static final long serialVersionUID = 3756687822214555218L;

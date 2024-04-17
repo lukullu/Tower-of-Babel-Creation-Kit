@@ -18,6 +18,7 @@ public enum SegmentRoles
     boolean isDirectional = false;
     String texture_url = "nil"; // ToDo make actual Texture Class
 
+
     SegmentRoles(boolean isDirectional, String texture_url)
     {
         this.isDirectional = isDirectional;

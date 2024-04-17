@@ -32,21 +32,6 @@ public class UnderSquare3 extends ExtendedPApplet {
     public void setup()
     {
 
-        gameObjects.putEntity(new Player("/shapeFiles/playerShape.psff",new Vec2(600,600) , 0, 40));
-        gameObjects.putEntity(new Entity("/shapeFiles/playerShape.psff",new Vec2(900,600) , 0, 40));
-        gameObjects.putEntity(new Entity("/shapeFiles/segmentDemo.psff",new Vec2(1500,600), 0, 40));
-        gameObjects.putEntity(new Debris("/shapeFiles/playerShape.psff",new Vec2(1200,600), 0, 10,3));
-        gameObjects.putMeta(  new Meta  ("/shapeFiles/playerShape.psff",new Vec2(1000,700), 0, 40,(nil)->{System.out.println("heya");},false));
-        gameObjects.putMeta(  new Meta  ("/shapeFiles/playerShape.psff",new Vec2(400,300) , 0, 40,(res)->{res.collider.reset();},false));
-        gameObjects.putStatic(new Static("/shapeFiles/playerShape.psff",new Vec2(800,500) , PI, 40));
-
-        // Write instructions
-        DebugUtil.getInstance().addStaticText("Move with: [W, A, S, D]");
-        DebugUtil.getInstance().addStaticText("Rotate with: [Q, E]");
-        DebugUtil.getInstance().addStaticText("Scale with: [R, F]");
-        DebugUtil.getInstance().addStaticText("Activate Slow-Motion with: [L] (Keep Pressed)");
-        DebugUtil.getInstance().addStaticText("Cycle Between Cameras with: [C]");
-        DebugUtil.getInstance().addStaticText("Activate Experimental Features with: [K] (Keep Pressed)");
 
         Camera.getInstance().setPossibleTargets((ArrayList<GameplayObject>) gameObjects.get(EntityObject.class));
     }

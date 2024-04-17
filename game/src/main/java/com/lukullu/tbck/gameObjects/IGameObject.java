@@ -7,7 +7,7 @@ import com.tbck.math.Vec2;
 
 import java.util.ArrayList;
 
-public interface IGameObject extends ProcessingClass {
+public interface IGameObject extends IAtom, ProcessingClass {
 
     int getID();
     void update();

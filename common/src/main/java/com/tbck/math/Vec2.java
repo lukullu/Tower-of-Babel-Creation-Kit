@@ -138,6 +138,11 @@ public class Vec2 implements Serializable
     @Exposed(as = "position")
     public Vec2 getPosition() { return this; }
 
+    public long getZOrder()
+    {
+
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

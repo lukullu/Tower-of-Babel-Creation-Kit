@@ -9,7 +9,8 @@ import java.util.ArrayList;
 public class Simulation implements ProcessingClass
 {
 
-    private static final double INITIAL_MOLECULE_SPACING = 15;
+    private static final double INITIAL_MOLECULE_SPACING = 50;
+    public static final double TARGET_DENSITY = 0.0;
 
     ArrayList<IAtom> molecules = new ArrayList<>();
 

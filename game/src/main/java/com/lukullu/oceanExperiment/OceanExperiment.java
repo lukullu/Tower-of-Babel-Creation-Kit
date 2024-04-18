@@ -1,6 +1,8 @@
 package com.lukullu.oceanExperiment;
 
 import com.kilix.processing.ExtendedPApplet;
+import com.kilix.processing.ProcessingClass;
+import com.lukullu.oceanExperiment.simulation.H2O;
 import com.lukullu.oceanExperiment.simulation.Simulation;
 import com.lukullu.tbck.gameObjects.ICollidableObject;
 import com.lukullu.tbck.gameObjects.gameplayObjects.EntityObject;
@@ -36,7 +38,7 @@ public class OceanExperiment extends ExtendedPApplet {
 
     public void setup()
     {
-        sim = new Simulation(500);
+        sim = new Simulation(600);
     }
 
     public void draw()
@@ -48,6 +50,7 @@ public class OceanExperiment extends ExtendedPApplet {
         DeltaTimer.getInstance().update();
         // Display FPS
         DebugUtil.getInstance().addDynamicText(1/(DeltaTimer.getInstance().getDeltaTime()) + " FPS");
+        DebugUtil.getInstance().addDynamicText("Target: " +600d/(1920d*1080d) + " \nDensity " + H2O.calcSurroundingDensity(new Vec2(width/2d,height/2d)));
 
         sim.update();
         sim.paint();

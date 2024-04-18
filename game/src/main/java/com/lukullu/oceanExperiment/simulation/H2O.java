@@ -12,10 +12,11 @@ import java.util.Objects;
 public class H2O implements IAtom, ProcessingClass
 {
 
-    private static final double DENSITY_RADIUS = 50;
+    private static final double DENSITY_RADIUS = 100;
     private static final double MOLECULE_MASS = 1;
-    private static final Vec2 GRAVITY = new Vec2(0,10);
-    private static final double DENSITY_PUSH_FORCE = 50;
+    private static final Vec2 GRAVITY = new Vec2(0,100);
+    private static final double DENSITY_PUSH_FORCE = 100;
+    private static final double COLLISION_DAMPENING = 0.8;
     private Vec2 position;
     private Vec2 force = new Vec2(0,0);
     public double surroundingDensity = 1;
@@ -29,7 +30,7 @@ public class H2O implements IAtom, ProcessingClass
     public void update()
     {
         surroundingDensity = calcSurroundingDensity(this.getPosition());
-        applyForce(GRAVITY);
+        //applyForce(GRAVITY);
         applyForce(calcDensityForce());
         collision();
         move();
@@ -49,25 +50,26 @@ public class H2O implements IAtom, ProcessingClass
     {
         if(position.y >= getHeight() || position.y <= 0)
         {
-            force = new Vec2(force.x,-force.y);
+            force = new Vec2(force.x,-force.y).multiply(COLLISION_DAMPENING);
         }
 
         if(position.x >= getWidth() || position.x <= 0)
         {
-            force = new Vec2(-force.x,force.y);
+            force = new Vec2(-force.x,force.y).multiply(COLLISION_DAMPENING);
         }
 
     }
 
-    private double calcSurroundingDensity(Vec2 position)
+    public static double calcSurroundingDensity(Vec2 position)
     {
         ArrayList<IAtom> allMolecules = OceanExperiment.getSim().getMolecules();
 
         double newSurroundingDensity = 0;
+        int colliderCounter = 0;
 
         for(IAtom molecule : allMolecules)
         {
-            if(molecule.equals(this))
+            if(molecule.getPosition().equals(position))
                 continue;
 
             double distance2 = Vec2.distance2(molecule.getPosition(),position);
@@ -78,21 +80,28 @@ public class H2O implements IAtom, ProcessingClass
             double normalisedDistance = distance2 / (DENSITY_RADIUS * DENSITY_RADIUS);
 
             newSurroundingDensity += normalisedDistance * MOLECULE_MASS;
+            colliderCounter++;
 
         }
-        return newSurroundingDensity;
+        double out = 0;
+        if(colliderCounter != 0)
+            out = newSurroundingDensity / (double) colliderCounter;
+
+    return out;
     }
 
     private Vec2 calcDensityForce()
     {
-        double densityLeft  = calcSurroundingDensity(getPosition().add(new Vec2(-DENSITY_RADIUS,0)));
-        double densityRight = calcSurroundingDensity(getPosition().add(new Vec2( DENSITY_RADIUS,0)));
-        double densityUp    = calcSurroundingDensity(getPosition().add(new Vec2(0,-DENSITY_RADIUS)));
-        double densityDown  = calcSurroundingDensity(getPosition().add(new Vec2(0, DENSITY_RADIUS)));
+        double densityLeft  = -calcSurroundingDensity(getPosition().add(new Vec2(-DENSITY_RADIUS,0))) + Simulation.TARGET_DENSITY;
+        double densityRight = -calcSurroundingDensity(getPosition().add(new Vec2( DENSITY_RADIUS,0))) + Simulation.TARGET_DENSITY;
+        double densityUp    = -calcSurroundingDensity(getPosition().add(new Vec2(0,-DENSITY_RADIUS))) + Simulation.TARGET_DENSITY;
+        double densityDown  = -calcSurroundingDensity(getPosition().add(new Vec2(0, DENSITY_RADIUS))) + Simulation.TARGET_DENSITY;
+
+        System.out.println(densityDown);
 
         Vec2 densityForce = new Vec2(
-                densityLeft  -densityRight,
-                densityUp  -densityDown
+                densityLeft - densityRight,
+                densityUp - densityDown
         );
 
         return densityForce.multiply(DENSITY_PUSH_FORCE);
@@ -101,8 +110,7 @@ public class H2O implements IAtom, ProcessingClass
     @Override
     public void paint()
     {
-
-        fill(60 + (float) surroundingDensity * 10);
+        fill(60 + (float) surroundingDensity * 30);
         noStroke();
         ellipse((float)position.x,(float)position.y,5,5);
 

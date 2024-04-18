@@ -1,18 +1,16 @@
 package com.lukullu.undersquare.objectTypes;
 
 import com.lukullu.tbck.gameObjects.gameplayObjects.EntityObject;
-import com.lukullu.tbck.utils.Collision;
 import com.lukullu.tbck.utils.CollisionResult;
 import com.lukullu.undersquare.Constants;
 import com.lukullu.undersquare.interfaces.ISegmentedObject;
 import com.tbck.data.entity.SegmentDataManager;
-import com.tbck.math.LineSegment;
 import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
 import com.tbck.data.entity.SegmentData;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 public class Entity extends EntityObject implements ISegmentedObject
 {
@@ -35,9 +33,9 @@ public class Entity extends EntityObject implements ISegmentedObject
     }
 
     //@Override
-    public ArrayList<CollisionResult> dynamicCollisionUpdate(int depth) {
+    public ArrayList<CollisionResult> dynamicCollisionUpdate(List<EntityObject> entities, int depth) {
 
-        ArrayList<CollisionResult> collisionResults = super.dynamicCollisionUpdate(depth);
+        ArrayList<CollisionResult> collisionResults = super.dynamicCollisionUpdate(entities, depth);
         ArrayList<Polygon> colliderPolygons = new ArrayList<>();
         ArrayList<Polygon> queryPolygons = new ArrayList<>();
 

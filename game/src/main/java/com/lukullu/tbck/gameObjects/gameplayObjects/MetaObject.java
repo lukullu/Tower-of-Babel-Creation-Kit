@@ -8,6 +8,7 @@ import com.tbck.math.Polygon;
 import com.tbck.math.Vec2;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class MetaObject extends GameplayObject implements ICollidableObject
@@ -44,9 +45,9 @@ public class MetaObject extends GameplayObject implements ICollidableObject
     }
 
     @Override
-    public ArrayList<Polygon> staticCollisionUpdate(int depth)
+    public ArrayList<Polygon> staticCollisionUpdate(List<EntityObject> entities, int depth)
     {
-        ArrayList<Polygon> polygonColliders = super.staticCollisionUpdate(depth);
+        ArrayList<Polygon> polygonColliders = super.staticCollisionUpdate(entities, depth);
 
         if(polygonColliders.isEmpty())
             setInActive();

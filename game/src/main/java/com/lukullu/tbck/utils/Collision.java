@@ -117,7 +117,7 @@ public class Collision implements ProcessingClass
         {
             int j = (i+1)%polygon.size();
 
-            if(MyMath.lineSegmentIntersection(point,lineFromPointToPolygonCenter,polygon.get(i),polygon.get(j)))
+            if(MyMath.lineSegmentIntersectionCheck(point,lineFromPointToPolygonCenter,polygon.get(i),polygon.get(j)))
                 return false;
 
         }

@@ -1,0 +1,15 @@
+[
+  {
+    "isValid": true,
+    "enabled": true,
+    "armorPoints": 10,
+    "health": 100.0,
+    "role": "HEART",
+    "vertices": [
+      [-1.0,-1.0],
+      [1.0,-1.0],
+      [1.0,1.0],
+      [-1.0,1.0]
+    ]
+  }
+]

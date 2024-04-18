@@ -3,7 +3,6 @@ package com.lukullu.tbck.gameObjects;
 import com.lukullu.tbck.gameObjects.gameplayObjects.EntityObject;
 import com.lukullu.tbck.utils.Collision;
 import com.lukullu.tbck.utils.CollisionResult;
-import com.lukullu.undersquare.UnderSquare3;
 import com.tbck.data.entity.SegmentData;
 import com.tbck.math.LineSegment;
 import com.tbck.math.Polygon;
@@ -38,16 +37,15 @@ public interface ICollidableObject extends IGameObject
         return out;
     }
 
-    default ArrayList<CollisionResult> dynamicCollisionUpdate(int depth)
+    default ArrayList<CollisionResult> dynamicCollisionUpdate(List<EntityObject> entities, int depth)
     {
-
         if(depth <= 0) return new ArrayList<>();
-
-        @SuppressWarnings("all")
-        List<EntityObject> entities = (List<EntityObject>)(Object) UnderSquare3.getGameObjects().get(EntityObject.class);
 
         ArrayList<CollisionResult> results = new ArrayList<>();
         ArrayList<EntityObject> colliders = new ArrayList<>();
+
+        if(entities == null || entities.isEmpty())
+            return results;
 
         for (EntityObject entity : entities)
         {
@@ -88,19 +86,20 @@ public interface ICollidableObject extends IGameObject
 
         collisionResolutionResponse(results);
 
-        for (EntityObject entity : colliders) entity.dynamicCollisionUpdate(depth-1);
+        for (EntityObject entity : colliders) entity.dynamicCollisionUpdate(entities, depth-1);
 
         return results;
     }
 
-    default ArrayList<Polygon> staticCollisionUpdate(int depth)
+    default ArrayList<Polygon> staticCollisionUpdate(List<EntityObject> entities, int depth)
     {
-        @SuppressWarnings("all")
-        List<EntityObject> entities = (List<EntityObject>)(Object) UnderSquare3.getGameObjects().get(EntityObject.class);
 
         ArrayList<Polygon> out = new ArrayList<>();
         ArrayList<CollisionResult> results = new ArrayList<>();
         ArrayList<EntityObject> colliders = new ArrayList<>();
+
+        if(entities == null || entities.isEmpty())
+            return out;
 
         for (EntityObject entity : entities)
         {

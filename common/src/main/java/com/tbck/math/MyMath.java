@@ -4,7 +4,7 @@ public class MyMath {
 
     public static boolean isEven(int in) { return (in % 2) == 0; }
 
-    public static boolean lineSegmentIntersection(Vec2 p1, Vec2 p2, Vec2 p3, Vec2 p4)
+    public static boolean lineSegmentIntersectionCheck(Vec2 p1, Vec2 p2, Vec2 p3, Vec2 p4)
     {
         double h =  (p4.x - p3.x) * (p1.y - p2.y)  - (p1.x - p2.x) * (p4.y - p3.y);
         double t = ((p1.x - p3.x) * (p3.y - p4.y) - (p1.y - p3.y) * (p3.x - p4.x)) / h;
@@ -12,6 +12,27 @@ public class MyMath {
 
         return t >= 0 && t <= 1 && u >= 0 && u <= 1;
     }
+
+    public static Vec2 lineSegmentIntersection(Vec2 A, Vec2 B, Vec2 C, Vec2 D)
+    {
+        double tTop = (D.x-C.x)*(A.y-C.y)-(D.y-C.y)*(A.x-C.x);
+        double uTop = (C.y-A.y)*(A.x-B.x)-(C.x-A.x)*(A.y-B.y);
+        double bottom = (D.y-C.y)*(B.x-A.x)-(D.x-C.x)*(B.y-A.y);
+        double t = tTop/bottom;
+        double u = uTop/bottom;
+
+        if(bottom == 0)
+            return null;
+
+        if(t >= 0 && t <= 1 && u >= 0 && u <= 1)
+            return new Vec2(
+                    A.x+(B.x-A.x)*t,
+                    A.y+(B.y-A.y)*t
+            );
+
+        return null;
+    }
+
 
     public static Vec2 lineIntersection(Vec2 p1_1, Vec2 p1_2, Vec2 p2_1, Vec2 p2_2)
     {

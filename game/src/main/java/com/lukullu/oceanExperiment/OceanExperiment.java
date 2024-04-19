@@ -38,7 +38,7 @@ public class OceanExperiment extends ExtendedPApplet {
 
     public void setup()
     {
-        sim = new Simulation(600);
+        sim = new Simulation(3000);
     }
 
     public void draw()

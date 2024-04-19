@@ -1,7 +1,10 @@
 package com.lukullu.oceanExperiment.simulation;
 
 import com.kilix.processing.ProcessingClass;
+import com.lukullu.oceanExperiment.spacialPartitioning.QuadList;
 import com.lukullu.tbck.gameObjects.IAtom;
+import com.tbck.math.MortonCode;
+import com.tbck.math.UInt32;
 import com.tbck.math.Vec2;
 
 import java.util.ArrayList;
@@ -9,10 +12,11 @@ import java.util.ArrayList;
 public class Simulation implements ProcessingClass
 {
 
-    private static final double INITIAL_MOLECULE_SPACING = 50;
+    private static final double INITIAL_MOLECULE_SPACING = 5;
     public static final double TARGET_DENSITY = 0.0;
 
     ArrayList<IAtom> molecules = new ArrayList<>();
+    QuadList partitionedMolecules = new QuadList(getWidth(),6);
 
     public Simulation(int moleculeCount)
     {
@@ -31,6 +35,7 @@ public class Simulation implements ProcessingClass
                 getHeight()/2d-(dim/2d)*INITIAL_MOLECULE_SPACING
         );
 
+
         for(int y = 0; y < dim; y++)
         {
             for(int x = 0; x < dim; x++)
@@ -48,6 +53,8 @@ public class Simulation implements ProcessingClass
 
     public void update()
     {
+        partitionedMolecules.partition(molecules);
+
         for (IAtom molecule : molecules)
         {
             molecule.update();
@@ -56,6 +63,12 @@ public class Simulation implements ProcessingClass
 
     public void paint()
     {
+
+        for(IAtom molecule : molecules)
+        {
+            molecule.paint();
+        }
+
         for (IAtom molecule : molecules)
         {
             molecule.paint();

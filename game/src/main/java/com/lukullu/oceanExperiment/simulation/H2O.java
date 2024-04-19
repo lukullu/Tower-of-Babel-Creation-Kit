@@ -38,7 +38,8 @@ public class H2O implements IAtom, ProcessingClass
 
     private void move()
     {
-        position = position.add(force.divide(MOLECULE_MASS).multiply(DeltaTimer.getInstance().getDeltaTime() * DeltaTimer.getInstance().getDeltaTime()));
+        //position = position.add(force.divide(MOLECULE_MASS).multiply(DeltaTimer.getInstance().getDeltaTime() * DeltaTimer.getInstance().getDeltaTime()));
+        position = position.add(force.divide(MOLECULE_MASS).multiply(0.00002));
     }
 
     private void applyForce(Vec2 deltaForce)
@@ -51,18 +52,48 @@ public class H2O implements IAtom, ProcessingClass
         if(position.y >= getHeight() || position.y <= 0)
         {
             force = new Vec2(force.x,-force.y).multiply(COLLISION_DAMPENING);
+            position.y = position.y > 0 ? getHeight()-1 : 1;
         }
 
         if(position.x >= getWidth() || position.x <= 0)
         {
             force = new Vec2(-force.x,force.y).multiply(COLLISION_DAMPENING);
+            position.x = position.x > 0 ? getWidth()-1 : 1;
         }
 
     }
 
     public static double calcSurroundingDensity(Vec2 position)
     {
-        ArrayList<IAtom> allMolecules = OceanExperiment.getSim().getMolecules();
+
+        Vec2 cartesianIndex = OceanExperiment.getSim().partitionedMolecules.getCartesianIndex(position);
+
+        ArrayList<IAtom> allMolecules = new ArrayList<>();
+
+        //allMolecules = OceanExperiment.sim.molecules;
+        for(int y = -1; y < 2; y++)
+        {
+            for(int x = -1; x < 2; x++)
+            {
+                int iX;
+                int iY;
+                if(cartesianIndex.x + x < 0)
+                    iX = 0;
+                else
+                    iX = (int)cartesianIndex.x + x;
+
+                if(cartesianIndex.y + y < 0)
+                    iY = 0;
+                else
+                    iY = (int)cartesianIndex.y + y;
+
+
+                if(OceanExperiment.getSim().partitionedMolecules.getPartitionedPoints()[iY][iX] != null)
+                    allMolecules.addAll(OceanExperiment.getSim().partitionedMolecules.getPartitionedPoints()[iY][iX]);
+            }
+        }
+
+        System.out.println(allMolecules.size());
 
         double newSurroundingDensity = 0;
         int colliderCounter = 0;
@@ -92,12 +123,67 @@ public class H2O implements IAtom, ProcessingClass
 
     private Vec2 calcDensityForce()
     {
+        Vec2 cartesianIndex = OceanExperiment.getSim().partitionedMolecules.getCartesianIndex(position);
+
+        ArrayList<IAtom> allMolecules = new ArrayList<>();
+
+        //allMolecules = OceanExperiment.sim.molecules;
+        for(int y = -1; y < 2; y++)
+        {
+            for(int x = -1; x < 2; x++)
+            {
+                int iX;
+                int iY;
+                if(cartesianIndex.x + x < 0)
+                    iX = 0;
+                else
+                    iX = (int)cartesianIndex.x + x;
+
+                if(cartesianIndex.y + y < 0)
+                    iY = 0;
+                else
+                    iY = (int)cartesianIndex.y + y;
+
+
+                if(OceanExperiment.getSim().partitionedMolecules.getPartitionedPoints()[iY][iX] != null)
+                    allMolecules.addAll(OceanExperiment.getSim().partitionedMolecules.getPartitionedPoints()[iY][iX]);
+            }
+        }
+
+        Vec2 output = new Vec2(0,0);
+        for(IAtom molecule : allMolecules)
+        {
+            if(molecule.getPosition().equals(position))
+                continue;
+
+            double distance2 = Vec2.distance2(molecule.getPosition(),position);
+
+            if(distance2 > DENSITY_RADIUS * DENSITY_RADIUS)
+                continue;
+
+            double normalisedDistance = distance2 / (DENSITY_RADIUS * DENSITY_RADIUS);
+
+            double force = densityForceFunction(normalisedDistance);
+
+            output = output.add(molecule.getPosition().subtract(this.position).normalise().multiply(force*DENSITY_PUSH_FORCE));
+        }
+
+        return output;
+    }
+
+    private static double densityForceFunction(double in)
+    {
+        return Math.pow(in-0.5,3)*8;
+    }
+
+    /*private Vec2 calcDensityForce()
+    {
         double densityLeft  = -calcSurroundingDensity(getPosition().add(new Vec2(-DENSITY_RADIUS,0))) + Simulation.TARGET_DENSITY;
         double densityRight = -calcSurroundingDensity(getPosition().add(new Vec2( DENSITY_RADIUS,0))) + Simulation.TARGET_DENSITY;
         double densityUp    = -calcSurroundingDensity(getPosition().add(new Vec2(0,-DENSITY_RADIUS))) + Simulation.TARGET_DENSITY;
         double densityDown  = -calcSurroundingDensity(getPosition().add(new Vec2(0, DENSITY_RADIUS))) + Simulation.TARGET_DENSITY;
 
-        System.out.println(densityDown);
+        //System.out.println(densityDown);
 
         Vec2 densityForce = new Vec2(
                 densityLeft - densityRight,
@@ -105,7 +191,9 @@ public class H2O implements IAtom, ProcessingClass
         );
 
         return densityForce.multiply(DENSITY_PUSH_FORCE);
-    }
+    }*/
+
+
 
     @Override
     public void paint()
@@ -141,5 +229,14 @@ public class H2O implements IAtom, ProcessingClass
     @Override
     public int hashCode() {
         return Objects.hash(position, force);
+    }
+
+    @Override
+    public String toString() {
+        return "H2O{" +
+                "position=" + position +
+                ", force=" + force +
+                ", surroundingDensity=" + surroundingDensity +
+                '}';
     }
 }

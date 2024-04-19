@@ -138,9 +138,14 @@ public class Vec2 implements Serializable
     @Exposed(as = "position")
     public Vec2 getPosition() { return this; }
 
-    public long getZOrder()
+    public UInt32 getZOrderPosition()
     {
+        return MortonCode.encode2D((int)Math.floor(x),(int)Math.floor(y));
+    }
 
+    public static Vec2 getFromZOrderPosition(UInt32 z)
+    {
+        return MortonCode.decode2D(z);
     }
 
     @Override
